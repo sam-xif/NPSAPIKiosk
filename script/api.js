@@ -1,3 +1,7 @@
+/**
+ *
+ */
+
 // TODO: Do not put API key directly in source code
 let API_KEY = "bGpxFeQ0v8stp7tM6fuxocR57DsjdxrKDuWzrLl9";
 let API_ENDPOINT = "https://developer.nps.gov/api/v1/";
@@ -34,8 +38,32 @@ function NPSAPIClient() {
     }
 }
 
-let api = new NPSAPIClient();
+/**
+ *
+ * @constructor
+ */
+function NPSAPIClientInterface() {
+    this.clientInstance = new NPSAPIClient();
 
+    /**
+     * Gets a park object from the given park code. This function runs asynchronously.
+     * @param parkCode The park code to search
+     * @returns {NPSPark} An {@link NPSPark} object corresponding to the given park code, or null if
+     */
+    this.parkFromCode = async function (parkCode) {
+        let response = await this.clientInstance.parkInfo(parkCode);
+        let responseArr = response.data.data;
+
+        if (responseArr.length < 1) {
+            throw new Error("No park found with given code.");
+        }
+
+        return new NPSPark(response.data.data[0]);
+    }
+}
+
+
+let interface = new NPSAPIClientInterface();
 (async function () {
-    console.log(await api.parkInfo("acad"));
+    console.log(await interface.parkFromCode("acad"));
 })();
