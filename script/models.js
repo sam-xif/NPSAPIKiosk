@@ -37,7 +37,19 @@ function NPSAlert(source) {
     this.id = source.id;
     this.title = source.title;
 
-    this.park = (new NPSAPIClientInterface()).parkFromCode(this.parkCode);
+    /**
+     * Obtains a Promise which resolves to a new {@code NPSAlert} instance that has the {@code park} field defined
+     *  as the park corresponding to this instance's parkCode.
+     * @return {Promise} The promise
+     */
+    this.fetchPark = function () {
+        return (async function (alertInstance) {
+            let park = await (new NPSAPIClientInterface(new NPSAPIClient()))
+                .parkFromCode(alertInstance.parkCode);
+            alertInstance.park = park;
+            return alertInstance;
+        })(this);
+    }
 }
 
 /**
