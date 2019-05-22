@@ -15,7 +15,7 @@ function NPSModel(parkCode, url, data) {
     this.data = data;
 
     /**
-     * Renders this Data to HTML. This method is an abstract definition
+     * Renders this Data to HTML. This method is left to be implemented by subclasses.
      */
     this.render = function() { throw new Error("Attempted to call abstract function."); }
 }
