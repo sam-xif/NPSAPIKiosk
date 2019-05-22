@@ -48,6 +48,9 @@ function NPSAPIClientInterface(client) {
         throw new Error("Expected client object to be passed to constructor.");
     }
 
+    /**
+     * @type {NPSAPIClient}
+     */
     this.clientInstance = client;
 
     /**
@@ -72,6 +75,15 @@ function NPSAPIClientInterface(client) {
         }
         return park;
     };
+
+    this.getAllAlerts = async function () {
+        let response = await this.clientInstance.alerts();
+        let alertArr = [];
+        response.data.data.forEach((alert, idx) => {
+            alertArr.push(new NPSAlert(alert));
+        });
+        return alertArr;
+    }
 }
 
 let clientInterface = new NPSAPIClientInterface(new NPSAPIClient());
