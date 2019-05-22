@@ -49,6 +49,7 @@ function NPSAPIClientInterface(client) {
     }
 
     /**
+     * The instance of the API client.
      * @type {NPSAPIClient}
      */
     this.clientInstance = client;
@@ -76,6 +77,10 @@ function NPSAPIClientInterface(client) {
         return park;
     };
 
+    /**
+     * Queries the API to get an array of all active alerts. This function runs asynchronously.
+     * @returns {Promise<Array>} A promise of an array of {@link NPSAlert}s
+     */
     this.getAllAlerts = async function () {
         let response = await this.clientInstance.alerts();
         let alertArr = [];
@@ -85,8 +90,3 @@ function NPSAPIClientInterface(client) {
         return alertArr;
     }
 }
-
-let clientInterface = new NPSAPIClientInterface(new NPSAPIClient());
-let alert = new NPSAlert({parkCode: "acad"}).fetchPark().then((park) => {
-    console.log(park);
-});

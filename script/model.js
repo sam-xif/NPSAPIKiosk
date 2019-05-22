@@ -7,7 +7,7 @@
  * @param parkCode The park code associated with this piece of data
  * @param url The url associated with this piece of data
  * @param data JSON object of other data (optional)
- * @constructor Creates a new model instance
+ * @constructor Creates a new model instance.
  */
 function NPSModel(parkCode, url, data) {
     this.parkCode = parkCode;
@@ -21,9 +21,9 @@ function NPSModel(parkCode, url, data) {
 }
 
 /**
- *
- * @param source
- * @constructor
+ * An alert issued by the NPS.
+ * @param source Source JSON object from the API to use to construct the object.
+ * @constructor Creates a new instance from the given source.
  */
 function NPSAlert(source) {
     let parkCode = source.parkCode;
@@ -53,9 +53,9 @@ function NPSAlert(source) {
 }
 
 /**
- *
- * @param source
- * @constructor
+ * A park in the NPS's database.
+ * @param source Source JSON object from the API to use to construct the object.
+ * @constructor Creates a new instance from the given source.
  */
 function NPSPark(source) {
     let parkCode = source.parkCode;
