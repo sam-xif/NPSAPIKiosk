@@ -68,15 +68,12 @@ function NPSAPIClient(endpoint) {
 /**
  * High-level interface with the {@link NPSAPIClient} class. Mainly serves to create {@link NPSModel}s from the
  *  data obtained from the API.
+ * @param {NPSAPIClient} client The client object to wrap around.
  * @constructor Constructs a new {@code NPSAPIClientInterface} instance.
  */
 function NPSAPIClientInterface(client) {
     if (client === undefined) {
         throw new Error("Expected client object to be passed to constructor.");
-    }
-
-    if (api_key === undefined) {
-        throw new Error("Expected API key to be passed to constructor.");
     }
 
     /**
@@ -217,9 +214,33 @@ function NPSAPIQueryBuilder(api_key) {
     };
 
     /**
+     * Builds the URL query parameters that are contained in this query builder.
      * @return {JSON} JSON object of URL query parameters
      */
     this.build = function () {
-        // TODO: Implement me!
+        let params = {};
+        params["api_key"] = this.api_key;
+
+        if (this.parkCodes.length > 0) {
+            params["parkCode"] = ((parkCodes) => {
+                let out = "";
+                for (let i = 0; i < parkCodes.length; i++) {
+                    if (i < parkCodes.length - 1) {
+                        out += parkCodes[i] + ",";
+                    } else {
+                        out += parkCodes[i];
+                    }
+                }
+                return out;
+            })(this.parkCodes);
+        }
+
+        params["limit"] = this.limit;
+
+        if (this.queryString != null) {
+            params["q"] = this.queryString;
+        }
+
+        return params;
     };
 }

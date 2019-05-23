@@ -3,21 +3,35 @@
  * @param template The HTML template with format specifiers.
  * @constructor Creates a new instance from the given template.
  */
-function TemplateRenderer(template) {
+function TemplateRenderer() {
     /**
-     * The template.
-     * @type {String}
+     * Map from template names to templates. New templates can be registered with {@link registerTemplate()}.
+     * @type {Map<String, String>}
      */
-    this.template = template;
+    this.templates = {};
+
+    /**
+     * Registers a new template for use in rendering.
+     * @param templateName The name of the template
+     * @param template The template
+     */
+    this.registerTemplate = function (templateName, template) {
+        this.templates[templateName] = template;
+    };
 
     /**
      * Renders, based on the given template, to the tag with the given ID,
      * using the arguments array to format the template.
      * @param {String} tagID The ID of the tag into which to insert HTML.
+     * @param {String} templateName The name of the registered template to render.
      * @param {Array} args The array of format arguments.
      */
-    this.renderToHTML = function (tagID, args) {
-        let templateCopy = this.template;
+    this.renderToHTML = function (tagID, templateName, args) {
+        if (!(templateName in this.templates)) {
+            throw new Error("'templateName' must be in registered templates.");
+        }
+
+        let templateCopy = this.templates[templateName];
         // This replaces format specifiers sequentially, which may lead to problems if, for example,
         // {0} expands to {1}, but it shouldn't matter for the purposes of this code.
         args.forEach((elem, idx) => {

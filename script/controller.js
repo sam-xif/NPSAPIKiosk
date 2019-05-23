@@ -14,6 +14,22 @@ function onPageLoad() {
     alertsCtrl.initialize();
 }
 
+function Controller(api_endpoint, api_key) {
+    this.renderer = new TemplateRenderer();
+    this.queryBuilder = new NPSAPIQueryBuilder(api_key);
+
+    let client = new NPSAPIClient(api_endpoint);
+    this.clientInterface = NPSAPIClientInterface(client);
+
+    this.initialize = function() {
+        this.renderer.registerTemplate("alert",
+            "<div><h4><a href=\"{0}\">{1}</a></h4><p>{2}</p></div>");
+    }
+
+    this.renderAlerts = function() {
+
+    }
+}
 
 // TODO: Create a generic controller class with a mapping between template names and templates that utilizes the
 //  command pattern.
@@ -21,8 +37,8 @@ function onPageLoad() {
  *
  */
 function AlertsController(api_endpoint, api_key) {
-    let client = new NPSAPIQueryBuilder(api_endpoint);
-    this.clientInterface = NPSAPIClientInterface(client);
+    let client = new NPSAPIClient(api_endpoint);
+    this.clientInterface = new NPSAPIClientInterface(client);
 
     const ALERT_TEMPLATE = "<div><h4><a href=\"{0}\">{1}</a></h4><p>{2}</p></div>";
 
@@ -39,11 +55,14 @@ function AlertsController(api_endpoint, api_key) {
         // Get alerts
         let alerts = await this.clientInterface.getAllAlerts(parkCodeMap, qb);
 
-        let renderer = new TemplateRenderer(ALERT_TEMPLATE);
+        let renderer = new TemplateRenderer();
+        renderer.registerTemplate("alert", ALERT_TEMPLATE);
 
         for (let i = 0; i < alerts.length; i++) {
             let alert = alerts[i]; //await alerts[i].fetchPark();
-            renderer.renderToHTML("#slideshow-parent", [alert.url, alert.title, alert.description]);
+            renderer.renderToHTML("#slideshow-parent",
+                "alert",
+                [alert.url, alert.title, alert.description]);
         }
 
         // Set up alert slideshow
