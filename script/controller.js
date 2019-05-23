@@ -12,12 +12,11 @@ function onPageLoad() {
 
         // Get parks
         console.log("Getting park code map");
-        let parkMap = await clientInterface.getParkCodeMap();
-        console.log(parkMap);
+        let parkCodeMap = await clientInterface.getParkCodeMap();
 
         // First, get alerts
-        let alerts = await clientInterface.getAllAlerts();
-
+        let alerts = await clientInterface.getAllAlerts(parkCodeMap);
+        console.log(alerts);
         let alertTemplate = "<div>" +
             "<h4><a href=\"{0}\">{1}</a></h4><p>{2}</p></div>";
         let renderer = new TemplateRenderer(alertTemplate);

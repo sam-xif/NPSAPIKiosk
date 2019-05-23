@@ -17,20 +17,28 @@ function NPSModel(parkCode, url, data) {
 
 /**
  * An alert issued by the NPS.
- * @param source Source JSON object from the API to use to construct the object.
+ * @param {JSON} source Source JSON object from the API to use to construct the object.
+ * @param {JSON?} parkCodeMap Optional park code map to use to find the corresponding
+ *                 {@link NPSPark} instance.
  * @constructor Creates a new instance from the given source.
  */
-function NPSAlert(source) {
+function NPSAlert(source, parkCodeMap) {
     let parkCode = source.parkCode;
     let url = source.url;
 
-    // Set up inheritance
     this.__proto__ = new NPSModel(parkCode, url);
 
     this.category = source.category;
     this.description = source.description;
     this.id = source.id;
     this.title = source.title;
+
+    if (parkCodeMap !== undefined) {
+        console.log(parkCodeMap);
+        console.log(parkCode);
+        console.log(parkCodeMap[parkCode]);
+        this.park = parkCodeMap[parkCode];
+    }
 
     /**
      * Obtains a Promise which resolves to a new {@code NPSAlert} instance that has the {@code park} field defined

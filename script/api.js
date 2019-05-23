@@ -91,23 +91,57 @@ function NPSAPIClientInterface(client) {
 
     /**
      * Queries the API to get an array of all active alerts. This function runs asynchronously.
+     * @param {JSON?} parkCodeMap Optional park code map to use when creating {@link NPSAlert} objects from
+     *                  the received API data.
      * @returns {Promise<Array>} A promise of an array of {@link NPSAlert}s
      */
-    this.getAllAlerts = async function () {
+    this.getAllAlerts = async function (parkCodeMap) {
         let response = await this.clientInstance.alerts();
         let alertArr = [];
-        response.data.data.forEach((alert, idx) => {
-            alertArr.push(new NPSAlert(alert));
+        response.data.data.forEach((alert) => {
+            alertArr.push(new NPSAlert(alert, parkCodeMap !== undefined ? parkCodeMap : undefined));
         });
         return alertArr;
     };
 
+    /**
+     *
+     * @returns {Promise<JSON>}
+     */
     this.getParkCodeMap = async function () {
         let response = await this.clientInstance.allParks();
         let parkMap = {};
-        response.data.data.forEach((park, idx) => {
-            parkMap[park.parkCode] = park;
+        response.data.data.forEach((park) => {
+            parkMap[park.parkCode] = new NPSPark(park);
         });
         return parkMap;
     }
+}
+
+/**
+ *
+ * @param api_key
+ * @constructor
+ */
+function NPSAPIQueryBuilder(api_key) {
+    this.api_key = api_key;
+    this.parkCodes = [];
+
+    /**
+     *
+     * @param parkCode
+     */
+    this.addParkCode = function (parkCode) {
+        if (!parkCodes.includes(parkCode)) {
+            parkCodes.push(parkCode);
+        }
+    };
+
+
+    /**
+     * @returns {JSON} JSON object of URL query parameters
+     */
+    this.compile = function () {
+
+    };
 }
