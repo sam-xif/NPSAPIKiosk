@@ -108,12 +108,12 @@ function NPSAPIClientInterface(client) {
 
     /**
      * Queries the API to get an array of all active alerts. This function runs asynchronously.
+     * @param {NPSAPIQueryBuilder} query The query builder to use.
      * @param {JSON?} parkCodeMap Optional park code map to use when creating {@link NPSAlert} objects from
      *                  the received API data.
-     * @param {NPSAPIQueryBuilder} query The query builder to use.
      * @return {Promise<Array>} A promise of an array of {@link NPSAlert}s
      */
-    this.getAllAlerts = async function (parkCodeMap, query) {
+    this.getAllAlerts = async function (query, parkCodeMap) {
         let response =
             await this.clientInstance.alerts(query.build());
         let alertArr = [];

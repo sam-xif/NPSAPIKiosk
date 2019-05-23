@@ -5,8 +5,9 @@
  */
 function TemplateRenderer() {
     /**
-     * Map from template names to templates. New templates can be registered with {@link registerTemplate()}.
-     * @type {Map<String, String>}
+     * Object that maps from template names to templates.
+     * New templates can be registered with {@link registerTemplate()}.
+     * @type {Object}
      */
     this.templates = {};
 
@@ -40,3 +41,30 @@ function TemplateRenderer() {
         $(tagID).append(templateCopy);
     };
 }
+
+/**
+ * Creates a slideshow of divs in the given tag. Depends on jQuery.
+ * @param tagID
+ * @param fadeSpeed
+ * @param delay
+ */
+function createSlideshow(tagID, fadeSpeed, delay) {
+    // Set up alert slideshow
+    function Divs() {
+        let divs= $(`${tagID} div`),
+            now = divs.filter(':visible') /*.not(':hover')*/,
+            next = now.next().length ? now.next() : divs.first(),
+            speed = fadeSpeed;
+
+        now.fadeOut(speed);
+        next.fadeIn(speed);
+    }
+
+    $(function () {
+        setInterval(Divs, delay);
+    });
+}
+
+let ViewUtil = {
+    "createSlideshow" : createSlideshow
+};

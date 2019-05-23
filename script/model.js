@@ -49,7 +49,18 @@ function NPSAlert(source, parkCodeMap) {
             alertInstance.park = park;
             return alertInstance;
         })(this);
-    }
+    };
+
+    /**
+     * Given a mapping from park codes to {@link NPSPark}s, attempts to find the park represented by this instance's
+     *  park code.
+     * @param parkCodeMap
+     */
+    this.linkPark = function (parkCodeMap) {
+        if (this.parkCode in parkCodeMap) {
+            this.park = parkCodeMap[this.parkCode];
+        }
+    };
 }
 
 /**
