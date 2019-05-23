@@ -1,5 +1,5 @@
 /**
- * Renders templated HTML to the DOM. Depends on jQuery.
+ * Renders parameterized HTML to the DOM. Depends on jQuery.
  * @param template The HTML template with format specifiers.
  * @constructor Creates a new instance from the given template.
  */

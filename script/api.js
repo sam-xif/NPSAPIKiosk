@@ -28,7 +28,7 @@ function NPSAPIClient(endpoint) {
     /**
      * Obtains the alerts issued by the NPS.
      * @param params
-     * @returns {Promise} A Promise that, when resolved, returns a JSON object with data
+     * @return {Promise} A Promise that, when resolved, returns a JSON object with data
      */
     this.alerts = function (params) {
         if (!this.validParams(params)) throw new Error("Parameters object is invalid");
@@ -41,7 +41,7 @@ function NPSAPIClient(endpoint) {
     /**
      * Gets park info.
      * @param {String} parkCode The four-letter park code
-     * @returns {Promise} A Promise that, when resolved, returns a JSON object with data
+     * @return {Promise} A Promise that, when resolved, returns a JSON object with data
      */
     this.parkInfo = function (parkCode, params) {
         if (!this.validParams(params)) throw new Error("Parameters object is invalid");
@@ -54,7 +54,7 @@ function NPSAPIClient(endpoint) {
 
     /**
      * Gets all parks.
-     * @returns {Promise} A Promise that, when resolved returns a JSON object with data of all the parks
+     * @return {Promise} A Promise that, when resolved returns a JSON object with data of all the parks
      */
     this.parks = function (params) {
         if (!this.validParams(params)) throw new Error("Parameters object is invalid");
@@ -91,7 +91,7 @@ function NPSAPIClientInterface(client) {
      * @param {(function(park: NPSPark): void)?} callback Optional callback function that is executed when the park object is obtained.
      *                              The park object is passed into this function.
      * @param {NPSAPIQueryBuilder} query The query builder to use.
-     * @returns {Promise} A Promise that resolves to an {@link NPSPark} object corresponding to the given park code,
+     * @return {Promise} A Promise that resolves to an {@link NPSPark} object corresponding to the given park code,
      *                    or rejects with an error if the parkCode is not valid
      */
     this.parkFromCode = async function (parkCode, callback, query) {
@@ -114,7 +114,7 @@ function NPSAPIClientInterface(client) {
      * @param {JSON?} parkCodeMap Optional park code map to use when creating {@link NPSAlert} objects from
      *                  the received API data.
      * @param {NPSAPIQueryBuilder} query The query builder to use.
-     * @returns {Promise<Array>} A promise of an array of {@link NPSAlert}s
+     * @return {Promise<Array>} A promise of an array of {@link NPSAlert}s
      */
     this.getAllAlerts = async function (parkCodeMap, query) {
         let response =
@@ -130,7 +130,7 @@ function NPSAPIClientInterface(client) {
      * Constructs a map from 4-letter park code strings to {@link NPSPark} objects.
      * To customize what park codes are included in the output, add codes to the query builder before passing it.
      * @param {NPSAPIQueryBuilder} query The query builder to use.
-     * @returns {Promise<JSON>}
+     * @return {Promise<JSON>}
      */
     this.getParkCodeMap = async function (query) {
         let response = await this.clientInstance.parks(query.build());
@@ -156,7 +156,7 @@ function NPSAPIQueryBuilder(api_key) {
 
     /**
      * Resets the Query Builder to its initial, default state.
-     * @returns {NPSAPIQueryBuilder} This instance.
+     * @return {NPSAPIQueryBuilder} This instance.
      */
     this.reset = function () {
         this.parkCodes = [];
@@ -170,6 +170,7 @@ function NPSAPIQueryBuilder(api_key) {
     /**
      *
      * @param parkCode
+     * @return {NPSAPIQueryBuilder} This instance.
      */
     this.addParkCode = function (parkCode) {
         if (!this.parkCodes.includes(parkCode)) {
@@ -178,6 +179,11 @@ function NPSAPIQueryBuilder(api_key) {
         return this;
     };
 
+    /**
+     *
+     * @param parkCodeArr
+     * @return {NPSAPIQueryBuilder}
+     */
     this.addAllParkCodes = function (parkCodeArr) {
         parkCodeArr.forEach((parkCode) => {
            if (!this.parkCodes.includes(parkCode)) {
@@ -187,6 +193,11 @@ function NPSAPIQueryBuilder(api_key) {
         return this;
     };
 
+    /**
+     *
+     * @param queryString
+     * @return {NPSAPIQueryBuilder}
+     */
     this.setQueryString = function (queryString) {
         this.queryString = queryString;
         return this;
@@ -206,9 +217,9 @@ function NPSAPIQueryBuilder(api_key) {
     };
 
     /**
-     * @returns {JSON} JSON object of URL query parameters
+     * @return {JSON} JSON object of URL query parameters
      */
     this.build = function () {
-        // ...
+        // TODO: Implement me!
     };
 }
