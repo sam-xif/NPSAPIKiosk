@@ -1,5 +1,10 @@
+/**
+ * Entry point and controller logic.
+ */
 
-
+/**
+ * Function that gets called when the page is loaded
+ */
 function onPageLoad() {
     (async function () {
         let client = new NPSAPIClient();
@@ -25,7 +30,7 @@ function onPageLoad() {
         // Set up alert slideshow
         function Divs() {
             let divs= $('#slideshow-parent div'),
-                now = divs.filter(':visible').not(':hover'),
+                now = divs.filter(':visible') /*.not(':hover')*/,
                 next = now.next().length ? now.next() : divs.first(),
                 speed = 1500;
 

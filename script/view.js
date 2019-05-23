@@ -11,9 +11,10 @@ function TemplateRenderer(template) {
     this.template = template;
 
     /**
-     *
-     * @param tagID
-     * @param args
+     * Renders, based on the given template, to the tag with the given ID, using the arguments array to format the
+     *  template.
+     * @param {String} tagID The ID of the tag into which to insert HTML.
+     * @param {Array} args The list of format arguments.
      */
     this.renderToHTML = function (tagID, args) {
         let templateCopy = this.template;
