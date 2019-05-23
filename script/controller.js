@@ -5,15 +5,22 @@ function onPageLoad() {
         let client = new NPSAPIClient();
         let clientInterface = new NPSAPIClientInterface(client);
 
+        // Get parks
+        console.log("Getting park code map");
+        let parkMap = await clientInterface.getParkCodeMap();
+        console.log(parkMap);
+
         // First, get alerts
         let alerts = await clientInterface.getAllAlerts();
+
         let alertTemplate = "<div>" +
             "<h4><a href=\"{0}\">{1}</a></h4><p>{2}</p></div>";
         let renderer = new TemplateRenderer(alertTemplate);
-        let alert0 = await alerts[0].fetchPark();
-        let alert1 = await alerts[1].fetchPark();
-        renderer.renderToHTML("#slideshow-parent", [alert0.url, alert0.park.fullName, alert0.description]);
-        renderer.renderToHTML("#slideshow-parent", [alert1.url, alert1.park.fullName, alert1.description]);
+
+        for (let i = 0; i < alerts.length; i++) {
+            let alert = alerts[i]; //await alerts[i].fetchPark();
+            renderer.renderToHTML("#slideshow-parent", [alert.url, alert.title, alert.description]);
+        }
 
         // Set up alert slideshow
         function Divs() {

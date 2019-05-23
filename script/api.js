@@ -36,6 +36,18 @@ function NPSAPIClient() {
             }
         });
     };
+
+    /**
+     * Gets all parks.
+     * @returns {Promise} A Promise that, when resolved returns a JSON object with data of all the parks
+     */
+    this.allParks = function () {
+        return axios.get(API_ENDPOINT + "parks", {
+            params: {
+                "api_key": API_KEY
+            }
+        });
+    };
 }
 
 /**
@@ -88,5 +100,14 @@ function NPSAPIClientInterface(client) {
             alertArr.push(new NPSAlert(alert));
         });
         return alertArr;
+    };
+
+    this.getParkCodeMap = async function () {
+        let response = await this.clientInstance.allParks();
+        let parkMap = {};
+        response.data.data.forEach((park, idx) => {
+            parkMap[park.parkCode] = park;
+        });
+        return parkMap;
     }
 }
