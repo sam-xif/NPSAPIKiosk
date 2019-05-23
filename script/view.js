@@ -18,6 +18,8 @@ function TemplateRenderer(template) {
      */
     this.renderToHTML = function (tagID, args) {
         let templateCopy = this.template;
+        // This replaces format specifiers sequentially, which may lead to problems if, for example,
+        // {0} expands to {1}, but it shouldn't matter for the purposes of this code.
         args.forEach((elem, idx) => {
             templateCopy = templateCopy.replace(`\{${idx}\}`, elem);
         });

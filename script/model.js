@@ -40,7 +40,7 @@ function NPSAlert(source, parkCodeMap) {
     /**
      * Obtains a Promise which resolves to a new {@code NPSAlert} instance that has the {@code park} field defined
      *  as the park corresponding to this instance's parkCode.
-     * @return {Promise} The promise
+     * @return {Promise<NPSAlert>} The promise
      */
     this.fetchPark = function () {
         return (async function (alertInstance) {
