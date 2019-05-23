@@ -2,24 +2,44 @@
  * Entry point and controller logic.
  */
 
+// TODO: Do not put API key directly in source code
+const API_KEY = "bGpxFeQ0v8stp7tM6fuxocR57DsjdxrKDuWzrLl9";
+const API_ENDPOINT = "https://developer.nps.gov/api/v1/";
+
 /**
- * Function that gets called when the page is loaded
+ * Function that gets called when the page is loaded.
  */
 function onPageLoad() {
-    (async function () {
-        let client = new NPSAPIClient();
-        let clientInterface = new NPSAPIClientInterface(client);
+    let alertsCtrl = new AlertsController(API_ENDPOINT, API_KEY);
+    alertsCtrl.initialize();
+}
+
+
+// TODO: Create a generic controller class with a mapping between template names and templates that utilizes the
+//  command pattern.
+/**
+ *
+ */
+function AlertsController(api_endpoint, api_key) {
+    let client = new NPSAPIQueryBuilder(api_endpoint);
+    this.clientInterface = NPSAPIClientInterface(client);
+
+    const ALERT_TEMPLATE = "<div><h4><a href=\"{0}\">{1}</a></h4><p>{2}</p></div>";
+
+    /**
+     *
+     * @return {Promise<void>}
+     */
+    this.initialize = async function() {
+        let qb = new NPSAPIQueryBuilder(api_key);
 
         // Get parks
-        console.log("Getting park code map");
-        let parkCodeMap = await clientInterface.getParkCodeMap();
+        let parkCodeMap = await this.clientInterface.getParkCodeMap(qb);
 
-        // First, get alerts
-        let alerts = await clientInterface.getAllAlerts(parkCodeMap);
-        console.log(alerts);
-        let alertTemplate = "<div>" +
-            "<h4><a href=\"{0}\">{1}</a></h4><p>{2}</p></div>";
-        let renderer = new TemplateRenderer(alertTemplate);
+        // Get alerts
+        let alerts = await this.clientInterface.getAllAlerts(parkCodeMap, qb);
+
+        let renderer = new TemplateRenderer(ALERT_TEMPLATE);
 
         for (let i = 0; i < alerts.length; i++) {
             let alert = alerts[i]; //await alerts[i].fetchPark();
@@ -40,6 +60,5 @@ function onPageLoad() {
         $(function () {
             setInterval(Divs, 5000);
         });
-
-    })();
+    }
 }

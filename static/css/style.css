@@ -1,0 +1,22 @@
+div.nps-alert {
+    border: 1px solid gray;
+    border-radius: 15px;
+    transition-duration: 0.5s;
+}
+
+div.nps-alert:hover {
+    -webkit-box-shadow: 0 0 5px gray;
+    -moz-box-shadow: 0 0 5px gray;
+    box-shadow: 0 0 5px gray;
+    transition-duration: 0.5s;
+}
+
+#slideshow-parent div {
+    display:none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#slideshow-parent div:first-child {
+    display:block;
+}

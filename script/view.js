@@ -1,5 +1,5 @@
 /**
- * Renders templated HTML to the DOM.
+ * Renders templated HTML to the DOM. Depends on jQuery.
  * @param template The HTML template with format specifiers.
  * @constructor Creates a new instance from the given template.
  */
@@ -11,10 +11,10 @@ function TemplateRenderer(template) {
     this.template = template;
 
     /**
-     * Renders, based on the given template, to the tag with the given ID, using the arguments array to format the
-     *  template.
+     * Renders, based on the given template, to the tag with the given ID,
+     * using the arguments array to format the template.
      * @param {String} tagID The ID of the tag into which to insert HTML.
-     * @param {Array} args The list of format arguments.
+     * @param {Array} args The array of format arguments.
      */
     this.renderToHTML = function (tagID, args) {
         let templateCopy = this.template;

@@ -33,10 +33,7 @@ function NPSAlert(source, parkCodeMap) {
     this.id = source.id;
     this.title = source.title;
 
-    if (parkCodeMap !== undefined) {
-        console.log(parkCodeMap);
-        console.log(parkCode);
-        console.log(parkCodeMap[parkCode]);
+    if (parkCodeMap !== undefined && parkCode in parkCodeMap) {
         this.park = parkCodeMap[parkCode];
     }
 
