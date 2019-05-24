@@ -42,11 +42,12 @@ function TemplateRenderer() {
     };
 }
 
+// TODO: Perhaps make a slideshow class that is more configurable
 /**
  * Creates a slideshow of divs in the given tag. Depends on jQuery.
- * @param tagID
- * @param fadeSpeed
- * @param delay
+ * @param {String} tagID The ID of the tag to create the slideshow in.
+ * @param {int} fadeSpeed Fade speed in ms.
+ * @param {int} delay Delay between fades in ms.
  */
 function createSlideshow(tagID, fadeSpeed, delay) {
     // Set up alert slideshow

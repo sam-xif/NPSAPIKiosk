@@ -2,6 +2,8 @@
  * This file defines objects which act as clients to the NPS API.
  */
 
+// TODO: Make this class depend on a proxy that routes requests to axios so that the API can be mocked more easily
+//  for testing.
 /**
  * Simple client for the National Park Services API. All of the functions execute asynchronously.
  * Depends on Axios.

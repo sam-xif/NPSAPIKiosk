@@ -15,6 +15,12 @@ function onPageLoad() {
     ctrl.renderAlerts();
 }
 
+/**
+ *
+ * @param api_endpoint
+ * @param api_key
+ * @constructor
+ */
 function Controller(api_endpoint, api_key) {
     this.renderer = new TemplateRenderer();
     this.queryBuilder = new NPSAPIQueryBuilder(api_key);
