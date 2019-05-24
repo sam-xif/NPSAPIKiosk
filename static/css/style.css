@@ -20,3 +20,7 @@ div.nps-alert:hover {
 #slideshow-parent div:first-child {
     display:block;
 }
+
+a.graylink {
+    color: gray;
+}
