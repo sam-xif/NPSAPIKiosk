@@ -2,7 +2,6 @@
  * This file defines objects which act as clients to the NPS API.
  */
 
-
 /**
  * Simple client for the National Park Services API. All of the functions execute asynchronously.
  * Depends on Axios.

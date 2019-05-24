@@ -28,8 +28,11 @@ function Controller(api_endpoint, api_key) {
     };
 
     this.renderAlerts = async function() {
+        // Set limit to 25
+        this.queryBuilder.setLimit(25);
+
         // First, obtain a list of alerts to view
-        let alerts = await this.clientInterface.getAllAlerts(this.queryBuilder.setLimit(25));
+        let alerts = await this.clientInterface.getAllAlerts(this.queryBuilder);
 
         // Next, get all unique parks from these alerts
         let uniqueParks = [];

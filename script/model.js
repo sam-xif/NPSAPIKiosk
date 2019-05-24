@@ -16,8 +16,33 @@ function NPSModel(parkCode, url, data) {
 }
 
 /**
+ * Parses raw {@code JSON} data from the API into an {@link NPSModel} or a collection of {@link NPSModel}s.
+ * @param {JSON} rawData Raw {@code JSON} data
+ * @return {NPSModel|Array} {@link NPSModel} if there is one datum, {@link Array} if there is more than one.
+ */
+NPSModel.parse = function (rawData) {
+    let total = rawData.total;
+
+    if (total == 0) {
+        throw new Error("No data to be parsed");
+    }
+
+    if (total == 1) {
+        let datum = rawData.data.data[0];
+        return new NPSModel(datum.parkCode, datum.url, datum);
+    }
+
+    let data = rawData.data;
+    let out = [];
+    data.forEach((datum) => {
+        out.push(new NPSModel(datum.parkCode, datum.url, datum));
+    });
+    return out;
+};
+
+/**
  * An alert issued by the NPS.
- * @param {JSON} source Source JSON object from the API to use to construct the object.
+ * @param {JSON} source Source {@code JSON} object from the API to use to construct the object.
  * @param {JSON?} parkCodeMap Optional park code map to use to find the corresponding
  *                 {@link NPSPark} instance.
  * @constructor Creates a new instance from the given source.
