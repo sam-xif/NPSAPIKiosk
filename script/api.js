@@ -19,7 +19,7 @@ function NPSAPIClient(endpoint) {
 
     /**
      * Validates a URL parameters object for use with the NPS API.
-     * @param {JSON} params The parameters object to check.
+     * @param {Object} params The parameters object to check.
      * @return {boolean} Whether the parameters object is valid.
      */
     this.validParams = function (params) {
@@ -86,13 +86,13 @@ function NPSAPIClientInterface(client) {
     /**
      * Gets a park object from the given park code. This function runs asynchronously.
      * @param {String} parkCode The park code to search
+     * @param {NPSAPIQueryBuilder} query The query builder to use.
      * @param {(function(park: NPSPark): void)?} callback Optional callback function that is executed when the park object is obtained.
      *                              The park object is passed into this function.
-     * @param {NPSAPIQueryBuilder} query The query builder to use.
      * @return {Promise} A Promise that resolves to an {@link NPSPark} object corresponding to the given park code,
      *                    or rejects with an error if the parkCode is not valid
      */
-    this.parkFromCode = async function (parkCode, callback, query) {
+    this.parkFromCode = async function (parkCode, query, callback) {
         let response = await this.clientInstance.parkInfo(parkCode, query.build());
         let responseArr = response.data.data;
 
@@ -245,3 +245,9 @@ function NPSAPIQueryBuilder(api_key) {
         return params;
     };
 }
+
+module.exports = {
+    NPSAPIClient : NPSAPIClient,
+    NPSAPIClientInterface : NPSAPIClientInterface,
+    NPSAPIQueryBuilder : NPSAPIQueryBuilder
+};

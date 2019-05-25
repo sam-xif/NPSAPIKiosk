@@ -1,5 +1,11 @@
 {
-  "scripts" : {
-    "test" : "jest"
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "jest": "^24.8.0",
+    "jquery": "^3.4.1",
+    "requirejs": "^2.3.6"
   }
 }

@@ -2,6 +2,8 @@
  * Definitions for JavaScript class representations of data objects provided by the NPS API.
  */
 
+import {NPSAPIClient, NPSAPIClientInterface} from "./api";
+
 /**
  * Base class for models of data objects from the NPS API.
  * @param parkCode The park code associated with this piece of data
@@ -105,3 +107,9 @@ function NPSPark(source) {
     this.description = source.description;
     this.weatherInfo = source.weatherInfo;
 }
+
+module.exports = {
+    NPSModel : NPSModel,
+    NPSPark : NPSPark,
+    NPSAlert : NPSAlert
+};
