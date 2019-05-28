@@ -25,8 +25,7 @@ function Controller(api_endpoint, api_key) {
     this.renderer = new TemplateRenderer();
     this.queryBuilder = new NPSAPIQueryBuilder(api_key);
 
-    let client = new NPSAPIClient(api_endpoint);
-    this.clientInterface = new NPSAPIClientInterface(client);
+    this.client = new NPSAPIClient(api_key, api_endpoint);
 
     this.initializeView = function() {
         this.renderer.registerTemplate("alert",
@@ -35,10 +34,14 @@ function Controller(api_endpoint, api_key) {
 
     this.renderAlerts = async function() {
         // Set limit to 25
-        this.queryBuilder.setLimit(25);
+        //this.queryBuilder.setLimit(25);
 
         // First, obtain a list of alerts to view
-        let alerts = await this.clientInterface.getAllAlerts(this.queryBuilder);
+        let alerts = await this.client
+            .from("alerts")
+            .pageSize(25)
+            .page(1)
+            .select();
 
         // Next, get all unique parks from these alerts
         let uniqueParks = [];
@@ -48,7 +51,19 @@ function Controller(api_endpoint, api_key) {
             }
         });
 
-        let parks = await this.clientInterface.getParkCodeMap(this.queryBuilder.addAllParkCodes(uniqueParks));
+
+        let parks = (await client
+            .from("parks")
+            .where("parkCode")
+            .is(Matchers.anyOf(uniqueParks))
+            .select())
+            .reduce((parkMap, nextPark) => {
+                parkMap[nextPark.parkCode] = new NPSPark(nextPark);
+                return parkMap;
+            }, {});
+
+
+        //let parks = await this.clientInterface.getParkCodeMap(this.queryBuilder.addAllParkCodes(uniqueParks));
 
         // Now, link alerts with their respective parks
         alerts.forEach((elem) => {

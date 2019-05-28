@@ -34,10 +34,27 @@ function NPSAPIProxy(api_key, api_endpoint) {
     };
 }
 
+/**
+ * National Park Service API Client that provides a fluent, SQL-like interface for accessing the API's data.
+ *
+ * @param api_key
+ * @param api_endpoint
+ * @constructor
+ */
 function NPSAPIClient(api_key, api_endpoint) {
     this.client = new NPSAPIProxy(api_key, api_endpoint);
     this.buildingQuery = false;
 
+    const DEFAULT_PAGE_SIZE = 50;
+    const DEFAULT_MAX_RESULTS = 200;
+
+    this.filters = {};
+
+    /**
+     *
+     * @param resource
+     * @return {NPSAPIClient}
+     */
     this.from = function (resource) {
         this.buildingQuery = true;
         this.query = new NPSAPIQueryBuilder(api_key, api_endpoint);
@@ -45,32 +62,119 @@ function NPSAPIClient(api_key, api_endpoint) {
         return this;
     };
 
+    /**
+     *
+     * @param parameter
+     * @return {NPSAPIClient}
+     */
     this.where = function (parameter) {
         if (!this.buildingQuery) {
             throw new Error("Query is not being built.");
         }
 
+        this.filters[parameter] = null;
+
         return this;
     };
 
-    this.is = function (value) {
+    /**
+     *
+     * @param {String|function(String): boolean} match
+     * @return {NPSAPIClient}
+     */
+    this.is = function (match) {
         if (!this.buildingQuery) {
             throw new Error("Query is not being built.");
+        }
+
+        let unassignedFilters = [];
+        for (let parameter in this.filters) {
+            if (this.filters[parameter] === null) {
+                unassignedFilters.push(parameter);
+            }
+        }
+
+        if (unassignedFilters.length > 1) {
+            throw new Error("Multiple calls to where() detected, must call is() for each call to where().");
+        } else if (unassignedFilters.length === 0) {
+            throw new Error("Expected call to where() before call to is()");
+        }
+
+        // Now, unassignedFilters is assumed to have length of 1
+
+        if (typeof match === 'string') {
+            this.filters[unassignedFilters[0]] = function (term) {
+                return term === match;
+            };
+        } else if (typeof match === 'function') {
+            this.filters[unassignedFilters[0]] = match;
+        } else {
+            // error
         }
 
         return this;
     };
 
-    this.select = function () {
+    /**
+     *
+     * @return {Promise<Array<Object>>}
+     */
+    this.select = async function () {
         if (!this.buildingQuery) {
             throw new Error("Query is not being built.");
         }
 
         this.buildingQuery = false;
-        return this.query.build().execute();
+        let results = await this.query.build().execute();
+
+        // Apply filters then return the result
+        for (let property in this.filters) {
+
+        }
+    };
+
+    /**
+     *
+     * @param pageSize
+     * @return {NPSAPIClient}
+     */
+    this.pageSize = function (pageSize) {
+        if (!this.buildingQuery) {
+            throw new Error("Query is not being built.");
+        }
+
+        this.pageSize = pageSize;
+        this.query.setLimit(pageSize);
+        return this;
+    };
+
+    /**
+     *
+     * @param pageNum
+     * @return {NPSAPIClient}
+     */
+    this.page = function (pageNum) {
+        if (!this.buildingQuery) {
+            throw new Error("Query is not being built.");
+        }
+
+        if (this.pageSize !== undefined) {
+            this.query.setStart(this.pageSize * pageNum);
+        } else {
+            this.query.setStart(DEFAULT_PAGE_SIZE * pageNum); // Use the default
+        }
+        return this;
     };
 }
 
+/**
+ *
+ * @param resource
+ * @param params
+ * @param api_key
+ * @param api_endpoint
+ * @constructor
+ */
 function NPSAPIQuery(resource, params, api_key, api_endpoint) {
     this.resource = resource;
     this.proxy = new NPSAPIProxy(api_key, api_endpoint);
@@ -162,6 +266,14 @@ function NPSAPIQueryBuilder(api_key, api_endpoint) {
         return this;
     };
 
+    this.setStart = function (start) {
+        if (start < 0) {
+            throw new Error("Start cannot be less than 0");
+        }
+        this.start = start;
+        return this;
+    }
+
     /**
      * Builds the URL query parameters that are contained in this query builder.
      * @return {NPSAPIQuery} JSON object of URL query parameters
@@ -192,3 +304,21 @@ function NPSAPIQueryBuilder(api_key, api_endpoint) {
         return new NPSAPIQuery(this.resource, params, this.api_key, this.api_endpoint);
     };
 }
+
+/**
+ * Object that defines various matching predicates for the client API.
+ * @type {Object}
+ */
+let Matchers = {
+    /**
+     * Returns a match predicate that matches any of the given terms.
+     * @param {Array<String>} terms The list of terms to match any one of
+     * @return {function(String): boolean} The match predicate, closed over the terms
+     */
+    anyOf : function (terms) {
+        return function (item) {
+            return terms.includes(item);
+        };
+    }
+};
+

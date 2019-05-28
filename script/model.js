@@ -69,7 +69,7 @@ function NPSAlert(source, parkCodeMap) {
      */
     this.fetchPark = function () {
         return (async function (alertInstance) {
-            let park = await (new NPSAPIClientInterface(new NPSAPIClient()))
+            let park = await (new NPSAPIClientInterface(new NPSAPIClient())) // TODO: Remove this to decouple model from client
                 .parkFromCode(alertInstance.parkCode);
             alertInstance.park = park;
             return alertInstance;
