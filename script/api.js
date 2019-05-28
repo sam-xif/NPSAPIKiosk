@@ -246,8 +246,11 @@ function NPSAPIQueryBuilder(api_key) {
     };
 }
 
+/*
 module.exports = {
     NPSAPIClient : NPSAPIClient,
     NPSAPIClientInterface : NPSAPIClientInterface,
     NPSAPIQueryBuilder : NPSAPIQueryBuilder
 };
+
+ */
