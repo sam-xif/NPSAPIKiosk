@@ -1,4 +1,4 @@
-const axios = require('axios');
+//const axios = require('axios');
 
 /**
  * Depends on Axios
@@ -15,13 +15,21 @@ function NPSAPIProxy(api_key, api_endpoint) {
      * @param params
      * @return {Promise} A Promise that, when resolved, returns a JSON object with data
      */
-    this.get = function (resource, params) {
+    this.get = async function (resource, params) {
+        // TODO: Remove this check if api key is added in next line
         if (!this.validParams(params)) throw new Error("Parameters object is invalid");
 
         params["api_key"] = this.api_key;
-        return axios.get(this.api_endpoint + resource, {
+        let result = await axios.get(this.api_endpoint + resource, {
             params: params
         });
+
+        if (result.status === 200) {
+            return result.data;
+        } else {
+            // error
+            throw new Error("Resource could not be retrieved; status = " + result.status);
+        }
     };
 
     /**
@@ -125,12 +133,16 @@ function NPSAPIClient(api_key, api_endpoint) {
         }
 
         this.buildingQuery = false;
-        let results = await this.query.build().execute();
-
+        let results = (await this.query.build().execute()).data;
+        console.log(results);
         // Apply filters then return the result
         for (let property in this.filters) {
-
+            results = results.filter(result => {
+                return this.filters[property](result[property]);
+            });
         }
+
+        return results;
     };
 
     /**
@@ -181,8 +193,12 @@ function NPSAPIQuery(resource, params, api_key, api_endpoint) {
 
     this.params = params;
 
-    this.execute = function () {
-        return this.proxy.get(this.resource, this.params);
+    /**
+     *
+     * @return {Promise<Array<Object>>}
+     */
+    this.execute = async function () {
+        return await this.proxy.get(this.resource, this.params);
     };
 }
 
@@ -272,7 +288,7 @@ function NPSAPIQueryBuilder(api_key, api_endpoint) {
         }
         this.start = start;
         return this;
-    }
+    };
 
     /**
      * Builds the URL query parameters that are contained in this query builder.
@@ -280,6 +296,8 @@ function NPSAPIQueryBuilder(api_key, api_endpoint) {
      */
     this.build = function () {
         let params = {};
+
+        params["api_key"] = this.api_key;
 
         if (this.parkCodes.length > 0) {
             params["parkCode"] = ((parkCodes) => {
