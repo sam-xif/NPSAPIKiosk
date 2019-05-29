@@ -1,6 +1,7 @@
 const api = require('./client');
 const model = require('./model');
 const view = require('./view');
+const controller = require('./controller');
 
 /**
  * Entry point and controller logic.
@@ -14,11 +15,11 @@ const API_ENDPOINT = "https://developer.nps.gov/api/v1/";
  * Function that gets called when the page is loaded.
  */
 function onPageLoad() {
-    //let ctrl = new Controller(API_ENDPOINT, API_KEY);
-    //ctrl.initializeView();
-    //ctrl.renderAlerts();
+    let ctrl = new controller.Controller(API_ENDPOINT, API_KEY);
+    ctrl.initializeView();
+    ctrl.renderAlerts();
 
-
+/*
     (async function () {
         let client = new api.NPSAPIClient(API_KEY, API_ENDPOINT);
         // First, obtain a list of alerts to view
@@ -52,6 +53,8 @@ function onPageLoad() {
 
         console.log(parks);
     })();
+
+ */
 }
 
 module.exports = {

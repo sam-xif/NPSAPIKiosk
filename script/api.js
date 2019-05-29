@@ -1,8 +1,11 @@
 /**
  * This file defines objects which act as clients to the NPS API.
+ *
+ * This file will likely be rendered obsolete by client.js
  */
 
 const axios = require('axios');
+const model = require('./model');
 
 // TODO: Make this class depend on a proxy that routes requests to axios so that the API can be mocked more easily
 //  for testing.
@@ -121,7 +124,7 @@ function NPSAPIClientInterface(client) {
             await this.clientInstance.alerts(query.build());
         let alertArr = [];
         response.data.data.forEach((alert) => {
-            alertArr.push(new NPSAlert(alert, parkCodeMap !== undefined ? parkCodeMap : undefined));
+            alertArr.push(new model.NPSAlert(alert, parkCodeMap !== undefined ? parkCodeMap : undefined));
         });
         return alertArr;
     };
@@ -136,7 +139,7 @@ function NPSAPIClientInterface(client) {
         let response = await this.clientInstance.parks(query.build());
         let parkMap = {};
         response.data.data.forEach((park) => {
-            parkMap[park.parkCode] = new NPSPark(park);
+            parkMap[park.parkCode] = new model.NPSPark(park);
         });
         return parkMap;
     }

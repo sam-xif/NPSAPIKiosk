@@ -71,3 +71,8 @@ function createSlideshow(tagID, fadeSpeed, delay) {
 let ViewUtil = {
     "createSlideshow" : createSlideshow
 };
+
+module.exports = {
+    TemplateRenderer : TemplateRenderer,
+    ViewUtil : ViewUtil
+};
