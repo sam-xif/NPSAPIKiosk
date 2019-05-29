@@ -1,3 +1,5 @@
+const $ = require('jquery');
+
 /**
  * Renders parameterized HTML to the DOM. Depends on jQuery.
  * @param template The HTML template with format specifiers.

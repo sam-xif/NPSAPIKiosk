@@ -2,6 +2,8 @@
  * This file defines objects which act as clients to the NPS API.
  */
 
+const axios = require('axios');
+
 // TODO: Make this class depend on a proxy that routes requests to axios so that the API can be mocked more easily
 //  for testing.
 /**
@@ -246,11 +248,9 @@ function NPSAPIQueryBuilder(api_key) {
     };
 }
 
-/*
+
 module.exports = {
     NPSAPIClient : NPSAPIClient,
     NPSAPIClientInterface : NPSAPIClientInterface,
     NPSAPIQueryBuilder : NPSAPIQueryBuilder
 };
-
- */

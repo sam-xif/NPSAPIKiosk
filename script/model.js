@@ -106,10 +106,9 @@ function NPSPark(source) {
     this.weatherInfo = source.weatherInfo;
 }
 
-/*
+
 module.exports = {
     NPSModel : NPSModel,
     NPSPark : NPSPark,
     NPSAlert : NPSAlert
 };
-*/

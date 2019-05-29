@@ -1,4 +1,4 @@
-//const axios = require('axios');
+const axios = require('axios');
 
 /**
  * Depends on Axios
@@ -340,3 +340,10 @@ let Matchers = {
     }
 };
 
+module.exports = {
+    NPSAPIClient : NPSAPIClient,
+    NPSAPIQuery : NPSAPIQuery,
+    NPSAPIQueryBuilder : NPSAPIQueryBuilder,
+    NPSAPIProxy : NPSAPIProxy,
+    Matchers : Matchers
+};
