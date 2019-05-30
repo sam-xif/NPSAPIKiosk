@@ -17,7 +17,7 @@ function NPSAPIProxy(api_key, api_endpoint) {
      */
     this.get = async function (resource, params) {
         // TODO: Remove this check if api key is added in next line
-        if (!this.validParams(params)) throw new Error("Parameters object is invalid");
+        //if (!this.validParams(params)) throw new Error("Parameters object is invalid");
 
         params["api_key"] = this.api_key;
         let result = await axios.get(this.api_endpoint + resource, {
@@ -192,13 +192,12 @@ function NPSAPIQuery(resource, params) {
     this.params = params;
 
     /**
-     *
-     * @return {Promise<>}
+     * Executes this query using the given proxy object to make calls to the API.
+     * @param {NPSAPIProxy} proxy The API proxy object to use
+     * @return {Promise<JSON>} The raw response data
      */
-    this.execute = function (worker) {
-        return new Promise(function (resolve) {
-            worker.request(new NPSAPIQuery(resource, params), resolve);
-        });
+    this.execute = function (proxy) {
+        return proxy.get(this.resource, this.params);
     };
 }
 
@@ -336,7 +335,6 @@ let Matchers = {
 };
 
 module.exports = {
-    NPSAPIClient : NPSAPIClient,
     NPSAPIQuery : NPSAPIQuery,
     NPSAPIQueryBuilder : NPSAPIQueryBuilder,
     NPSAPIProxy : NPSAPIProxy,

@@ -32,7 +32,7 @@ function NPSAPIWorkerManager(clientWorkerScriptSrc) {
         this.worker.postMessage({
             action: "get",
             id: this.requestCounter,
-            requestData: request
+            request: request
         });
         if (callback) {
             this.callbacks[this.requestCounter] = callback;
@@ -51,8 +51,6 @@ function NPSAPIWorkerManager(clientWorkerScriptSrc) {
      */
     this.worker.onmessage = function (msg) {
         let data = msg.data;
-        if (data.status === "ok") {
-            this.callbacks[data.id](data.responseData);
-        }
+        this.callbacks[data.id](data);
     }
 }
