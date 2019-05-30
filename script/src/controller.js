@@ -1,6 +1,6 @@
-const view = require('./view');
-const client = require('./client');
-const model = require('./model');
+const view = require('view');
+const client = require('client');
+const model = require('model');
 
 /**
  *

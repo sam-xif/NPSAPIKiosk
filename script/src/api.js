@@ -4,8 +4,8 @@
  * This file will likely be rendered obsolete by client.js
  */
 
-const axios = require('axios');
-const model = require('./model');
+const axios = require('axios/index');
+const model = require('model');
 
 // TODO: Make this class depend on a proxy that routes requests to axios so that the API can be mocked more easily
 //  for testing.
