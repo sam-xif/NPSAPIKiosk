@@ -32,12 +32,23 @@ function NPSAPIWorkerManager(clientWorkerScriptSrc) {
         this.worker.postMessage({
             action: "get",
             id: this.requestCounter,
-            request: request
+            request: request.strip()
         });
         if (callback) {
             this.callbacks[this.requestCounter] = callback;
+            console.log(this.callbacks);
         }
         this.requestCounter++;
+    };
+
+    // For internal use
+    this.resolve = function (response) {
+        let idx = parseInt(response.id);
+        if (this.callbacks[idx]) {
+            this.callbacks[parseInt(response.id)](response);
+        } else {
+            // error?
+        }
     };
 
     // register event handler for this instance's worker
@@ -49,8 +60,14 @@ function NPSAPIWorkerManager(clientWorkerScriptSrc) {
      *  responseData: <JSON>
      * }
      */
-    this.worker.onmessage = function (msg) {
-        let data = msg.data;
-        this.callbacks[data.id](data);
-    }
-}
+    this.worker.onmessage = (function (context) {
+        return (function (msg) {
+            let data = msg.data;
+            context.resolve(data);
+        });
+    })(this);
+};
+
+module.exports = {
+    NPSAPIWorkerManager : NPSAPIWorkerManager
+};

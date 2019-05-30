@@ -55,13 +55,28 @@ function NPSAPIQuery(resource, params) {
     this.params = params;
 
     /**
-     * Executes this query using the given proxy object to make calls to the API.
-     * @param {NPSAPIProxy} proxy The API proxy object to use
-     * @return {Promise<JSON>} The raw response data
+     *
+     * @return {{resource: *, params: *}}
      */
-    this.execute = function (proxy) {
-        return proxy.get(this.resource, this.params);
+    this.strip = function () {
+        return {
+            resource: this.resource,
+            params: this.params
+        };
     };
+
+    /**
+     * Executes this query using the given worker manager object to make calls to the API.
+     * @param {NPSAPIWorkerManager} workerMgr The worker manager object to issue the request to
+     * @return {Object} Response data
+     */
+    this.execute = async function (workerMgr) {
+        let response = await (new Promise((resolve) => {
+            workerMgr.request(this, resolve);
+        }));
+
+        return response;
+    }
 }
 
 
@@ -71,10 +86,6 @@ function NPSAPIQuery(resource, params) {
  * @constructor
  */
 function NPSAPIQueryBuilder() {
-    if (api_key === undefined) {
-        throw new Error("API key must be passed to constructor");
-    }
-
     /**
      * Resets the Query Builder to its initial, default state.
      * @return {NPSAPIQueryBuilder} This instance.
@@ -88,8 +99,14 @@ function NPSAPIQueryBuilder() {
 
     this.reset();
 
+    /**
+     *
+     * @param resource
+     * @return {NPSAPIQueryBuilder}
+     */
     this.from = function (resource) {
         this.resource = resource;
+        return this;
     };
 
     /**

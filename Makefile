@@ -12,7 +12,7 @@ MAINPATH=$(SCRIPTDIR)/$(MAIN)
 WORKER_SCRIPTS=clientWorkerMain.js
 
 # Command options
-LIB_BUNDLE_OPTS=-r ./model.js:model -r ./client.js:client -r ./controller.js:controller -r ./view.js:view
+LIB_BUNDLE_OPTS=-r ./model.js:model -r ./client.js:client -r ./controller.js:controller -r ./view.js:view -r ./clientWorkerManager.js:worker
 MAIN_BUNDLE_OPTS=-x controller
 
 # In the worker bundle, unlike the main bundle, we re-require model and client because the worker cannot

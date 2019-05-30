@@ -1,6 +1,7 @@
 const view = require('view');
 const client = require('client');
 const model = require('model');
+const worker = require('worker');
 
 /**
  *
@@ -10,9 +11,10 @@ const model = require('model');
  */
 function Controller(api_endpoint, api_key) {
     this.renderer = new view.TemplateRenderer();
-    this.queryBuilder = new client.NPSAPIQueryBuilder();
+    this.qb = new client.NPSAPIQueryBuilder();
+    this.workerMgr = new worker.NPSAPIWorkerManager('script/dist/worker.js');
 
-    this.client = new client.NPSAPIClient(api_key, api_endpoint);
+    //this.client = new client.NPSAPIClient(api_key, api_endpoint);
 
     this.initializeView = function() {
         this.renderer.registerTemplate("alert",
@@ -24,11 +26,12 @@ function Controller(api_endpoint, api_key) {
         //this.queryBuilder.setLimit(25);
 
         // First, obtain a list of alerts to view
-        let alerts = await this.client
+        let alerts = await this.qb
             .from("alerts")
-            .pageSize(25)
-            .page(1)
-            .select();
+            .build()
+            .queue(this.workerMgr);
+
+        console.log(alerts);
 
         // Next, get all unique parks from these alerts
         let uniqueParks = [];
@@ -39,16 +42,11 @@ function Controller(api_endpoint, api_key) {
         });
 
 
-        let parks = (await this.client
+        let parks = await this.qb
             .from("parks")
-            .where("parkCode")
-            .is(client.Matchers.anyOf(uniqueParks))
-            .select())
-            .reduce((parkMap, nextPark) => {
-                parkMap[nextPark.parkCode] = new model.NPSPark(nextPark);
-                return parkMap;
-            }, {});
-
+            .addAllParkCodes(uniqueParks)
+            .build()
+            .queue(this.workerMgr);
 
         //let parks = await this.clientInterface.getParkCodeMap(this.queryBuilder.addAllParkCodes(uniqueParks));
 

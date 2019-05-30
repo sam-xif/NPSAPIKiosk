@@ -7,19 +7,24 @@ const API_ENDPOINT = "https://developer.nps.gov/api/v1/";
 // Initialize API client
 let api = new client.NPSAPIProxy(API_KEY, API_ENDPOINT);
 
+console.log("Worker has been started!");
+
+/**
+ *
+ * @param msg
+ */
 onmessage = function (msg) {
     let data = msg.data;
     if (data.action === "get") {
-        console.log("Get request received.");
-        console.log(msg);
-
-        // Make sure to add api key to all requests received
-
-        data.request.execute(api)
+        let resource = data.request.resource;
+        let params = data.request.params;
+        let response = api.get(resource, params)
             .then((response) => {
                 postMessage({
                     status: 'ok',
                     id: data.id,
+                    reqResource: resource,
+                    reqParams: params,
                     response: response
                 });
             })
@@ -27,6 +32,8 @@ onmessage = function (msg) {
                 postMessage({
                     status: 'error',
                     id: data.id,
+                    reqResource: resource,
+                    reqParams: params,
                     response: error
                 })
             });
