@@ -4,7 +4,6 @@ const controller = require('controller');
  * Entry point and controller logic.
  */
 
-// TODO: Do not put API key directly in source code
 const API_KEY = "bGpxFeQ0v8stp7tM6fuxocR57DsjdxrKDuWzrLl9";
 const API_ENDPOINT = "https://developer.nps.gov/api/v1/";
 
@@ -16,10 +15,16 @@ function onPageLoad() {
     // Setup worker if possible
     if (window.Worker) {
          let apiservice = new Worker('script/dist/worker.js');
-         setTimeout(() => apiservice.postMessage("Hello!"), 1000);
+         setTimeout(() => apiservice.postMessage({
+             action: "get",
+             params: {
+                 "parkCode": "acad"
+             }
+         }), 1000);
     } else {
         // Perform alternate setup if Worker is not available
         console.log("workers not available");
+        throw new Error("Cannot start background API service on worker thread. Make sure worker threads are supported on your browser.");
     }
 
     let ctrl = new controller.Controller(API_ENDPOINT, API_KEY);

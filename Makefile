@@ -9,10 +9,7 @@ BACK=../..
 # The entry point file and its path relative to the current directory
 MAIN=main.js
 MAINPATH=$(SCRIPTDIR)/$(MAIN)
-WORKER=apiservice.js
-
-# Exclude these files (names separated by spaces) from the list of dependencies
-EXCLUDES=$(OUTPATH) $(WORKERS)
+WORKER_SCRIPT=apiservice.js
 
 # Command options which exclude files from the bundle itself
 BUNDLE_EXCLUDES=
@@ -31,13 +28,16 @@ WORKER_BUNDLE=worker.js
 MAIN_BUNDLE=main.js
 
 # Worker scripts that should not be included in the bundle
-WORKERS=$(SCRIPTDIR)/apiservice.js
+WORKERS=$(SRC)/apiservice.js
+
+# Exclude these files (names separated by spaces) from the list of dependencies
+EXCLUDES=$(WORKERS)
 
 # This command creates script/dist if it does not exist
 MK_DIST_DIR=mkdir -p $(DIST)
 
 # Make all targets
-.PHONE: all
+.PHONY: all
 all: $(DIST)/$(MAIN_BUNDLE) $(DIST)/$(WORKER_BUNDLE) $(DIST)/$(LIB_BUNDLE)
 
 # Build the main bundle
@@ -46,12 +46,12 @@ $(DIST)/$(MAIN_BUNDLE): $(DIST)/$(LIB_BUNDLE)
 	pushd $(SRC) && $(JSBUNDLER) $(MAIN) $(MAIN_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(MAIN_BUNDLE) && popd
 
 # Build the worker bundle
-$(DIST)/$(WORKER_BUNDLE) : $(DIST)/$(LIB_BUNDLE)
+$(DIST)/$(WORKER_BUNDLE) : $(DIST)/$(LIB_BUNDLE) $(WORKERS)
 	$(MK_DIST_DIR)
-	pushd $(SRC) && $(JSBUNDLER) $(WORKER) $(WORKER_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(WORKER_BUNDLE) && popd
+	pushd $(SRC) && $(JSBUNDLER) $(WORKER_SCRIPT) $(WORKER_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(WORKER_BUNDLE) && popd
 
 # Build the library bundle
-$(DIST)/$(LIB_BUNDLE): $(filter-out $(EXCLUDES), $(wildcard $(SCRIPTDIR)/*.js))
+$(DIST)/$(LIB_BUNDLE): $(filter-out $(EXCLUDES), $(wildcard $(SRC)/*.js))
 	$(MK_DIST_DIR)
 	pushd $(SRC) && $(JSBUNDLER) $(LIB_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(LIB_BUNDLE) && popd
 
