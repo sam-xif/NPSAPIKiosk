@@ -19,10 +19,11 @@ BUNDLE_EXCLUDES=
 
 # Command options
 LIB_BUNDLE_OPTS=-r ./model.js:model -r ./client.js:client -r ./controller.js:controller -r ./view.js:view $(BUNDLE_EXCLUDES)
-# In the worker bundle, we re-require model and client because the worker cannot
+MAIN_BUNDLE_OPTS=-x controller
+
+# In the worker bundle, unlike the main bundle, we re-require model and client because the worker cannot
 #  refer to lib as it runs in a separate context.
 WORKER_BUNDLE_OPTS=-r ./model.js:model -r ./client.js:client
-MAIN_BUNDLE_OPTS=-x controller
 
 # Output file name and relative path
 LIB_BUNDLE=lib.js
@@ -32,9 +33,11 @@ MAIN_BUNDLE=main.js
 # Worker scripts that should not be included in the bundle
 WORKERS=$(SCRIPTDIR)/apiservice.js 
 
+# Make all targets
 .PHONE: all
 all: $(DIST)/$(MAIN_BUNDLE) $(DIST)/$(WORKER_BUNDLE) $(DIST)/$(LIB_BUNDLE)
 
+# Build the main bundle
 $(DIST)/$(MAIN_BUNDLE): $(DIST)/$(LIB_BUNDLE)
 	pushd $(SRC) && $(JSBUNDLER) $(MAIN) $(MAIN_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(MAIN_BUNDLE) && popd
 
@@ -42,7 +45,7 @@ $(DIST)/$(MAIN_BUNDLE): $(DIST)/$(LIB_BUNDLE)
 $(DIST)/$(WORKER_BUNDLE) : $(DIST)/$(LIB_BUNDLE)
 	pushd $(SRC) && $(JSBUNDLER) $(WORKER) $(WORKER_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(WORKER_BUNDLE) && popd
 
-# Build the main bundle
+# Build the library bundle
 $(DIST)/$(LIB_BUNDLE): $(filter-out $(EXCLUDES), $(wildcard $(SCRIPTDIR)/*.js))
 	pushd $(SRC) && $(JSBUNDLER) $(LIB_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(LIB_BUNDLE) && popd
 
