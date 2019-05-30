@@ -12,20 +12,6 @@ const API_ENDPOINT = "https://developer.nps.gov/api/v1/";
  */
 function onPageLoad() {
     console.log("TEST");
-    // Setup worker if possible
-    if (window.Worker) {
-         let apiservice = new Worker('script/dist/worker.js');
-         setTimeout(() => apiservice.postMessage({
-             action: "get",
-             params: {
-                 "parkCode": "acad"
-             }
-         }), 1000);
-    } else {
-        // Perform alternate setup if Worker is not available
-        console.log("workers not available");
-        throw new Error("Cannot start background API service on worker thread. Make sure worker threads are supported on your browser.");
-    }
 
     let ctrl = new controller.Controller(API_ENDPOINT, API_KEY);
     ctrl.initializeView();

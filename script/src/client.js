@@ -187,18 +187,18 @@ function NPSAPIClient(api_key, api_endpoint) {
  * @param api_endpoint
  * @constructor
  */
-function NPSAPIQuery(resource, params, api_key, api_endpoint) {
+function NPSAPIQuery(resource, params) {
     this.resource = resource;
-    this.proxy = new NPSAPIProxy(api_key, api_endpoint);
-
     this.params = params;
 
     /**
      *
-     * @return {Promise<Array<Object>>}
+     * @return {Promise<>}
      */
-    this.execute = async function () {
-        return await this.proxy.get(this.resource, this.params);
+    this.execute = function (worker) {
+        return new Promise(function (resolve) {
+            worker.request(new NPSAPIQuery(resource, params), resolve);
+        });
     };
 }
 
@@ -208,13 +208,10 @@ function NPSAPIQuery(resource, params, api_key, api_endpoint) {
  * @param api_key
  * @constructor
  */
-function NPSAPIQueryBuilder(api_key, api_endpoint) {
+function NPSAPIQueryBuilder() {
     if (api_key === undefined) {
         throw new Error("API key must be passed to constructor");
     }
-
-    this.api_key = api_key;
-    this.api_endpoint = api_endpoint;
 
     /**
      * Resets the Query Builder to its initial, default state.
@@ -296,8 +293,6 @@ function NPSAPIQueryBuilder(api_key, api_endpoint) {
      */
     this.build = function () {
         let params = {};
-
-        params["api_key"] = this.api_key;
 
         if (this.parkCodes.length > 0) {
             params["parkCode"] = ((parkCodes) => {

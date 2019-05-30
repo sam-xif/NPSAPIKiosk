@@ -8,6 +8,12 @@ const API_ENDPOINT = "https://developer.nps.gov/api/v1/";
 let api = new client.NPSAPIClient(API_KEY, API_ENDPOINT);
 
 onmessage = function (msg) {
-    console.log("Message received");
-    console.log(msg);
+    let data = msg.data;
+    if (data.action === "get") {
+        console.log("Get request received.");
+        console.log(msg);
+
+        // Make sure to add api key to all requests received
+
+    }
 };
