@@ -37,7 +37,7 @@ $(DIST)/$(MAIN_BUNDLE): $(DIST)/$(LIB_BUNDLE)
 	pushd $(SRC) && $(JSBUNDLER) $(MAIN) $(MAIN_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(MAIN_BUNDLE) && popd
 
 # Build the worker bundle
-$(DIST)/$(WORKER_BUNDLE) : $(DIST)/$(LIB_BUNDLE) (add-prefix $(SRC),$WORKER_SCRIPTS)
+$(DIST)/$(WORKER_BUNDLE) : $(DIST)/$(LIB_BUNDLE) $(add-prefix $(SRC),$(WORKER_SCRIPTS))
 	$(MK_DIST_DIR)
 	pushd $(SRC) && $(JSBUNDLER) $(WORKER_SCRIPTS) $(WORKER_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(WORKER_BUNDLE) && popd
 
