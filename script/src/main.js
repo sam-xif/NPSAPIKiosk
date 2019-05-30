@@ -11,8 +11,6 @@ const API_ENDPOINT = "https://developer.nps.gov/api/v1/";
  * Function that gets called when the page is loaded.
  */
 function onPageLoad() {
-    console.log("TEST");
-
     let ctrl = new controller.Controller(API_ENDPOINT, API_KEY);
     ctrl.initializeView();
     ctrl.renderAlerts();

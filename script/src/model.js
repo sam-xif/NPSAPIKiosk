@@ -1,3 +1,5 @@
+const client = require('client');
+
 /**
  * Definitions for JavaScript class representations of data objects provided by the NPS API.
  */
@@ -41,6 +43,40 @@ NPSModel.parse = function (rawData) {
 };
 
 /**
+ *
+ * @param {NPSAPIQuery} query
+ */
+NPSModel.retrieve = async function (query, workerMgr) {
+    let response = await query.execute(workerMgr);
+
+    if (response.status === 'error') {
+        throw new Error(response.data);
+    }
+
+    let resource = response.reqResource;
+    let data = response.data; // This data is the actual API response in its entirety
+
+    let out = [];
+
+    switch (resource) {
+        case 'parks':
+            data.data.forEach((parkObj) => {
+                out.push(new NPSPark(parkObj));
+            });
+            break;
+        case 'alerts':
+            data.data.forEach((alertObj) => {
+                out.push(new NPSAlert(alertObj));
+            });
+            break;
+        default:
+            throw new Error("Unsupported resource");
+    }
+
+    return out;
+};
+
+/**
  * An alert issued by the NPS.
  * @param {JSON} source Source {@code JSON} object from the API to use to construct the object.
  * @param {JSON?} parkCodeMap Optional park code map to use to find the corresponding
@@ -62,19 +98,19 @@ function NPSAlert(source, parkCodeMap) {
         this.park = parkCodeMap[parkCode];
     }
 
-    /**
-     * Obtains a Promise which resolves to a new {@code NPSAlert} instance that has the {@code park} field defined
-     *  as the park corresponding to this instance's parkCode.
-     * @return {Promise<NPSAlert>} The promise
-     */
-    this.fetchPark = function () {
-        return (async function (alertInstance) {
-            let park = await (new NPSAPIClientInterface(new NPSAPIClient())) // TODO: Remove this to decouple model from client
-                .parkFromCode(alertInstance.parkCode);
-            alertInstance.park = park;
-            return alertInstance;
-        })(this);
-    };
+    // /**
+    //  * Obtains a Promise which resolves to a new {@code NPSAlert} instance that has the {@code park} field defined
+    //  *  as the park corresponding to this instance's parkCode.
+    //  * @return {Promise<NPSAlert>} The promise
+    //  */
+    // this.fetchPark = function () {
+    //     return (async function (alertInstance) {
+    //         let park = await (new NPSAPIClientInterface(new NPSAPIClient())) // TODO: Remove this to decouple model from client
+    //             .parkFromCode(alertInstance.parkCode);
+    //         alertInstance.park = park;
+    //         return alertInstance;
+    //     })(this);
+    // };
 
     /**
      * Given a mapping from park codes to {@link NPSPark}s, attempts to find the park represented by this instance's

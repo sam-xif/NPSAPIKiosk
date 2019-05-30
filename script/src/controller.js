@@ -26,10 +26,11 @@ function Controller(api_endpoint, api_key) {
         //this.queryBuilder.setLimit(25);
 
         // First, obtain a list of alerts to view
-        let alerts = await this.qb
-            .from("alerts")
-            .build()
-            .queue(this.workerMgr);
+        let alerts = await model.NPSModel.retrieve(
+            this.qb
+                .from("alerts")
+                .build(),
+            this.workerMgr);
 
         console.log(alerts);
 
@@ -42,11 +43,12 @@ function Controller(api_endpoint, api_key) {
         });
 
 
-        let parks = await this.qb
-            .from("parks")
-            .addAllParkCodes(uniqueParks)
-            .build()
-            .queue(this.workerMgr);
+        let parks = await model.NPSModel.retrieve(
+            this.qb
+                .from("parks")
+                .addAllParkCodes(uniqueParks)
+                .build(),
+            this.workerMgr);
 
         //let parks = await this.clientInterface.getParkCodeMap(this.queryBuilder.addAllParkCodes(uniqueParks));
 

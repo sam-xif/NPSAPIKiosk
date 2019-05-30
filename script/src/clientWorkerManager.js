@@ -32,11 +32,10 @@ function NPSAPIWorkerManager(clientWorkerScriptSrc) {
         this.worker.postMessage({
             action: "get",
             id: this.requestCounter,
-            request: request.strip()
+            data: request.strip()
         });
         if (callback) {
             this.callbacks[this.requestCounter] = callback;
-            console.log(this.callbacks);
         }
         this.requestCounter++;
     };

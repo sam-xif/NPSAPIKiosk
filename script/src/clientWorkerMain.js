@@ -14,27 +14,27 @@ console.log("Worker has been started!");
  * @param msg
  */
 onmessage = function (msg) {
-    let data = msg.data;
-    if (data.action === "get") {
-        let resource = data.request.resource;
-        let params = data.request.params;
+    let request = msg.data;
+    if (request.action === "get") {
+        let resource = request.data.resource;
+        let params = request.data.params;
         let response = api.get(resource, params)
             .then((response) => {
                 postMessage({
                     status: 'ok',
-                    id: data.id,
+                    id: request.id,
                     reqResource: resource,
                     reqParams: params,
-                    response: response
+                    data: response
                 });
             })
             .catch((error) => {
                 postMessage({
                     status: 'error',
-                    id: data.id,
+                    id: request.id,
                     reqResource: resource,
                     reqParams: params,
-                    response: error
+                    data: error
                 })
             });
     }

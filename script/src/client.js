@@ -16,9 +16,6 @@ function NPSAPIProxy(api_key, api_endpoint) {
      * @return {Promise} A Promise that, when resolved, returns a JSON object with data
      */
     this.get = async function (resource, params) {
-        // TODO: Remove this check if api key is added in next line
-        //if (!this.validParams(params)) throw new Error("Parameters object is invalid");
-
         params["api_key"] = this.api_key;
         let result = await axios.get(this.api_endpoint + resource, {
             params: params
@@ -46,8 +43,6 @@ function NPSAPIProxy(api_key, api_endpoint) {
  *
  * @param resource
  * @param params
- * @param api_key
- * @param api_endpoint
  * @constructor
  */
 function NPSAPIQuery(resource, params) {
