@@ -10,7 +10,7 @@ const model = require('model');
  */
 function Controller(api_endpoint, api_key) {
     this.renderer = new view.TemplateRenderer();
-    this.queryBuilder = new client.NPSAPIQueryBuilder(api_key);
+    this.queryBuilder = new client.NPSAPIQueryBuilder();
 
     this.client = new client.NPSAPIClient(api_key, api_endpoint);
 
