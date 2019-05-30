@@ -9,13 +9,10 @@ BACK=../..
 # The entry point file and its path relative to the current directory
 MAIN=main.js
 MAINPATH=$(SCRIPTDIR)/$(MAIN)
-WORKER_SCRIPT=apiservice.js
-
-# Command options which exclude files from the bundle itself
-BUNDLE_EXCLUDES=
+WORKER_SCRIPTS=apiservice.js
 
 # Command options
-LIB_BUNDLE_OPTS=-r ./model.js:model -r ./client.js:client -r ./controller.js:controller -r ./view.js:view $(BUNDLE_EXCLUDES)
+LIB_BUNDLE_OPTS=-r ./model.js:model -r ./client.js:client -r ./controller.js:controller -r ./view.js:view
 MAIN_BUNDLE_OPTS=-x controller
 
 # In the worker bundle, unlike the main bundle, we re-require model and client because the worker cannot
@@ -26,12 +23,6 @@ WORKER_BUNDLE_OPTS=-r ./model.js:model -r ./client.js:client
 LIB_BUNDLE=lib.js
 WORKER_BUNDLE=worker.js
 MAIN_BUNDLE=main.js
-
-# Worker scripts that should not be included in the bundle
-WORKERS=$(SRC)/apiservice.js
-
-# Exclude these files (names separated by spaces) from the list of dependencies
-EXCLUDES=$(WORKERS)
 
 # This command creates script/dist if it does not exist
 MK_DIST_DIR=mkdir -p $(DIST)
@@ -46,12 +37,12 @@ $(DIST)/$(MAIN_BUNDLE): $(DIST)/$(LIB_BUNDLE)
 	pushd $(SRC) && $(JSBUNDLER) $(MAIN) $(MAIN_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(MAIN_BUNDLE) && popd
 
 # Build the worker bundle
-$(DIST)/$(WORKER_BUNDLE) : $(DIST)/$(LIB_BUNDLE) $(WORKERS)
+$(DIST)/$(WORKER_BUNDLE) : $(DIST)/$(LIB_BUNDLE) (add-prefix $(SRC),$WORKER_SCRIPTS)
 	$(MK_DIST_DIR)
-	pushd $(SRC) && $(JSBUNDLER) $(WORKER_SCRIPT) $(WORKER_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(WORKER_BUNDLE) && popd
+	pushd $(SRC) && $(JSBUNDLER) $(WORKER_SCRIPTS) $(WORKER_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(WORKER_BUNDLE) && popd
 
 # Build the library bundle
-$(DIST)/$(LIB_BUNDLE): $(filter-out $(EXCLUDES), $(wildcard $(SRC)/*.js))
+$(DIST)/$(LIB_BUNDLE): $(filter-out $(add-prefix $(SRC)/,$(WORKER_SCRIPTS)), $(wildcard $(SRC)/*.js))
 	$(MK_DIST_DIR)
 	pushd $(SRC) && $(JSBUNDLER) $(LIB_BUNDLE_OPTS) > $(BACK)/$(DIST)/$(LIB_BUNDLE) && popd
 
