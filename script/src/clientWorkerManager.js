@@ -65,7 +65,7 @@ function NPSAPIWorkerManager(clientWorkerScriptSrc) {
             context.resolve(data);
         });
     })(this);
-};
+}
 
 module.exports = {
     NPSAPIWorkerManager : NPSAPIWorkerManager
