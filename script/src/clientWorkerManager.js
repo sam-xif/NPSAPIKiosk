@@ -59,7 +59,7 @@ function NPSAPIWorkerManager(clientWorkerScriptSrc) {
      *  responseData: <JSON>
      * }
      */
-    this.worker.onmessage = (function (context) {
+    this.worker.onmessage = (function (context) { // close over this instance
         return (function (msg) {
             let data = msg.data;
             context.resolve(data);

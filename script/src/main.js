@@ -14,43 +14,6 @@ function onPageLoad() {
     let ctrl = new controller.Controller(API_ENDPOINT, API_KEY);
     ctrl.initializeView();
     ctrl.renderAlerts();
-
-/*
-    (async function () {
-        let client = new api.NPSAPIClient(API_KEY, API_ENDPOINT);
-        // First, obtain a list of alerts to view
-        let alerts = await client
-            .from("alerts")
-            .pageSize(50)
-            .page(0)
-            .select();
-
-        console.log(alerts);
-
-        // Next, get all unique parks from these alerts
-        let uniqueParks = [];
-        alerts.forEach((elem) => {
-            if (!uniqueParks.includes(elem.parkCode)) {
-                uniqueParks.push(elem.parkCode);
-            }
-        });
-
-        console.log(uniqueParks);
-
-        let parks = (await client
-            .from("parks")
-            .where("parkCode")
-            .is(api.Matchers.anyOf(uniqueParks))
-            .select())
-            .reduce((parkMap, nextPark) => {
-                parkMap[nextPark.parkCode] = new model.NPSPark(nextPark);
-                return parkMap;
-            }, {});
-
-        console.log(parks);
-    })();
-
- */
 }
 
 document.addEventListener("DOMContentLoaded", onPageLoad, false);
