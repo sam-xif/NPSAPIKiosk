@@ -76,8 +76,7 @@ function NPSAPIQuery(resource, params) {
 
 
 /**
- *
- * @param api_key
+ * Constructs queries of type {@link NPSAPIQuery} that can be executed on the NPS API.
  * @constructor
  */
 function NPSAPIQueryBuilder() {
