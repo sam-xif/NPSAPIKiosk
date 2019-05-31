@@ -1,3 +1,5 @@
+const $ = require('jquery');
+
 /**
  * Renders parameterized HTML to the DOM. Depends on jQuery.
  * @param template The HTML template with format specifiers.
@@ -68,4 +70,9 @@ function createSlideshow(tagID, fadeSpeed, delay) {
 
 let ViewUtil = {
     "createSlideshow" : createSlideshow
+};
+
+module.exports = {
+    TemplateRenderer : TemplateRenderer,
+    ViewUtil : ViewUtil
 };
