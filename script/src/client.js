@@ -50,7 +50,10 @@ function NPSAPIQuery(resource, params) {
     this.params = params;
 
     /**
-     *
+     * <p>
+     *     Strips this {@link NPSAPIQuery} down into a JavaScript object with this instance's resource and
+     *     params properties.
+     * </p>
      * @return {{resource: *, params: *}}
      */
     this.strip = function () {

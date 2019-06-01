@@ -18,7 +18,7 @@ function Controller(api_endpoint, api_key) {
 
     this.initializeView = function() {
         this.renderer.registerTemplate("alert",
-            "<div><h4><a href=\"{0}\">{1}</a></h4><p>{2}</p></div>");
+            '<div class="alert"><h4><a href=\"{0}\">{1}</a></h4><p>{2}</p></div>');
     };
 
     this.renderAlerts = async function() {
@@ -42,14 +42,6 @@ function Controller(api_endpoint, api_key) {
             }
         });
 
-
-        let parks = await model.NPSModel.retrieve(
-            this.qb
-                .from("parks")
-                .addAllParkCodes(uniqueParks)
-                .build(),
-            this.workerMgr);
-
         //let parks = await this.clientInterface.getParkCodeMap(this.queryBuilder.addAllParkCodes(uniqueParks));
 
         // Now, link alerts with their respective parks
@@ -57,14 +49,17 @@ function Controller(api_endpoint, api_key) {
         //    elem.linkPark(parks);
         //});
 
+        let tagID = "#slideshowParent";
+        //let spinnerID = "#spinner";
+        //$(spinnerID).remove();
         for (let i = 0; i < alerts.length; i++) {
             let alert = alerts[i]; //await alerts[i].fetchPark();
-            this.renderer.renderToHTML("#slideshow-parent",
+            this.renderer.renderToHTML(tagID,
                 "alert",
                 [alert.url, alert.title/*, alert.park.fullName*/, alert.description]);
         }
 
-        view.ViewUtil.createSlideshow("#slideshow-parent", 1500, 6000);
+        view.ViewUtil.createSlideshow(tagID, 1500, 6000);
     }
 }
 

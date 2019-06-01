@@ -40,6 +40,8 @@ function TemplateRenderer() {
         args.forEach((elem, idx) => {
             templateCopy = templateCopy.replace(`\{${idx}\}`, elem);
         });
+
+        // Append new
         $(tagID).append(templateCopy);
     };
 }
@@ -68,8 +70,17 @@ function createSlideshow(tagID, fadeSpeed, delay) {
     });
 }
 
+/**
+ *
+ * @param tagID
+ */
+function clearTag(tagID) {
+    $(tagID).empty();
+}
+
 let ViewUtil = {
-    "createSlideshow" : createSlideshow
+    createSlideshow : createSlideshow,
+    clearTag : clearTag
 };
 
 module.exports = {

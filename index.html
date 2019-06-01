@@ -20,6 +20,9 @@
     <!-- Local scripts -->
     <script src="script/dist/lib.js"></script>
     <script src="script/dist/main.js"></script>
+
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/b3d7be163b.js"></script>
 </head>
 <body>
 <header>
@@ -27,7 +30,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-md-7 py-4">
-                    <h4 class="text-white">About</h4>
+                    <h4 class="text-white">Search</h4>
                     <p class="text-muted">
                         Welcome to a virtual information kiosk for the National Park Service!</p>
                 </div>
@@ -46,6 +49,18 @@
     </div>
 </header>
 <main role="main">
+    <section id="search">
+        <div class="container py-4">
+            <h2>Search</h2>
+            <div class="input-group md-form form-sm form-1 pl-0">
+                <div class="input-group-prepend">
+                                <span class="input-group-text black lighten-3" id="basic-text1"><i class="fas fa-search"
+                                                                                                   aria-hidden="true"></i></span>
+                </div>
+                <input class="form-control my-0 py-1" type="text" placeholder="Search" aria-label="Search">
+            </div>
+        </div>
+    </section>
     <section id="alertSection">
         <div class="container py-4">
             <div class="row">
@@ -56,12 +71,10 @@
             </div>
         </div>
         <div class="container py-2" id="alertContainer">
-            <div class="row">
-                <div class="col-sm-1 col-md-1 py-4"></div>
-                <div id="slideshow-parent" class="col-sm-10 col-md-10 py-4">
-                    <!-- alerts are inserted here -->
-                </div>
-                <div class="col-sm-1 col-md-1 py-4"></div>
+            <div id="slideshowParent" class="d-flex justify-content-center">
+                    <div id="spinner" class="spinner-border p-2" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
             </div>
         </div>
     </section>

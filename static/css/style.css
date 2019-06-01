@@ -11,13 +11,18 @@ div.nps-alert:hover {
     transition-duration: 0.5s;
 }
 
-#slideshow-parent div {
+#slideshowParent {
+    position: relative;
+}
+
+#slideshowParent > div.alert {
     display:none;
     position: absolute;
     top: 0;
     left: 0;
 }
-#slideshow-parent div:first-child {
+
+#slideshowParent > div.alert:first-child {
     display:block;
 }
 
