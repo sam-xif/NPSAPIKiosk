@@ -58,20 +58,30 @@ NPSModel.retrieve = async function (query, workerMgr) {
 
     let out = [];
 
-    switch (resource) {
-        case 'parks':
-            data.data.forEach((parkObj) => {
-                out.push(new NPSPark(parkObj));
-            });
-            break;
-        case 'alerts':
-            data.data.forEach((alertObj) => {
-                out.push(new NPSAlert(alertObj));
-            });
-            break;
-        default:
-            throw new Error("Unsupported resource");
-    }
+    let models = {
+        'parks' : NPSPark,
+        'alerts' : NPSAlert
+    };
+
+    data.data.forEach((parkObj) => {
+        out.push(new models[resource](parkObj));
+    });
+
+    // switch (resource) {
+    //     case 'parks':
+    //         data.data.forEach((parkObj) => {
+    //             out.push(new NPSPark(parkObj));
+    //         });
+    //         break;
+    //     case 'alerts':
+    //         data.data.forEach((alertObj) => {
+    //             out.push(new NPSAlert(alertObj));
+    //         });
+    //         break;
+    //         // Add more
+    //     default:
+    //         throw new Error("Unsupported resource");
+    // }
 
     return out;
 };

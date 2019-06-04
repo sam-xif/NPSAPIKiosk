@@ -2,6 +2,7 @@ const view = require('view');
 const client = require('client');
 const model = require('model');
 const worker = require('worker');
+const $ = require('jquery');
 
 /**
  *
@@ -21,46 +22,41 @@ function Controller(api_endpoint, api_key) {
             '<div class="alert"><h4><a href=\"{0}\">{1}</a></h4><p>{2}</p></div>');
     };
 
-    this.renderAlerts = async function() {
-        // Set limit to 25
-        //this.queryBuilder.setLimit(25);
-
-        // First, obtain a list of alerts to view
-        let alerts = await model.NPSModel.retrieve(
-            this.qb
-                .from("alerts")
-                .build(),
-            this.workerMgr);
-
-        console.log(alerts);
-
-        // Next, get all unique parks from these alerts
-        let uniqueParks = [];
-        alerts.forEach((elem) => {
-            if (!uniqueParks.includes(elem.parkCode)) {
-                uniqueParks.push(elem.parkCode);
-            }
-        });
-
-        //let parks = await this.clientInterface.getParkCodeMap(this.queryBuilder.addAllParkCodes(uniqueParks));
-
-        // Now, link alerts with their respective parks
-        //alerts.forEach((elem) => {
-        //    elem.linkPark(parks);
-        //});
+    this.renderAlerts = function() {
+        this.qb.from("alerts").setLimit(5);
 
         let tagID = "#slideshowParent";
-        //let spinnerID = "#spinner";
-        //$(spinnerID).remove();
-        for (let i = 0; i < alerts.length; i++) {
-            let alert = alerts[i]; //await alerts[i].fetchPark();
-            this.renderer.renderToHTML(tagID,
-                "alert",
-                [alert.url, alert.title/*, alert.park.fullName*/, alert.description]);
-        }
+        let slideShowCreated = false;
 
-        view.ViewUtil.createSlideshow(tagID, 1500, 6000);
+        // gets 5 * 10 = 50 (ish, because of off-by-one errors from the API) alerts
+        for (let i = 0; i < 10; i++) {
+            model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
+                .then((alerts) => {
+                    console.log("adding more alerts");
+                    if (!slideShowCreated) {
+                        let spinnerID = "#spinner";
+                        $(spinnerID).remove();
+                        view.ViewUtil.createSlideshow(tagID, 1500, 6000);
+                        slideShowCreated = true;
+                    }
+                    for (let i = 0; i < alerts.length; i++) {
+                        let alert = alerts[i]; //await alerts[i].fetchPark();
+                        this.renderer.renderToHTML(tagID,
+                            "alert",
+                            [alert.url, alert.title/*, alert.park.fullName*/, alert.description]);
+                    }
+                });
+            this.qb.nextPage();
+        }
     }
+}
+
+function SearchController(formID) {
+    this.formID = formID;
+
+    $(formID).addEventListener('onsubmit', (data) => {
+        console.log(data);
+    })
 }
 
 module.exports = {

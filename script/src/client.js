@@ -91,6 +91,7 @@ function NPSAPIQueryBuilder() {
         this.parkCodes = [];
         this.queryString = null;
         this.limit = 50;
+        this.start = 0;
         return this;
     };
 
@@ -160,6 +161,11 @@ function NPSAPIQueryBuilder() {
             throw new Error("Start cannot be less than 0");
         }
         this.start = start;
+        return this;
+    };
+
+    this.nextPage = function () {
+        this.start += 1;
         return this;
     };
 
