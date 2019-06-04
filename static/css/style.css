@@ -11,6 +11,12 @@ div.nps-alert:hover {
     transition-duration: 0.5s;
 }
 
+a.graylink {
+    color: gray;
+}
+
+/* Div slideshow */
+
 #slideshowParent {
     position: relative;
 }
@@ -26,9 +32,7 @@ div.nps-alert:hover {
     display:block;
 }
 
-a.graylink {
-    color: gray;
-}
+/* BG overlay */
 
 .bg-overlay {
     background: linear-gradient(rgba(0,0,0,.7), rgba(0,0,0,.7)), url("https://unsplash.imgix.net/photo-1416339442236-8ceb164046f8?q=75&fm=jpg&s=8eb83df8a744544977722717b1ea4d09");
