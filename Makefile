@@ -3,7 +3,7 @@ JSBUNDLER=browserify
 
 # Script directory relative to the directory that the Makefile executes from
 SRC=script/src
-OUT=script/dist
+OUT=dist/script
 BACK=../..
 
 # The entry point file and its path relative to the current directory
