@@ -1,11 +1,30 @@
 {
-  "sources": [
-    "templates"
-  ],
-  "include": [
-    "index.html"
-  ],
-  "context": {
-    "script_dir" : "script"
-  }
+  "globalContext": {
+    "script_dir": "script",
+    "api_key": "bGpxFeQ0v8stp7tM6fuxocR57DsjdxrKDuWzrLl9",
+    "api_endpoint": "https://developer.nps.gov/api/v1/"
+  },
+  "rules": [
+    {
+      "source": "src/templates",
+      "target": "build",
+      "filters": [
+        {
+          "type": "excludeAllExcept",
+          "pattern": "index.html"
+        }
+      ]
+    },
+    {
+      "before": "mkdir -p build/script/templates && pushd src/script && for f in ./*; do uglifyjs $f > ../../build/script/templates/$f; done && popd",
+      "source": "build/script/templates",
+      "target": "build/script",
+      "filters": [
+        {
+          "type": "includeAllExcept",
+          "pattern": "(?:^|/)\\.[\\w.\\- ]+"
+        }
+      ]
+    }
+  ]
 }

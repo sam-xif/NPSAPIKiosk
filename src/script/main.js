@@ -4,8 +4,8 @@ const controller = require('controller');
  * Entry point and controller logic.
  */
 
-const API_KEY = "bGpxFeQ0v8stp7tM6fuxocR57DsjdxrKDuWzrLl9";
-const API_ENDPOINT = "https://developer.nps.gov/api/v1/";
+const API_KEY = "{{ api_key }}";
+const API_ENDPOINT = "{{ api_endpoint }}";
 
 /* from https://davidwalsh.name/query-string-javascript */
 function getUrlParameter(name) {
