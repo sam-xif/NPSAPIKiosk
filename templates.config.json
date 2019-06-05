@@ -7,9 +7,9 @@
   "rules": [
     {
       "before": "mkdir -p $TARGET",
-      "afterEach": "mkdir -p dist && cp build/$FILE dist/$FILE",
+      "afterEach": "mkdir -p dist && cp $TARGET/$FILE dist/$FILE",
       "source": "src/templates",
-      "target": "build",
+      "target": "build/pages",
       "filters": [
         {
           "type": "excludeAllExcept",
