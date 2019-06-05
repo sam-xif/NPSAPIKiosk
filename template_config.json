@@ -2,5 +2,7 @@
   "exclude": [
     "base.html"
   ],
-  "context": {}
+  "context": {
+    "script_dir" : "script"
+  }
 }
