@@ -1,15 +1,17 @@
 {% extends "base.html" %}
 {% import "layout.html" as layout %}
 
+
 {% block title %}National Park Service Kiosk{% endblock %}
+
 
 {% block scripts %}
 <script src="{{ script_dir }}/lib.js"></script>
 <script src="{{ script_dir }}/main.js"></script>
 {% endblock %}
 
-{% block header %}
 
+{% block header %}
 {% call layout.navbar([{ "text":"Home", "link":"#" }], collapse=True, data_target="navbarHeader") %}
     <div class="row">
         <div class="col-sm-8 col-md-7 py-4">
@@ -19,11 +21,10 @@
         </div>
     </div>
 {% endcall %}
-
 {% endblock %}
 
-{% block content %}
 
+{% block content %}
 {% call layout.section("Search", section_id="search", container_class="bg-overlay") %}
     <div class="text-center">
         <h2>Search</h2>
@@ -53,5 +54,4 @@
         </div>
     </div>
 {% endcall %}
-
 {% endblock %}

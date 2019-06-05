@@ -1,4 +1,5 @@
 
+<!-- Generates a section -->
 {% macro section(title, section_id=none, container_class="") -%}
 <section {% if section_id is not none %}id="{{ section_id }}"{% endif %}>
     <div class="container {{ container_class }}">
@@ -8,6 +9,7 @@
 {%- endmacro %}
 
 
+<!-- Generates a navbar -->
 {% macro navbar(items, collapse=False, data_target=none) -%}
 {% if collapse and data_target is not none %}
 <div class="collapse bg-dark" id="{{ data_target }}">
