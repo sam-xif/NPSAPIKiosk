@@ -70,7 +70,7 @@ class AcceptNone(Filter):
 if __name__ == "__main__" :
     CONFIG = sys.argv[1]
 
-    print("Loading configuration")
+    print("Loading configuration\n")
     with open(CONFIG, "r") as config_file:
         config = json.loads(config_file.read())
 
@@ -78,11 +78,6 @@ if __name__ == "__main__" :
     global_context = config["globalContext"] if "globalContext" in config else {}
 
     for rule in config["rules"]:
-        print("Executing before script if one is defined")
-
-        if "before" in rule:
-            subprocess.call(rule["before"], shell=True)
-
         source = rule["source"]
         print("Creating environment for", source)
         env = Environment(
@@ -100,11 +95,19 @@ if __name__ == "__main__" :
         else:
             compiled_filter = None
 
+        if "before" in rule:
+            print("Executing before script with SRC={0} and TARGET={1}".format(source, target))
+            subprocess.run("SRC={0} TARGET={1}; {2}".format(source, target, rule["before"]), shell=True, check=True)
+
         print("Compiling templates to", target)
         templates = env.list_templates()
         for name in templates:
             if compiled_filter is not None and not compiled_filter.test(name):
                 continue
+
+            if "beforeEach" in rule:
+                print("Executing beforeEach script with FILE={0}".format(name))
+                subprocess.run("FILE={0}; {1}".format(name, rule["beforeEach"]), shell=True, check=True)
 
             template = env.get_template(name)
             template_str = template.render(global_context)
@@ -112,3 +115,13 @@ if __name__ == "__main__" :
             print("Writing to", outpath)
             with open(outpath, "w+") as outfile:
                 outfile.write(template_str)
+
+            if "afterEach" in rule:
+                print("Executing afterEach script with FILE={0}".format(name))
+                subprocess.run("FILE={0}; {1}".format(name, rule["afterEach"]), shell=True, check=True)
+
+        if "after" in rule:
+            print("Executing after script with SRC={0} and TARGET={1}".format(source, target))
+            subprocess.run("SRC={0} TARGET={1}; {2}".format(source, target, rule["after"]), shell=True, check=True)
+
+        print("")  # newline

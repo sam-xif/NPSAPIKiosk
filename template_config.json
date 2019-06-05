@@ -6,6 +6,8 @@
   },
   "rules": [
     {
+      "before": "mkdir -p $TARGET",
+      "afterEach": "mkdir -p dist && cp build/$FILE dist/$FILE",
       "source": "src/templates",
       "target": "build",
       "filters": [
@@ -16,7 +18,7 @@
       ]
     },
     {
-      "before": "mkdir -p build/script/templates && pushd src/script && for f in ./*; do uglifyjs $f > ../../build/script/templates/$f; done && popd",
+      "before": "mkdir -p $SRC && pushd src/script && for f in *.js; do uglifyjs $f > ../../$SRC/$f; done && popd",
       "source": "build/script/templates",
       "target": "build/script",
       "filters": [
