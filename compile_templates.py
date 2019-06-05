@@ -26,6 +26,7 @@ if __name__ == "__main__" :
         templates = env.list_templates()
         for name in templates:
             if name not in config["exclude"]:
+                print(name)
                 template = env.get_template(name)
                 template_str = template.render(context)
                 outpath = os.path.join(TARGET, name)

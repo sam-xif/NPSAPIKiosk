@@ -1,0 +1,17 @@
+
+{% macro navbar(items, collapse=False, data_target=none) -%}
+<div class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container d-flex justify-content-between">
+        {% for item in items %}
+        <a href="{{ item.link }}" class="navbar-brand d-flex align-items-center">
+            <strong>{{ item.text }}</strong>
+        </a>
+        {% endfor %}
+        {% if collapse and data_Target is not none %}
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#{{ data_target }}" aria-controls="{{ data_target }}" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        {% endif %}
+    </div>
+</div>
+{%- endmacro %}

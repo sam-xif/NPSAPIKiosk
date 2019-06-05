@@ -3,7 +3,9 @@
     "templates"
   ],
   "exclude": [
-    "base.html"
+    "base.html",
+    "navbar.html",
+    ".DS_Store"
   ],
   "context": {
     "script_dir" : "script"
