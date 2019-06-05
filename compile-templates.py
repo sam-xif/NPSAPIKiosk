@@ -146,6 +146,12 @@ class AcceptNone(Filter):
 
 
 def execute_command(command, vars):
+    """
+    Executes a shell command with the given variables dictionary as context.
+    Also prints a message with the command string.
+    :param command: The shell command to execute
+    :param vars: The context dictionary
+    """
     full_command = '{0}; {1}'.format(' '.join([name + "=" + vars[name] for name in vars]), command)
     print("Executing command:", full_command)
     subprocess.run(full_command, shell=True, check=True)
