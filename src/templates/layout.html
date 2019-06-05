@@ -1,5 +1,22 @@
 
+{% macro section(title, section_id=none, container_class="") -%}
+<section {% if section_id is not none %}id="{{ section_id }}"{% endif %}>
+    <div class="container {{ container_class }}">
+        {{ caller() }}
+    </div>
+</section>
+{%- endmacro %}
+
+
 {% macro navbar(items, collapse=False, data_target=none) -%}
+{% if collapse and data_target is not none %}
+<div class="collapse bg-dark" id="{{ data_target }}">
+    <div class="container">
+        {{ caller() }}
+    </div>
+</div>
+{% endif %}
+
 <div class="navbar navbar-dark bg-dark shadow-sm">
     <div class="container d-flex justify-content-between">
         {% for item in items %}
@@ -7,7 +24,7 @@
             <strong>{{ item.text }}</strong>
         </a>
         {% endfor %}
-        {% if collapse and data_Target is not none %}
+        {% if collapse and data_target is not none %}
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#{{ data_target }}" aria-controls="{{ data_target }}" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
