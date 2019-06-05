@@ -86,7 +86,7 @@ if __name__ == "__main__" :
         )
 
         target = rule["target"]
-        global_context.update(rule["context"] if "context" in rule else {})
+        context = {**global_context, **(rule["context"] if "context" in rule else {})}
 
         if "filters" in rule:
             filters = [Filter.from_json(filter_json) for filter_json in rule["filters"]]
