@@ -1,4 +1,7 @@
 {
+  "sources": [
+    "templates"
+  ],
   "exclude": [
     "base.html"
   ],
