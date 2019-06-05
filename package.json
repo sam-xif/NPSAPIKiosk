@@ -2,9 +2,7 @@
   "scripts": {
     "test": "jest"
   },
-  "dependencies": {
-    "uglify-es": "^3.3.9"
-  },
+  "dependencies": {},
   "devDependencies": {
     "axios": ">=0.19.0",
     "jquery": "^3.4.1",
