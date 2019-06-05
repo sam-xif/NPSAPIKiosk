@@ -1,8 +1,8 @@
 const model = require('model');
 const client = require('client');
 
-const API_KEY = "bGpxFeQ0v8stp7tM6fuxocR57DsjdxrKDuWzrLl9";
-const API_ENDPOINT = "https://developer.nps.gov/api/v1/";
+const API_KEY = "{{ api_key }}";
+const API_ENDPOINT = "{{ api_endpoint }}";
 
 // Initialize API client
 let api = new client.NPSAPIProxy(API_KEY, API_ENDPOINT);
@@ -10,8 +10,8 @@ let api = new client.NPSAPIProxy(API_KEY, API_ENDPOINT);
 console.log("Worker has been started!");
 
 /**
- *
- * @param msg
+ * Processes messages received by this worker.
+ * @param {Object} msg The message received
  */
 onmessage = function (msg) {
     let request = msg.data;

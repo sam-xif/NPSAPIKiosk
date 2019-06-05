@@ -3,7 +3,7 @@ const $ = require('jquery');
 /**
  * Renders parameterized HTML to the DOM. Depends on jQuery.
  * @param template The HTML template with format specifiers.
- * @constructor Creates a new instance from the given template.
+ * @constructor
  */
 function TemplateRenderer() {
     /**
@@ -71,7 +71,7 @@ function createSlideshow(tagID, fadeSpeed, delay) {
 }
 
 /**
- *
+ * Clears the innerHTML of the tag with the given id.
  * @param tagID
  */
 function clearTag(tagID) {

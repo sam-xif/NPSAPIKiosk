@@ -1,9 +1,9 @@
 const axios = require('axios/index');
 
 /**
- * Depends on Axios
- * @param api_key
- * @param api_endpoint
+ * Routes API requests to the given NPS API endpoint using the given API key.
+ * @param api_key The API key to use
+ * @param api_endpoint The API endpoint to access
  * @constructor
  */
 function NPSAPIProxy(api_key, api_endpoint) {
@@ -40,9 +40,9 @@ function NPSAPIProxy(api_key, api_endpoint) {
 }
 
 /**
- *
- * @param resource
- * @param params
+ * Represents an NPS API query that can be executed.
+ * @param resource The API resource to query
+ * @param params The query parameters
  * @constructor
  */
 function NPSAPIQuery(resource, params) {
@@ -156,6 +156,11 @@ function NPSAPIQueryBuilder() {
         return this;
     };
 
+    /**
+     *
+     * @param start
+     * @return {NPSAPIQueryBuilder}
+     */
     this.setStart = function (start) {
         if (start < 0) {
             throw new Error("Start cannot be less than 0");
@@ -164,6 +169,10 @@ function NPSAPIQueryBuilder() {
         return this;
     };
 
+    /**
+     *
+     * @return {NPSAPIQueryBuilder}
+     */
     this.nextPage = function () {
         this.start += 1;
         return this;

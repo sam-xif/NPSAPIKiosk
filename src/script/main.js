@@ -13,7 +13,7 @@ function getUrlParameter(name) {
     let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     let results = regex.exec(location.search);
     return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-};
+}
 
 /**
  * Function that gets called when the page is loaded.

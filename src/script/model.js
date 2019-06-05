@@ -9,7 +9,7 @@ const client = require('client');
  * @param parkCode The park code associated with this piece of data
  * @param url The url associated with this piece of data
  * @param data JSON object of other data (optional)
- * @constructor Creates a new model instance.
+ * @constructor
  */
 function NPSModel(parkCode, url, data) {
     this.parkCode = parkCode;
@@ -43,8 +43,9 @@ NPSModel.parse = function (rawData) {
 };
 
 /**
- *
- * @param {NPSAPIQuery} query
+ * Asynchronously fetch {@link NPSModel} objects using the given {@link NPSAPIQuery} object.
+ * @param {NPSAPIQuery} query The query to execute
+ * @param {NPSAPIWorkerManager} workerMgr the worker manager to route the request to
  */
 NPSModel.retrieve = async function (query, workerMgr) {
     let response = await query.execute(workerMgr);
@@ -67,22 +68,6 @@ NPSModel.retrieve = async function (query, workerMgr) {
         out.push(new models[resource](parkObj));
     });
 
-    // switch (resource) {
-    //     case 'parks':
-    //         data.data.forEach((parkObj) => {
-    //             out.push(new NPSPark(parkObj));
-    //         });
-    //         break;
-    //     case 'alerts':
-    //         data.data.forEach((alertObj) => {
-    //             out.push(new NPSAlert(alertObj));
-    //         });
-    //         break;
-    //         // Add more
-    //     default:
-    //         throw new Error("Unsupported resource");
-    // }
-
     return out;
 };
 
@@ -91,7 +76,7 @@ NPSModel.retrieve = async function (query, workerMgr) {
  * @param {JSON} source Source {@code JSON} object from the API to use to construct the object.
  * @param {JSON?} parkCodeMap Optional park code map to use to find the corresponding
  *                 {@link NPSPark} instance.
- * @constructor Creates a new instance from the given source.
+ * @constructor
  */
 function NPSAlert(source, parkCodeMap) {
     let parkCode = source.parkCode;
@@ -108,20 +93,6 @@ function NPSAlert(source, parkCodeMap) {
         this.park = parkCodeMap[parkCode];
     }
 
-    // /**
-    //  * Obtains a Promise which resolves to a new {@code NPSAlert} instance that has the {@code park} field defined
-    //  *  as the park corresponding to this instance's parkCode.
-    //  * @return {Promise<NPSAlert>} The promise
-    //  */
-    // this.fetchPark = function () {
-    //     return (async function (alertInstance) {
-    //         let park = await (new NPSAPIClientInterface(new NPSAPIClient())) // TODO: Remove this to decouple model from client
-    //             .parkFromCode(alertInstance.parkCode);
-    //         alertInstance.park = park;
-    //         return alertInstance;
-    //     })(this);
-    // };
-
     /**
      * Given a mapping from park codes to {@link NPSPark}s, attempts to find the park represented by this instance's
      *  park code.
@@ -137,7 +108,7 @@ function NPSAlert(source, parkCodeMap) {
 /**
  * A park in the NPS's database.
  * @param source Source JSON object from the API to use to construct the object.
- * @constructor Creates a new instance from the given source.
+ * @constructor
  */
 function NPSPark(source) {
     let parkCode = source.parkCode;

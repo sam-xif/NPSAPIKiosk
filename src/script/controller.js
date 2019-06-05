@@ -5,7 +5,7 @@ const worker = require('worker');
 const $ = require('jquery');
 
 /**
- *
+ * Main controller object for rendering index.html
  * @param api_endpoint
  * @param api_key
  * @constructor
