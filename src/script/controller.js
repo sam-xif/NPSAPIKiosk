@@ -13,7 +13,7 @@ const $ = require('jquery');
 function Controller(api_endpoint, api_key) {
     this.renderer = new view.TemplateRenderer();
     this.qb = new client.NPSAPIQueryBuilder();
-    this.workerMgr = new worker.NPSAPIWorkerManager('script/dist/worker.js');
+    this.workerMgr = new worker.NPSAPIWorkerManager('dist/script/worker.js');
 
     //this.client = new client.NPSAPIClient(api_key, api_endpoint);
 

@@ -1,0 +1,6 @@
+{
+  "exclude": [
+    "base.html"
+  ],
+  "context": {}
+}
