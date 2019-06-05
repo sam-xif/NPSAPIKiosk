@@ -2,7 +2,7 @@
 
 # Compile templates
 source ./env/bin/activate
-python compile_templates.py template_config.json
+python compile-templates.py template.config.json
 deactivate
 
 # make all scripts
