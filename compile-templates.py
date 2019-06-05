@@ -12,7 +12,7 @@ This is an overview of the format ([]'s around a field denote that a field is op
             ["beforeEach": <command to run before processing EACH file>],
             ["after": <command to run after processing ALL files>],
             ["afterEach": <command to run after processing EACH file],
-            ["context": <local context that shadows global context>],
+            ["context": <local context that gets merged with global context>],
             "source": <source_dir>,
             "target": <target_dir>,
             ["filters": [
