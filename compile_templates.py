@@ -25,7 +25,7 @@ if __name__ == "__main__" :
         print("Compiling templates to", TARGET)
         templates = env.list_templates()
         for name in templates:
-            if name not in config["exclude"]:
+            if name in config["include"]:
                 print(name)
                 template = env.get_template(name)
                 template_str = template.render(context)

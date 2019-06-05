@@ -2,10 +2,8 @@
   "sources": [
     "templates"
   ],
-  "exclude": [
-    "base.html",
-    "navbar.html",
-    ".DS_Store"
+  "include": [
+    "index.html"
   ],
   "context": {
     "script_dir" : "script"
