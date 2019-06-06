@@ -3,13 +3,17 @@
     "script_dir": "script",
     "worker_script": "worker.js",
     "api_key": "bGpxFeQ0v8stp7tM6fuxocR57DsjdxrKDuWzrLl9",
-    "api_endpoint": "https://developer.nps.gov/api/v1/"
+    "api_endpoint": "https://developer.nps.gov/api/v1/",
+    "containerIDs": {
+      "alerts": "slideshowParent",
+      "searchResults": "resultsParent"
+    }
   },
   "rules": [
     {
       "before": "mkdir -p $TARGET",
       "afterEach": "mkdir -p dist && cp $TARGET/$FILE dist/$FILE",
-      "source": "src/templates",
+      "source": "src/html",
       "target": "build/pages",
       "filters": [
         {
@@ -22,6 +26,17 @@
       "before": "mkdir -p $SRC && pushd src/script && for f in *.js; do uglifyjs $f > ../../$SRC/$f; done && popd",
       "source": "build/script/templates",
       "target": "build/script",
+      "filters": [
+        {
+          "type": "includeAllExcept",
+          "pattern": "(^|/)\\.[\\w.\\- ]+"
+        }
+      ]
+    },
+    {
+      "before": "mkdir -p $TARGET",
+      "source": "src/css",
+      "target": "dist/static/css",
       "filters": [
         {
           "type": "includeAllExcept",

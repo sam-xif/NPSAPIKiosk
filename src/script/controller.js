@@ -25,7 +25,7 @@ function Controller(api_endpoint, api_key) {
     this.renderAlerts = function() {
         this.qb.from("alerts").setLimit(5);
 
-        let tagID = "#slideshowParent";
+        let tagID = "#{{ containerIDs.alerts }}";
         let slideShowCreated = false;
 
         // gets 5 * 10 = 50 (ish, because of off-by-one errors from the API) alerts
@@ -52,13 +52,15 @@ function Controller(api_endpoint, api_key) {
 }
 
 /**
- *
+ * Controller that obtains and renders search results.
+ * @param resource
  * @param queryString
  * @param api_endpoint
  * @param api_key
  * @constructor
  */
-function SearchController(queryString, api_endpoint, api_key) {
+function SearchController(resource, queryString, api_endpoint, api_key) {
+    this.resource = resource;
     this.queryString = queryString;
     this.renderer = new view.TemplateRenderer();
     this.qb = new client.NPSAPIQueryBuilder();
@@ -69,13 +71,15 @@ function SearchController(queryString, api_endpoint, api_key) {
     };
 
     this.showResults = function() {
+        let tagID = "#{{ containerIDs.searchResults }}";
+
         this.qb.from("alerts").setLimit(5).setQueryString(this.queryString);
 
         // gets 5 * 10 = 50 (ish, because of off-by-one errors from the API) alerts
         for (let i = 0; i < 10; i++) {
             model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
                 .then((alerts) => {
-                    
+
                 });
             this.qb.nextPage();
         }
