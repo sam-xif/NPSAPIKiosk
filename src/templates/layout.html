@@ -3,7 +3,7 @@
 {% macro section(title, section_id=none, container_class="") -%}
 <section {% if section_id is not none %}id="{{ section_id }}"{% endif %}>
     <div class="container {{ container_class }}">
-        {{ caller() }}
+        {{ caller(title) }}
     </div>
 </section>
 {%- endmacro %}

@@ -13,7 +13,7 @@ const $ = require('jquery');
 function Controller(api_endpoint, api_key) {
     this.renderer = new view.TemplateRenderer();
     this.qb = new client.NPSAPIQueryBuilder();
-    this.workerMgr = new worker.NPSAPIWorkerManager('script/worker.js');
+    this.workerMgr = new worker.NPSAPIWorkerManager('{{ script_dir }}/{{ worker_script }}');
 
     //this.client = new client.NPSAPIClient(api_key, api_endpoint);
 
@@ -51,13 +51,37 @@ function Controller(api_endpoint, api_key) {
     }
 }
 
-function SearchController(formID) {
-    this.formID = formID;
+/**
+ *
+ * @param queryString
+ * @param api_endpoint
+ * @param api_key
+ * @constructor
+ */
+function SearchController(queryString, api_endpoint, api_key) {
+    this.queryString = queryString;
+    this.renderer = new view.TemplateRenderer();
+    this.qb = new client.NPSAPIQueryBuilder();
+    this.workerMgr = new worker.NPSAPIWorkerManager('{{ script_dir }}/{{ worker_script }}');
 
-    $(formID).addEventListener('onsubmit', (data) => {
-        console.log(data);
-    })
+    this.initialize = function() {
+
+    };
+
+    this.showResults = function() {
+        this.qb.from("alerts").setLimit(5).setQueryString(this.queryString);
+
+        // gets 5 * 10 = 50 (ish, because of off-by-one errors from the API) alerts
+        for (let i = 0; i < 10; i++) {
+            model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
+                .then((alerts) => {
+                    
+                });
+            this.qb.nextPage();
+        }
+    };
 }
+
 
 module.exports = {
     Controller : Controller

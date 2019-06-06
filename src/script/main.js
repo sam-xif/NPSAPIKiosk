@@ -12,18 +12,24 @@ function getUrlParameter(name) {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
     let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
     let results = regex.exec(location.search);
-    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    return results === null ? undefined : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
 /**
  * Function that gets called when the page is loaded.
  */
 function onPageLoad() {
+    if (getUrlParameter('query') && getUrlParameter('resource')) {
+        console.log("Query received!");
+    } else if (!getUrlParameter('resource')) {
+        // TODO: Display error about missing resource
+    } else if (!getUrlParameter('query')) {
+        // TODO: Display error about missing query
+    }
+
     let ctrl = new controller.Controller(API_ENDPOINT, API_KEY);
     ctrl.initializeView();
     ctrl.renderAlerts();
-
-    console.log(getUrlParameter('query'));
 }
 
 document.addEventListener("DOMContentLoaded", onPageLoad, false);

@@ -1,6 +1,7 @@
 {
   "globalContext": {
     "script_dir": "script",
+    "worker_script": "worker.js",
     "api_key": "bGpxFeQ0v8stp7tM6fuxocR57DsjdxrKDuWzrLl9",
     "api_endpoint": "https://developer.nps.gov/api/v1/"
   },
@@ -13,7 +14,7 @@
       "filters": [
         {
           "type": "excludeAllExcept",
-          "pattern": "index.html"
+          "pattern": "(index|searchResults)\\.html"
         }
       ]
     },
@@ -24,7 +25,7 @@
       "filters": [
         {
           "type": "includeAllExcept",
-          "pattern": "(?:^|/)\\.[\\w.\\- ]+"
+          "pattern": "(^|/)\\.[\\w.\\- ]+"
         }
       ]
     }
