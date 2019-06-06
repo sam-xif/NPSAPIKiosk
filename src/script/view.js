@@ -28,8 +28,6 @@ class TemplateRenderer {
         }
 
         let templateCopy = nunjucks.render(this.templates[templateName], context);
-        console.log(templateCopy);
-        // Append new
         $(tagID).append(templateCopy);
     }
 }

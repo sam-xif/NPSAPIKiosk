@@ -56,6 +56,16 @@ class NPSAPIQuery {
         };
     }
 
+    capture(response) {
+        if (response.status === 'error') {
+            this.status = response.status;
+            return;
+        }
+
+        let data = response.data;
+
+    }
+
     /**
      *
      * @param workerMgr
@@ -63,10 +73,87 @@ class NPSAPIQuery {
      */
     async execute(workerMgr) {
         let response = await (new Promise((resolve) => {
-            workerMgr.request(this, resolve);
+            workerMgr.request(this, (response) => { this.capture(response); resolve(response); });
         }));
 
         return response;
+    }
+}
+
+
+/**
+ *
+ */
+class NPSAPIResponse {
+    /**
+     * @param status
+     * @param start
+     * @param limit
+     * @param total
+     * @param data
+     */
+    constructor(status, resource, start, limit, total, data) {
+        this.status = status;
+        this.resource = resource;
+        this.start = start;
+        this.limit = limit;
+        this.total = total;
+        this.data = data;
+    }
+
+    totalPages() {
+        return Math.ceil(this.total / this.limit);
+    }
+
+    currentPage() {
+        return this.start / this.limit;
+    }
+
+    pagesLeft() {
+        return this.totalPages() - this.currentPage();
+    }
+
+    /**
+     * Checks whether the response has an OK status.
+     * @return {boolean}
+     */
+    ok() {
+        return this.status === 'ok';
+    }
+
+    /**
+     * <p>
+     *     Gets the data of this response. This method should only be expected to return a defined value if this.ok()
+     *     is true.
+     * </p>
+     * @return {Object} The data of this response
+     */
+    getData() {
+        return this.data;
+    }
+
+    getResource() {
+        console.log(this.resource);
+        return this.resource;
+    }
+
+    /**
+     * Constructs an {@link NPSAPIResponse} object from raw data.
+     * @param raw A response object as received from an {@link NPSAPIWorkerManager}.
+     * @return {NPSAPIResponse} The new object
+     * @throws Error if parsing the data failed
+     */
+    static from(responseObj) {
+        if (responseObj.status === undefined) {
+            throw new Error("Cannot parse malformed response. Expected a 'status' property.");
+        }
+
+        return new NPSAPIResponse(responseObj.status,
+            responseObj.reqResource,
+            responseObj.data.start,
+            responseObj.data.limit,
+            responseObj.data.total,
+            responseObj.data.data);
     }
 }
 
@@ -135,7 +222,7 @@ class NPSAPIQueryBuilder {
      * @return {NPSAPIQueryBuilder}
      */
     nextPage() {
-        this.start += 1;
+        this.start += this.limit;
         return this;
     }
 
@@ -198,6 +285,7 @@ class NPSAPIQueryBuilder {
         }
 
         params["limit"] = this.limit;
+        params["start"] = this.start;
 
         if (this.queryString != null) {
             params["q"] = this.queryString;
@@ -212,4 +300,5 @@ module.exports = {
     NPSAPIQuery : NPSAPIQuery,
     NPSAPIQueryBuilder : NPSAPIQueryBuilder,
     NPSAPIProxy : NPSAPIProxy,
+    NPSAPIResponse: NPSAPIResponse
 };

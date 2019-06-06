@@ -66,7 +66,7 @@ class NPSAPIWorkerManager {
     resolve(response) {
         let idx = parseInt(response.id);
         if (this.callbacks[idx]) {
-            this.callbacks[parseInt(response.id)](response);
+            this.callbacks[parseInt(response.id)](client.NPSAPIResponse.from(response));
         } else {
             // error?
         }

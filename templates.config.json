@@ -35,7 +35,8 @@
       "context": {
         "views_dir": "static/views",
         "views": {
-          "alert": "alertView.html"
+          "alert": "alertView.html",
+          "searchResult": "searchResultView.html"
         }
       }
     },

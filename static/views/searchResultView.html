@@ -1,0 +1,16 @@
+
+{% for result in results %}
+<div class="searchResult container my-2">
+    <div class="row">
+        <h4>
+            {{ result.title }}
+        </h4>
+    </div>
+    <div class="row"><p>{{ result.description }}</p></div>
+    {% if result.url %}
+    <div class="row"><p class="text-muted"><a href="{{ result.url }}">more...</a></p></div>
+    {% else %}
+    <div class="row"><p class="text-muted">link not available</p></div>
+    {% endif %}
+</div>
+{% endfor %}

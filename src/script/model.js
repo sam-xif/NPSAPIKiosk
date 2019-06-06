@@ -17,24 +17,33 @@ class NPSModel {
      * Gets a description of this NPS data object.
      * @return {String} A description
      */
-    description() {
-        throw new Error("'description()' must be implemented on a subclass of NPSModel");
+    getDescription() {
+        throw new Error("'getDescription()' must be implemented on a subclass of NPSModel");
+    }
+
+    getUrl() {
+        throw new Error("'getUrl()' must be implemented on a subclass of NPSModel");
+    }
+
+    getTitle() {
+        throw new Error("'getTitle()' must be implemented on a subclass of NPSModel");
     }
 
     /**
      * Asynchronously fetch {@link NPSModel} objects using the given {@link NPSAPIQuery} object.
      * @param {NPSAPIQuery} query The query to execute
      * @param {NPSAPIWorkerManager} workerMgr the worker manager to route the request to
+     * @throws Error if the response could not be parsed
      */
     static async retrieve(query, workerMgr) {
         let response = await query.execute(workerMgr);
 
-        if (response.status === 'error') {
-            throw new Error(response.data);
+        if (!response.ok()) {
+            throw new Error(response.getData());
         }
 
-        let resource = response.reqResource;
-        let data = response.data; // This data is the actual API response in its entirety
+        let resource = response.getResource();
+        let data = response.getData(); // This data is the actual API response in its entirety
 
         let out = [];
 
@@ -43,9 +52,13 @@ class NPSModel {
             'alerts' : NPSAlert
         };
 
-        data.data.forEach((parkObj) => {
-            out.push(new models[resource](parkObj));
-        });
+        if (!response.pagesLeft() <= 0) {
+            response.getData().forEach((obj) => {
+                out.push(new models[resource](obj));
+            });
+        } else {
+            console.log("Hit end!");
+        }
 
         return out;
     }
@@ -66,8 +79,16 @@ class NPSAlert extends NPSModel {
         Object.assign(this, source);
     }
 
-    description() {
+    getDescription() {
         return this.description;
+    }
+
+    getUrl() {
+        return this.url;
+    }
+
+    getTitle() {
+        return this.title;
     }
 }
 
@@ -84,8 +105,16 @@ class NPSPark extends NPSModel {
         Object.assign(this, source);
     }
 
-    description() {
+    getDescription() {
         return this.description;
+    }
+
+    getUrl() {
+        return this.url;
+    }
+
+    getTitle() {
+        return this.fullName;
     }
 }
 

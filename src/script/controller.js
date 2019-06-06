@@ -70,7 +70,7 @@ class IndexController extends Controller {
     }
 }
 
-class SearchController {
+class SearchController extends Controller {
     /**
      * Controller that obtains and renders search results.
      * @param resource
@@ -80,9 +80,10 @@ class SearchController {
      * @constructor
      */
     constructor(resource, queryString, api_endpoint, api_key) {
+        super();
         this.resource = resource;
         this.queryString = queryString;
-        this.renderer = new view.TemplateRenderer();
+        this.renderer = new view.TemplateRenderer('{{ views_dir }}');
         this.qb = new client.NPSAPIQueryBuilder();
         this.workerMgr = new worker.NPSAPIWorkerManager('{{ script_dir }}/{{ worker_script }}');
     }
@@ -99,6 +100,7 @@ class SearchController {
 
         // gets 5 * 10 = 50 (ish, because of off-by-one errors from the API) alerts
         for (let i = 0; i < 10; i++) {
+            console.log(this.qb.start);
             model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
                 .then(results => {
                     if (!spinnerRemoved) {
@@ -107,24 +109,35 @@ class SearchController {
                         spinnerRemoved = false;
                     }
 
-                    for (let j = 0; j < results.length; j++) {
-                        let result = results[j];
-                        this.renderer.renderToHTML(tagID,
-                            "searchResults",
-                            []);
-                    }
+                    this.renderer.renderToHTML(tagID,
+                        "searchResult",
+                        {
+                            results: results.map(result => {
+                                return {
+                                    url: result.getUrl(),
+                                    title: result.getTitle(),
+                                    description: result.getDescription()
+                                }
+                            })
+                        });
                 });
             this.qb.nextPage();
         }
     }
 
     initialize() {
+        this.renderer.registerTemplate("searchResult", '{{ views.searchResult }}')
+    }
 
+    go() {
+        this.initialize();
+        this.showResults();
     }
 }
 
 
 module.exports = {
     Controller : Controller,
-    IndexController : IndexController
+    IndexController : IndexController,
+    SearchController : SearchController
 };

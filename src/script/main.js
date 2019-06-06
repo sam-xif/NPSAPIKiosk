@@ -19,16 +19,17 @@ function getUrlParameter(name) {
  * Function that gets called when the page is loaded.
  */
 function onPageLoad() {
+    // TODO: Perhaps add logic to each page that decides what controller to use to avoid doing it here
     if (getUrlParameter('query') && getUrlParameter('resource')) {
-        console.log("Query received!");
-    } else if (!getUrlParameter('resource')) {
-        // TODO: Display error about missing resource
-    } else if (!getUrlParameter('query')) {
-        // TODO: Display error about missing query
+        let ctrl = new controller.SearchController(getUrlParameter('resource'),
+            getUrlParameter('query'),
+            API_ENDPOINT,
+            API_KEY);
+        ctrl.go();
+    } else {
+        let ctrl = new controller.IndexController(API_ENDPOINT, API_KEY);
+        ctrl.go();
     }
-
-    let ctrl = new controller.IndexController(API_ENDPOINT, API_KEY);
-    ctrl.go();
 }
 
 document.addEventListener("DOMContentLoaded", onPageLoad, false);
