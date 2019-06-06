@@ -2,20 +2,20 @@ const axios = require('axios/index');
 
 /**
  * Routes API requests to the given NPS API endpoint using the given API key.
- * @param api_key The API key to use
- * @param api_endpoint The API endpoint to access
- * @constructor
  */
-function NPSAPIProxy(api_key, api_endpoint) {
-    this.api_key = api_key;
-    this.api_endpoint = api_endpoint;
-
+class NPSAPIProxy {
     /**
-     * Gets data from the given resource in the NPS API
-     * @param params
-     * @return {Promise} A Promise that, when resolved, returns a JSON object with data
+     * @param api_key The API key to use
+     * @param api_endpoint The API endpoint to access
+     * @constructor
      */
-    this.get = async function (resource, params) {
+    constructor(api_key, api_endpoint) {
+        this.api_key = api_key;
+        this.api_endpoint = api_endpoint;
+
+    }
+
+    async get(resource, params) {
         params["api_key"] = this.api_key;
         let result = await axios.get(this.api_endpoint + resource, {
             params: params
@@ -27,48 +27,41 @@ function NPSAPIProxy(api_key, api_endpoint) {
             // error
             throw new Error("Resource could not be retrieved; status = " + result.status);
         }
-    };
-
-    /**
-     * Validates a URL parameters object for use with the NPS API.
-     * @param {Object} params The parameters object to check.
-     * @return {boolean} Whether the parameters object is valid.
-     */
-    this.validParams = function (params) {
-        return "api_key" in params;
-    };
+    }
 }
 
 /**
  * Represents an NPS API query that can be executed.
- * @param resource The API resource to query
- * @param params The query parameters
- * @constructor
  */
-function NPSAPIQuery(resource, params) {
-    this.resource = resource;
-    this.params = params;
+class NPSAPIQuery {
+    /**
+     * @param resource The API resource to query
+     * @param params The query parameters
+     * @constructor
+     */
+    constructor(resource, params) {
+        this.resource = resource;
+        this.params = params;
+
+    }
 
     /**
-     * <p>
-     *     Strips this {@link NPSAPIQuery} down into a JavaScript object with this instance's resource and
-     *     params properties.
-     * </p>
+     *
      * @return {{resource: *, params: *}}
      */
-    this.strip = function () {
+    strip() {
         return {
             resource: this.resource,
             params: this.params
         };
-    };
+    }
 
     /**
-     * Executes this query using the given worker manager object to make calls to the API.
-     * @param {NPSAPIWorkerManager} workerMgr The worker manager object to issue the request to
-     * @return {Object} Response data
+     *
+     * @param workerMgr
+     * @return {Promise<any>}
      */
-    this.execute = async function (workerMgr) {
+    async execute(workerMgr) {
         let response = await (new Promise((resolve) => {
             workerMgr.request(this, resolve);
         }));
@@ -80,109 +73,114 @@ function NPSAPIQuery(resource, params) {
 
 /**
  * Constructs queries of type {@link NPSAPIQuery} that can be executed on the NPS API.
- * @constructor
  */
-function NPSAPIQueryBuilder() {
+class NPSAPIQueryBuilder {
     /**
-     * Resets the Query Builder to its initial, default state.
-     * @return {NPSAPIQueryBuilder} This instance.
+     * @constructor
      */
-    this.reset = function () {
+    constructor() {
+        this.reset();
+    }
+
+    /**
+     *
+     * @return {NPSAPIQueryBuilder}
+     */
+    reset() {
         this.parkCodes = [];
         this.queryString = null;
         this.limit = 50;
         this.start = 0;
         return this;
-    };
-
-    this.reset();
-
-    /**
-     *
-     * @param resource
-     * @return {NPSAPIQueryBuilder}
-     */
-    this.from = function (resource) {
-        this.resource = resource;
-        return this;
-    };
-
-    /**
-     *
-     * @param parkCode
-     * @return {NPSAPIQueryBuilder} This instance.
-     */
-    this.addParkCode = function (parkCode) {
-        if (!this.parkCodes.includes(parkCode)) {
-            this.parkCodes.push(parkCode);
-        }
-        return this;
-    };
+    }
 
     /**
      *
      * @param parkCodeArr
      * @return {NPSAPIQueryBuilder}
      */
-    this.addAllParkCodes = function (parkCodeArr) {
+    addAllParkCodes(parkCodeArr) {
         parkCodeArr.forEach((parkCode) => {
             if (!this.parkCodes.includes(parkCode)) {
                 this.parkCodes.push(parkCode);
             }
         });
         return this;
-    };
+    }
+
+    /**
+     *
+     * @param parkCode
+     * @return {NPSAPIQueryBuilder}
+     */
+    addParkCode(parkCode) {
+        if (!this.parkCodes.includes(parkCode)) {
+            this.parkCodes.push(parkCode);
+        }
+        return this;
+    }
 
     /**
      *
      * @param queryString
      * @return {NPSAPIQueryBuilder}
      */
-    this.setQueryString = function (queryString) {
+    setQueryString(queryString) {
         this.queryString = queryString;
         return this;
-    };
+    }
 
     /**
      *
-     * @param {int} limit
+     * @return {NPSAPIQueryBuilder}
      */
-    this.setLimit = function (limit) {
+    nextPage() {
+        this.start += 1;
+        return this;
+    }
+
+    /**
+     *
+     * @param limit
+     * @return {NPSAPIQueryBuilder}
+     */
+    setLimit(limit) {
         if (limit < 0) {
             throw new Error("Limit cannot be less than 0");
         }
 
         this.limit = limit;
         return this;
-    };
+    }
 
     /**
      *
      * @param start
      * @return {NPSAPIQueryBuilder}
      */
-    this.setStart = function (start) {
+    setStart(start) {
         if (start < 0) {
             throw new Error("Start cannot be less than 0");
         }
         this.start = start;
         return this;
-    };
+    }
 
     /**
      *
+     * @param resource
      * @return {NPSAPIQueryBuilder}
      */
-    this.nextPage = function () {
-        this.start += 1;
+    from(resource) {
+        this.resource = resource;
         return this;
-    };
+    }
 
     /**
-     * Builds the URL query parameters that are contained in this query builder.
-     * @return {NPSAPIQuery} JSON object of URL query parameters
+     *
+     * @return {NPSAPIQuery}
      */
-    this.build = function () {
+    build() {
         let params = {};
 
         if (this.parkCodes.length > 0) {
@@ -206,7 +204,7 @@ function NPSAPIQueryBuilder() {
         }
 
         return new NPSAPIQuery(this.resource, params);
-    };
+    }
 }
 
 /**

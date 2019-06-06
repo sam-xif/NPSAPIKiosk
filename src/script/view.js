@@ -1,35 +1,26 @@
 const $ = require('jquery');
 
-/**
- * Renders parameterized HTML to the DOM. Depends on jQuery.
- * @param template The HTML template with format specifiers.
- * @constructor
- */
-function TemplateRenderer() {
+class TemplateRenderer {
     /**
-     * Object that maps from template names to templates.
-     * New templates can be registered with {@link registerTemplate()}.
-     * @type {Object}
+     * Renders parameterized HTML to the DOM. Depends on jQuery.
+     * @param template The HTML template with format specifiers.
+     * @constructor
      */
-    this.templates = {};
+    constructor() {
+        /**
+         * Object that maps from template names to templates.
+         * New templates can be registered with {@link registerTemplate()}.
+         * @type {Object}
+         */
+        this.templates = {};
 
-    /**
-     * Registers a new template for use in rendering.
-     * @param templateName The name of the template
-     * @param template The template
-     */
-    this.registerTemplate = function (templateName, template) {
+    }
+
+    registerTemplate(templateName, template) {
         this.templates[templateName] = template;
-    };
+    }
 
-    /**
-     * Renders, based on the given template, to the tag with the given ID,
-     * using the arguments array to format the template.
-     * @param {String} tagID The ID of the tag into which to insert HTML.
-     * @param {String} templateName The name of the registered template to render.
-     * @param {Array} args The array of format arguments.
-     */
-    this.renderToHTML = function (tagID, templateName, args) {
+    renderToHTML(tagID, templateName, args) {
         if (!(templateName in this.templates)) {
             throw new Error("'templateName' must be in registered templates.");
         }
@@ -43,45 +34,43 @@ function TemplateRenderer() {
 
         // Append new
         $(tagID).append(templateCopy);
-    };
+    }
 }
 
-// TODO: Perhaps make a slideshow class that is more configurable
-/**
- * Creates a slideshow of divs in the given tag. Depends on jQuery.
- * @param {String} tagID The ID of the tag to create the slideshow in.
- * @param {int} fadeSpeed Fade speed in ms.
- * @param {int} delay Delay between fades in ms.
- */
-function createSlideshow(tagID, fadeSpeed, delay) {
-    // Set up alert slideshow
-    function Divs() {
-        let divs= $(`${tagID} div`),
-            now = divs.filter(':visible') /*.not(':hover')*/,
-            next = now.next().length ? now.next() : divs.first(),
-            speed = fadeSpeed;
+class ViewUtil {
+    // TODO: Perhaps make a slideshow class that is more configurable
+    /**
+     * Creates a slideshow of divs in the given tag. Depends on jQuery.
+     * @param {String} tagID The ID of the tag to create the slideshow in.
+     * @param {int} fadeSpeed Fade speed in ms.
+     * @param {int} delay Delay between fades in ms.
+     */
+    static createSlideshow(tagID, fadeSpeed, delay) {
+        // Set up alert slideshow
+        function Divs() {
+            let divs= $(`${tagID} div`),
+                now = divs.filter(':visible') /*.not(':hover')*/,
+                next = now.next().length ? now.next() : divs.first(),
+                speed = fadeSpeed;
 
-        now.fadeOut(speed);
-        next.fadeIn(speed);
+            now.fadeOut(speed);
+            next.fadeIn(speed);
+        }
+
+        $(function () {
+            setInterval(Divs, delay);
+        });
     }
 
-    $(function () {
-        setInterval(Divs, delay);
-    });
-}
+    /**
+     * Clears the innerHTML of the tag with the given id.
+     * @param tagID
+     */
+    static clearTag(tagID) {
+        $(tagID).empty();
+    }
 
-/**
- * Clears the innerHTML of the tag with the given id.
- * @param tagID
- */
-function clearTag(tagID) {
-    $(tagID).empty();
 }
-
-let ViewUtil = {
-    createSlideshow : createSlideshow,
-    clearTag : clearTag
-};
 
 module.exports = {
     TemplateRenderer : TemplateRenderer,
