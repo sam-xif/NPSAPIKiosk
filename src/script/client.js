@@ -207,26 +207,9 @@ class NPSAPIQueryBuilder {
     }
 }
 
-/**
- * Object that defines various matching predicates for the client API.
- * @type {Object}
- */
-let Matchers = {
-    /**
-     * Returns a match predicate that matches any of the given terms.
-     * @param {Array<String>} terms The list of terms to match any one of
-     * @return {function(String): boolean} The match predicate, closed over the terms
-     */
-    anyOf : function (terms) {
-        return function (item) {
-            return terms.includes(item);
-        };
-    }
-};
 
 module.exports = {
     NPSAPIQuery : NPSAPIQuery,
     NPSAPIQueryBuilder : NPSAPIQueryBuilder,
     NPSAPIProxy : NPSAPIProxy,
-    Matchers : Matchers
 };

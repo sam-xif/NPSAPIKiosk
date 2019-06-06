@@ -1,0 +1,12 @@
+{% for alert in alerts %}
+<div class="alert">
+    <h4>
+        {% if alert.url %}
+        <a href="{{ url }}">{{ alert.title }}</a>
+        {% else %}
+        {{ alert.title }}
+        {% endif %}
+    </h4>
+    <p>{{ alert.description }}</p>
+</div>
+{% endfor %}

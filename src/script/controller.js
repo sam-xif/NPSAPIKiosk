@@ -5,6 +5,14 @@ const worker = require('worker');
 const $ = require('jquery');
 
 class Controller {
+    constructor() {}
+
+    go() {
+        throw new Error("'go()' must be implemented on subclasses of Controller");
+    }
+}
+
+class IndexController extends Controller {
     /**
      * Main controller object for rendering index.html
      * @param api_endpoint
@@ -12,17 +20,20 @@ class Controller {
      * @constructor
      */
     constructor(api_endpoint, api_key) {
-        this.renderer = new view.TemplateRenderer();
+        super();
+        this.renderer = new view.TemplateRenderer('{{ views_dir }}');
         this.qb = new client.NPSAPIQueryBuilder();
+    }
+
+    go() {
         this.workerMgr = new worker.NPSAPIWorkerManager('{{ script_dir }}/{{ worker_script }}');
 
-        //this.client = new client.NPSAPIClient(api_key, api_endpoint);
-
+        this.initializeView();
+        this.renderAlerts();
     }
 
     initializeView() {
-        this.renderer.registerTemplate("alert",
-            '<div class="alert"><h4><a href=\"{0}\">{1}</a></h4><p>{2}</p></div>');
+        this.renderer.registerTemplate("alert", '{{ views.alert }}');
     }
 
     renderAlerts() {
@@ -41,12 +52,18 @@ class Controller {
                         view.ViewUtil.createSlideshow(tagID, 1500, 6000);
                         slideShowCreated = true;
                     }
-                    for (let j = 0; j < alerts.length; j++) {
-                        let alert = alerts[j]; //await alerts[i].fetchPark();
-                        this.renderer.renderToHTML(tagID,
-                            "alert",
-                            [alert.url, alert.title/*, alert.park.fullName*/, alert.description]);
-                    }
+
+                    this.renderer.renderToHTML(tagID,
+                        "alert",
+                        {
+                            alerts: alerts.map(alert => {
+                                return {
+                                    url: alert.url,
+                                    title: alert.title,
+                                    description: alert.description
+                                }
+                            })
+                        });
                 });
             this.qb.nextPage();
         }
@@ -108,5 +125,6 @@ class SearchController {
 
 
 module.exports = {
-    Controller : Controller
+    Controller : Controller,
+    IndexController : IndexController
 };

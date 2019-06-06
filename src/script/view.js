@@ -1,37 +1,34 @@
 const $ = require('jquery');
+const nunjucks = require('nunjucks');
 
+/**
+ * Renders templated HTML to the DOM.
+ */
 class TemplateRenderer {
     /**
-     * Renders parameterized HTML to the DOM. Depends on jQuery.
-     * @param template The HTML template with format specifiers.
      * @constructor
      */
-    constructor() {
-        /**
-         * Object that maps from template names to templates.
-         * New templates can be registered with {@link registerTemplate()}.
-         * @type {Object}
-         */
+    constructor(templatesPath) {
         this.templates = {};
-
+        nunjucks.configure(templatesPath, { autoescape: true });
     }
 
-    registerTemplate(templateName, template) {
-        this.templates[templateName] = template;
+    /**
+     * Binds the given template file to the given name.
+     * @param {String} templateName The name to assign to the template
+     * @param {String} file The file name, relative to the template root folder.
+     */
+    registerTemplate(templateName, file) {
+        this.templates[templateName] = file;
     }
 
-    renderToHTML(tagID, templateName, args) {
+    renderToHTML(tagID, templateName, context) {
         if (!(templateName in this.templates)) {
             throw new Error("'templateName' must be in registered templates.");
         }
 
-        let templateCopy = this.templates[templateName];
-        // This replaces format specifiers sequentially, which may lead to problems if, for example,
-        // {0} expands to {1}, but it shouldn't matter for the purposes of this code.
-        args.forEach((elem, idx) => {
-            templateCopy = templateCopy.replace(`\{${idx}\}`, elem);
-        });
-
+        let templateCopy = nunjucks.render(this.templates[templateName], context);
+        console.log(templateCopy);
         // Append new
         $(tagID).append(templateCopy);
     }

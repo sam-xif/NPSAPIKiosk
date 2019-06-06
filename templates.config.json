@@ -31,7 +31,13 @@
           "type": "includeAllExcept",
           "pattern": "(^|/)\\.[\\w.\\- ]+"
         }
-      ]
+      ],
+      "context": {
+        "views_dir": "static/views",
+        "views": {
+          "alert": "alertView.html"
+        }
+      }
     },
     {
       "before": "mkdir -p $TARGET",

@@ -203,7 +203,7 @@ if __name__ == "__main__" :
                 execute_command(rule["beforeEach"], {"FILE": name, "SRC": source, "TARGET": target})
 
             template = env.get_template(name)
-            template_str = template.render(global_context)
+            template_str = template.render(context)
             outpath = os.path.join(target, name)
 
             print("Writing to", outpath)

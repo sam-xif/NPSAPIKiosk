@@ -27,9 +27,8 @@ function onPageLoad() {
         // TODO: Display error about missing query
     }
 
-    let ctrl = new controller.Controller(API_ENDPOINT, API_KEY);
-    ctrl.initializeView();
-    ctrl.renderAlerts();
+    let ctrl = new controller.IndexController(API_ENDPOINT, API_KEY);
+    ctrl.go();
 }
 
 document.addEventListener("DOMContentLoaded", onPageLoad, false);

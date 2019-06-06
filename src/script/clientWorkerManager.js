@@ -1,11 +1,13 @@
 const client = require('client');
 
+/**
+ * <p>
+ *     Creates and manages an NPS API client worker thread. This class handles message passing and receiving
+ *     and accepts {@link NPSAPIRequest}s.
+ * </p>
+ */
 class NPSAPIWorkerManager {
     /**
-     * <p>
-     *     Creates and manages an NPS API client worker thread. This class handles message passing and receiving
-     *     and accepts {@link NPSAPIRequest}s.
-     * </p>
      * @param {String} clientWorkerScriptSrc
      * @constructor
      */
@@ -40,6 +42,11 @@ class NPSAPIWorkerManager {
         })(this);
     }
 
+    /**
+     *
+     * @param request
+     * @param callback
+     */
     request(request, callback) {
         this.worker.postMessage({
             action: "get",
@@ -52,6 +59,10 @@ class NPSAPIWorkerManager {
         this.requestCounter++;
     }
 
+    /**
+     *
+     * @param response
+     */
     resolve(response) {
         let idx = parseInt(response.id);
         if (this.callbacks[idx]) {
