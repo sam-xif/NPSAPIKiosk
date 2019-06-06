@@ -12,6 +12,8 @@ class Controller {
     }
 }
 
+// TODO: Abstract these controller classes
+
 class IndexController extends Controller {
     /**
      * Main controller object for rendering index.html
@@ -100,7 +102,6 @@ class SearchController extends Controller {
 
         // gets 5 * 10 = 50 (ish, because of off-by-one errors from the API) alerts
         for (let i = 0; i < 10; i++) {
-            console.log(this.qb.start);
             model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
                 .then(results => {
                     if (!spinnerRemoved) {

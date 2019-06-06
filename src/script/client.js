@@ -82,11 +82,12 @@ class NPSAPIQuery {
 
 
 /**
- *
+ * Model of a response received from the NPS API.
  */
 class NPSAPIResponse {
     /**
      * @param status
+     * @param resource
      * @param start
      * @param limit
      * @param total
@@ -101,14 +102,26 @@ class NPSAPIResponse {
         this.data = data;
     }
 
+    /**
+     * Gets the total number of pages at the resource accessed.
+     * @return {number}
+     */
     totalPages() {
         return Math.ceil(this.total / this.limit);
     }
 
+    /**
+     * Gets the current page based on the query parameters
+     * @return {number}
+     */
     currentPage() {
         return this.start / this.limit;
     }
 
+    /**
+     * Gets the number of pages left based on the query parameters
+     * @return {number}
+     */
     pagesLeft() {
         return this.totalPages() - this.currentPage();
     }
@@ -132,6 +145,10 @@ class NPSAPIResponse {
         return this.data;
     }
 
+    /**
+     * Gets the resource that was accessed.
+     * @return {String}
+     */
     getResource() {
         console.log(this.resource);
         return this.resource;

@@ -119,6 +119,9 @@ class NPSPark extends NPSModel {
 }
 
 
+// TODO: Write model classes for the rest of the resources
+
+
 module.exports = {
     NPSModel : NPSModel,
     NPSPark : NPSPark,
