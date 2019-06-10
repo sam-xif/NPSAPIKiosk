@@ -46,7 +46,7 @@ class NPSAPIQuery {
     }
 
     /**
-     *
+     * Strips down this query object into a simple object with just resource and params fields.
      * @return {{resource: *, params: *}}
      */
     strip() {
@@ -67,9 +67,9 @@ class NPSAPIQuery {
     }
 
     /**
-     *
-     * @param workerMgr
-     * @return {Promise<any>}
+     * Executes this query by sending a request to the given API worker manager.
+     * @param {NPSAPIWorkerManager} workerMgr The worker manager
+     * @return {Promise<NPSAPIResponse>} The response object
      */
     async execute(workerMgr) {
         let response = await (new Promise((resolve) => {
@@ -86,12 +86,12 @@ class NPSAPIQuery {
  */
 class NPSAPIResponse {
     /**
-     * @param status
-     * @param resource
-     * @param start
-     * @param limit
-     * @param total
-     * @param data
+     * @param status The status of the response
+     * @param resource The resource from which the response was retrieved
+     * @param start The start index of the response
+     * @param limit The limit of the response
+     * @param total The total number of elements in the resource
+     * @param data The data of the response
      */
     constructor(status, resource, start, limit, total, data) {
         this.status = status;
@@ -176,19 +176,16 @@ class NPSAPIResponse {
 
 
 /**
- * Constructs queries of type {@link NPSAPIQuery} that can be executed on the NPS API.
+ * Factory for {@link NPSAPIQuery} objects that can be executed on the NPS API.
  */
 class NPSAPIQueryBuilder {
-    /**
-     * @constructor
-     */
     constructor() {
         this.reset();
     }
 
     /**
-     *
-     * @return {NPSAPIQueryBuilder}
+     * Resets this query builder to its initial state.
+     * @return {NPSAPIQueryBuilder} This instance, with its fields reset
      */
     reset() {
         this.parkCodes = [];
@@ -199,9 +196,9 @@ class NPSAPIQueryBuilder {
     }
 
     /**
-     *
-     * @param parkCodeArr
-     * @return {NPSAPIQueryBuilder}
+     * Adds all park codes in the given array to the query.
+     * @param {Array<String>} parkCodeArr The array of park codes to add
+     * @return {NPSAPIQueryBuilder} This instance
      */
     addAllParkCodes(parkCodeArr) {
         parkCodeArr.forEach((parkCode) => {
@@ -213,9 +210,9 @@ class NPSAPIQueryBuilder {
     }
 
     /**
-     *
-     * @param parkCode
-     * @return {NPSAPIQueryBuilder}
+     * Adds a single park code to the query.
+     * @param {String} parkCode The park code
+     * @return {NPSAPIQueryBuilder} This instance
      */
     addParkCode(parkCode) {
         if (!this.parkCodes.includes(parkCode)) {
@@ -225,9 +222,9 @@ class NPSAPIQueryBuilder {
     }
 
     /**
-     *
-     * @param queryString
-     * @return {NPSAPIQueryBuilder}
+     * Sets the query string.
+     * @param {String} queryString The query string
+     * @return {NPSAPIQueryBuilder} This instance
      */
     setQueryString(queryString) {
         this.queryString = queryString;
@@ -235,8 +232,13 @@ class NPSAPIQueryBuilder {
     }
 
     /**
+     * Advances the query by one page. Makes it extremely easy to chain queries to obtain multiple pages.
+     * @example
+     * let qb = new NPSAPIQueryBuilder();
+     * let response1 = qb.from("parks").build().execute();
+     * let response2 = qb.nextPage().build().execute();
      *
-     * @return {NPSAPIQueryBuilder}
+     * @return {NPSAPIQueryBuilder} This instance
      */
     nextPage() {
         this.start += this.limit;
@@ -244,9 +246,10 @@ class NPSAPIQueryBuilder {
     }
 
     /**
-     *
-     * @param limit
-     * @return {NPSAPIQueryBuilder}
+     * Sets the limit.
+     * @param {int} limit The limit
+     * @return {NPSAPIQueryBuilder} This instance
+     * @throws {Error} if the limit is less than 0
      */
     setLimit(limit) {
         if (limit < 0) {
@@ -258,9 +261,10 @@ class NPSAPIQueryBuilder {
     }
 
     /**
-     *
-     * @param start
-     * @return {NPSAPIQueryBuilder}
+     * Sets the start index.
+     * @param {int} start The start index
+     * @return {NPSAPIQueryBuilder} This instance
+     * @throws {Error} if the start index is less than 0
      */
     setStart(start) {
         if (start < 0) {
@@ -271,9 +275,9 @@ class NPSAPIQueryBuilder {
     }
 
     /**
-     *
-     * @param resource
-     * @return {NPSAPIQueryBuilder}
+     * Sets the resource from which to retrieve data.
+     * @param {String} resource The resource string
+     * @return {NPSAPIQueryBuilder} This instance
      */
     from(resource) {
         this.resource = resource;
@@ -281,8 +285,8 @@ class NPSAPIQueryBuilder {
     }
 
     /**
-     *
-     * @return {NPSAPIQuery}
+     * Builds a new query object based on the current configuration.
+     * @return {NPSAPIQuery} The query object
      */
     build() {
         let params = {};

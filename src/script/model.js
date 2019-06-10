@@ -21,10 +21,18 @@ class NPSModel {
         throw new Error("'getDescription()' must be implemented on a subclass of NPSModel");
     }
 
+    /**
+     * Gets a URL that links to more information about this NPS data object.
+     * @return {String} A URL
+     */
     getUrl() {
         throw new Error("'getUrl()' must be implemented on a subclass of NPSModel");
     }
 
+    /**
+     * Gets a title that is fitting for this NPS data object.
+     * @return {String} A title
+     */
     getTitle() {
         throw new Error("'getTitle()' must be implemented on a subclass of NPSModel");
     }
@@ -33,6 +41,7 @@ class NPSModel {
      * Asynchronously fetch {@link NPSModel} objects using the given {@link NPSAPIQuery} object.
      * @param {NPSAPIQuery} query The query to execute
      * @param {NPSAPIWorkerManager} workerMgr the worker manager to route the request to
+     * @return {Array<NPSModel>|null} Array of model objects, or null if there are no items to be retrieved
      * @throws Error if the response could not be parsed
      */
     static async retrieve(query, workerMgr) {
@@ -52,12 +61,16 @@ class NPSModel {
             'alerts' : NPSAlert
         };
 
+        if (response.totalPages() == 0) {
+            return null;
+        }
+
         if (response.pagesLeft() > 0) {
-            response.getData().forEach((obj) => {
+            data.forEach((obj) => {
                 out.push(new models[resource](obj));
             });
         } else {
-            console.log("Hit end!");
+            console.log("Hit end!"); // Debug msg
         }
 
         return out;

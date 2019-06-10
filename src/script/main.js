@@ -8,6 +8,11 @@ const API_KEY = "{{ api_key }}";
 const API_ENDPOINT = "{{ api_endpoint }}";
 
 /* from https://davidwalsh.name/query-string-javascript */
+/**
+ * Gets a value of a URL parameter.
+ * @param name The name of the parameter to get the value of.
+ * @return {String | undefined}
+ */
 function getUrlParameter(name) {
     name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
     let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
