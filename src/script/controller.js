@@ -72,9 +72,11 @@ class IndexController extends Controller {
     }
 }
 
+/**
+ * Controller that obtains and renders search results.
+ */
 class SearchController extends Controller {
     /**
-     * Controller that obtains and renders search results.
      * @param resource
      * @param queryString
      * @param api_endpoint
