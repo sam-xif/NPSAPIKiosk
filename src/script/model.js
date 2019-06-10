@@ -52,7 +52,7 @@ class NPSModel {
             'alerts' : NPSAlert
         };
 
-        if (!response.pagesLeft() <= 0) {
+        if (response.pagesLeft() > 0) {
             response.getData().forEach((obj) => {
                 out.push(new models[resource](obj));
             });
