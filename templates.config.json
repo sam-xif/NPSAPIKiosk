@@ -1,6 +1,7 @@
 {
   "globalContext": {
     "script_dir": "script",
+    "gallery_dir": "static/img/gallery",
     "worker_script": "worker.js",
     "api_key": "bGpxFeQ0v8stp7tM6fuxocR57DsjdxrKDuWzrLl9",
     "api_endpoint": "https://developer.nps.gov/api/v1/",
