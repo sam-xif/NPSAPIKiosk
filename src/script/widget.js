@@ -9,6 +9,19 @@ class DataSource {
     constructor() {
         this.data = [];
         this.counter = 0;
+        this.onUpdateCallbacks = [];
+    }
+
+    /**
+     *
+     * @param {function(DataSource): void} fn
+     */
+    addOnUpdateHandler(fn) {
+        this.onUpdateCallbacks.push(fn);
+    }
+
+    fireOnUpdateEvent() {
+        this.onUpdateCallbacks.forEach(fn => fn(this));
     }
 
     wrap(item) {
@@ -28,14 +41,17 @@ class DataSource {
 
     add(item) {
         this.data.push(this.wrap(item));
+        this.fireOnUpdateEvent();
     }
 
     addAll(itemsArr) {
-        this.data = this.data.concat(itemsArr.map(this.wrap));
+        this.data = this.data.concat(itemsArr.map(item => this.wrap(item)));
+        this.fireOnUpdateEvent();
     }
 
     insert(index, item) {
         this.data.splice(index, 0, this.wrap(item));
+        this.fireOnUpdateEvent();
     }
 
     remove(item) {
@@ -49,10 +65,12 @@ class DataSource {
     update(index, newItem) {
         this.removeAt(index);
         this.insert(index, newItem);
+        this.fireOnUpdateEvent();
     }
 
     set(itemsArr) {
-        this.data = itemsArr.map(this.wrap);
+        this.data = itemsArr.map(item => this.wrap(item));
+        this.fireOnUpdateEvent();
     }
 
     getSnapshot() {

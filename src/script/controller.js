@@ -3,6 +3,7 @@ const client = require('client');
 const model = require('model');
 const worker = require('worker');
 const $ = require('jquery');
+const widget = require('./widget');
 
 class Controller {
     constructor() {}
@@ -139,8 +140,45 @@ class SearchController extends Controller {
 }
 
 
+class NewIndexController {
+    constructor(api_endpoint, api_key) {
+        this.containerId = '#{{ containerIDs.alerts }}';
+
+        this.alertsSource = new widget.DataSource();
+
+        this.qb = new client.NPSAPIQueryBuilder();
+        this.workerMgr = new worker.NPSAPIWorkerManager('{{ script_dir }}/{{ worker_script }}');
+
+        this.template = new view.Template('{{ views_dir }}', '{{ views.alert }}');
+
+        this.alertsWidget = new widget.Widget(this.containerId, this.workerMgr, {});
+        this.alertsWidget.bind(this.alertsSource, this.template);
+
+        // Add event handler
+        this.alertsSource.addOnUpdateHandler(dataSource => this.alertsWidget.render());
+    }
+
+    go() {
+        this.qb.from("alerts").setLimit(5);
+        let slideshowCreated = false;
+
+        for (let i = 0; i < 10; i++) {
+            model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
+                .then(results => {
+                    this.alertsSource.addAll(results);
+                    if (!slideshowCreated) {
+                        view.ViewUtil.createSlideshow(this.containerId, 1500, 6000);
+                        slideshowCreated = true;
+                    }
+                });
+        }
+    }
+}
+
+
 module.exports = {
     Controller : Controller,
     IndexController : IndexController,
-    SearchController : SearchController
+    SearchController : SearchController,
+    NewIndexController : NewIndexController
 };

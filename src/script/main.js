@@ -45,7 +45,7 @@ function onPageLoad() {
             API_KEY);
         ctrl.go();
     } else {
-        let ctrl = new controller.IndexController(API_ENDPOINT, API_KEY);
+        let ctrl = new controller.NewIndexController(API_ENDPOINT, API_KEY);
         ctrl.go();
     }
 }
