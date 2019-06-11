@@ -1,4 +1,3 @@
-const model = require('model');
 const client = require('client');
 
 const API_KEY = "{{ api_key }}";

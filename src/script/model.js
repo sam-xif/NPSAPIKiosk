@@ -1,5 +1,3 @@
-const client = require('client');
-
 /**
  * Definitions for JavaScript class representations of data objects provided by the NPS API.
  */

@@ -1,6 +1,4 @@
-const model = require('model');
 const view = require('view');
-const $ = require('jquery');
 
 /**
  * A data source object which can be dynamically written to and read from.
