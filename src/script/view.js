@@ -119,7 +119,7 @@ class ViewUtil {
      * @param index
      */
     static removeNthChild(tagID, index) {
-        $(tagID + ` > *:nth-child(${index + 1}`).remove();
+        $(tagID + ` > *:nth-child(${index + 1})`).remove();
     }
 }
 
