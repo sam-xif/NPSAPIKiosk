@@ -11,14 +11,17 @@ class NPSModel {
     /**
      * @constructor
      */
-    constructor() {}
+    constructor(source) {
+        Object.assign(this, source);
+    }
 
     /**
      * Gets a description of this NPS data object.
      * @return {String} A description
      */
     getDescription() {
-        throw new Error("'getDescription()' must be implemented on a subclass of NPSModel");
+        //throw new Error("'getDescription()' must be implemented on a subclass of NPSModel");
+        return this.description;
     }
 
     /**
@@ -26,7 +29,7 @@ class NPSModel {
      * @return {String} A URL
      */
     getUrl() {
-        throw new Error("'getUrl()' must be implemented on a subclass of NPSModel");
+        return this.url;
     }
 
     /**
@@ -34,7 +37,7 @@ class NPSModel {
      * @return {String} A title
      */
     getTitle() {
-        throw new Error("'getTitle()' must be implemented on a subclass of NPSModel");
+        return this.title;
     }
 
     /**
@@ -67,7 +70,7 @@ class NPSModel {
 
         if (response.pagesLeft() > 0) {
             data.forEach((obj) => {
-                out.push(new models[resource](obj));
+                out.push(models[resource] !== undefined ? new models[resource](obj) : new NPSModel(obj));
             });
         } else {
             console.log("Hit end!"); // Debug msg
@@ -82,10 +85,7 @@ class NPSModel {
  */
 class NPSAlert extends NPSModel {
     /**
-     * @param {JSON} source Source {@code JSON} object from the API to use to construct the object.
-     * @param {JSON?} parkCodeMap Optional park code map to use to find the corresponding
-     *                 {@link NPSPark} instance.
-     * @constructor
+     * @param {JSON} source Source JSON object from the API to use to construct the object.
      */
     constructor(source) {
         super();
@@ -128,6 +128,14 @@ class NPSPark extends NPSModel {
 
     getTitle() {
         return this.fullName;
+    }
+
+    /**
+     *
+     * @return {boolean}
+     */
+    hasImages() {
+        return this.images !== undefined;
     }
 }
 
