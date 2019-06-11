@@ -57,6 +57,10 @@ class SearchController extends Controller {
                         spinnerRemoved = false;
                     }
 
+                    if (results == null) {
+                        return;
+                    }
+
                     this.searchSource.addAll(results);
                 });
             this.qb.nextPage();
@@ -94,6 +98,10 @@ class IndexController extends Controller {
                         $(spinnerID).remove();
                         view.ViewUtil.createSlideshow(this.containerId, 1500, 6000);
                         slideshowCreated = true;
+                    }
+
+                    if (results == null) {
+                        return;
                     }
 
                     this.alertsSource.addAll(results);

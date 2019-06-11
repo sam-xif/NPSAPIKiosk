@@ -67,7 +67,8 @@ class NPSModel {
 
         let models = {
             'parks' : NPSPark,
-            'alerts' : NPSAlert
+            'alerts' : NPSAlert,
+            'newsreleases' : NPSNewsRelease
         };
 
         if (response.totalPages() == 0) {
@@ -98,8 +99,7 @@ class NPSAlert extends NPSModel {
      * @param {JSON} source Source JSON object from the API to use to construct the object.
      */
     constructor(source) {
-        super();
-        Object.assign(this, source);
+        super(source);
     }
 }
 
@@ -112,8 +112,7 @@ class NPSPark extends NPSModel {
      * @constructor
      */
     constructor(source) {
-        super();
-        Object.assign(this, source);
+        super(source);
     }
 
     getTitle() {
@@ -126,6 +125,19 @@ class NPSPark extends NPSModel {
      */
     hasImages() {
         return this.images !== undefined;
+    }
+}
+
+/**
+ *
+ */
+class NPSNewsRelease extends NPSModel {
+    constructor(source) {
+        super(source);
+    }
+
+    getDescription() {
+        return this.abstract;
     }
 }
 
