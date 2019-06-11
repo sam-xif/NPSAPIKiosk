@@ -2,6 +2,7 @@
 {% import "layout.html" as layout %}
 
 {% block content %}
+<script>let CONTROLLER='{{ controllers.searchResults }}';</script>
 
 {% call(title) layout.section("Search", section_id="search") %}
     <div class="container text-center">

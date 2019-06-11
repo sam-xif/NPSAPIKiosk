@@ -20,7 +20,13 @@
           "type": "excludeAllExcept",
           "pattern": "(index|searchResults)\\.html"
         }
-      ]
+      ],
+      "context": {
+        "controllers": {
+          "index": "IndexController",
+          "searchResults": "SearchController"
+        }
+      }
     },
     {
       "before": "mkdir -p $SRC && pushd src/script && for f in *.js; do uglifyjs $f > ../../$SRC/$f; done && popd",

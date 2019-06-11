@@ -24,19 +24,22 @@ function getUrlParameter(name) {
 function onPageLoad() {
     let workerMgr = new worker.NPSAPIWorkerManager('{{ script_dir }}/{{ worker_script }}');
 
-    // TODO: Perhaps add logic to each page that decides what controller to use to avoid doing it here
-    if (getUrlParameter('query') && getUrlParameter('resource')) {
-        let ctrl = new controller.SearchController(workerMgr,
+    let controllers = {
+        IndexController: new controller.IndexController(workerMgr,
+            '{{ views_dir }}',
+            '{{ views.alert }}'),
+        SearchController: new controller.SearchController(workerMgr,
             '{{ views_dir }}',
             '{{ views.searchResult }}',
             getUrlParameter('resource'),
-            getUrlParameter('query'));
-        ctrl.go();
+            getUrlParameter('query'))
+    };
+
+    // CONTROLLER is a constant that is expected to be defined on each HTML page
+    if (CONTROLLER) {
+        controllers[CONTROLLER].go();
     } else {
-        let ctrl = new controller.IndexController(workerMgr,
-            '{{ views_dir }}',
-            '{{ views.alert }}',);
-        ctrl.go();
+        throw new Error("Page must define CONTROLLER constant");
     }
 }
 
