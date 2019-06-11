@@ -122,11 +122,9 @@ class DataSource {
 class Widget {
     /**
      * @param {String} containerId ID of the desired container of the widget
-     * @param {NPSAPIWorkerManager} workerMgr
      */
-    constructor(containerId, workerMgr) {
+    constructor(containerId) {
         this.containerID = containerId;
-        this.workerMgr = workerMgr;
     }
 
     /**
@@ -186,7 +184,6 @@ class Widget {
         // Finally, update lastSnapshot with the new snapshot
         this.lastSnapshot = this.dataSource.getSnapshot();
     }
-
 
     /**
      * <p>Renders (or re-renders) data source in its current state. This is less efficient than update() because

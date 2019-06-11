@@ -29,6 +29,7 @@ onmessage = function (msg) {
                 });
             })
             .catch((error) => {
+                console.log(error);
                 postMessage({
                     status: 'error',
                     id: request.id,

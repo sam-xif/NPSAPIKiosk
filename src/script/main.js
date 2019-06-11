@@ -1,8 +1,5 @@
 const controller = require('controller');
-const client = require('client');
-const view = require('view');
 const worker = require('worker');
-const widget = require('./widget');
 
 /**
  * Entry point and controller logic.
@@ -29,11 +26,16 @@ function onPageLoad() {
 
     // TODO: Perhaps add logic to each page that decides what controller to use to avoid doing it here
     if (getUrlParameter('query') && getUrlParameter('resource')) {
-        let ctrl = new controller.SearchController(workerMgr, getUrlParameter('resource'),
+        let ctrl = new controller.SearchController(workerMgr,
+            '{{ views_dir }}',
+            '{{ views.searchResult }}',
+            getUrlParameter('resource'),
             getUrlParameter('query'));
         ctrl.go();
     } else {
-        let ctrl = new controller.IndexController(workerMgr);
+        let ctrl = new controller.IndexController(workerMgr,
+            '{{ views_dir }}',
+            '{{ views.alert }}',);
         ctrl.go();
     }
 }
