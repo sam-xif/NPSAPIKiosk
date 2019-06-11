@@ -12,17 +12,21 @@ MAINPATH=$(SCRIPTDIR)/$(MAIN)
 WORKER_SCRIPTS=clientWorkerMain.js
 
 # Command options
-LIB_BUNDLE_OPTS=-r ./model.js:model -r ./client.js:client -r ./controller.js:controller -r ./view.js:view -r ./clientWorkerManager.js:worker
-MAIN_BUNDLE_OPTS=-x model -x client -x controller -x view -x worker
+LIB_BUNDLE_OPTS=-r ./model.js:model -r ./client.js:client -r ./controller.js:controller -r ./view.js:view -r ./clientWorkerManager.js:worker -r ./widget.js:widget
+MAIN_BUNDLE_OPTS=-x controller -x worker
 
 # In the worker bundle, unlike the main bundle, we re-require model and client because the worker cannot
 #  refer to lib as it runs in a separate context.
-WORKER_BUNDLE_OPTS=-r ./model.js:model -r ./client.js:client
+WORKER_BUNDLE_OPTS=-r ./client.js:client
 
 # Output file name and relative path
 LIB_BUNDLE=lib.js
 WORKER_BUNDLE=worker.js
 MAIN_BUNDLE=main.js
+
+LIB_BUNDLE_MIN=lib.min.js
+WORKER_BUNDLE_MIN=worker.min.js
+MAIN_BUNDLE_MIN=main.min.js
 
 # This command creates the output directory if it does not exist
 MK_OUT_DIR=mkdir -p $(OUT)

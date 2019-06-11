@@ -1,7 +1,7 @@
 const view = require('view');
 const client = require('client');
 const model = require('model');
-const widget = require('./widget');
+const widget = require('widget');
 const $ = require('jquery');
 
 class Controller {
