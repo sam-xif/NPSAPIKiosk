@@ -17,11 +17,22 @@ class Template {
 
     /**
      *
-     * @param containerID
+     * @param containerId
      * @param context
      */
-    render(containerID, context) {
-        $(containerID).append(nunjucks.render(this.templateName, context));
+    render(containerId, context) {
+        $(containerId).append(nunjucks.render(this.templateName, context));
+    }
+
+    /**
+     *
+     * zero-indexed
+     * @param index
+     * @param containerId
+     * @param context
+     */
+    renderInsert(index, containerId, context) {
+        $(containerId + `:nth-child(${index + 1})`).after(nunjucks.render(this.templateName, context));
     }
 }
 
@@ -96,6 +107,14 @@ class ViewUtil {
         $(tagID).empty();
     }
 
+    /**
+     *
+     * @param tagID
+     * @param index
+     */
+    static removeNthChild(tagID, index) {
+        $(tagID + `:nth-child(${index + 1}`).remove();
+    }
 }
 
 module.exports = {

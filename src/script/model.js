@@ -44,13 +44,19 @@ class NPSModel {
      * Asynchronously fetch {@link NPSModel} objects using the given {@link NPSAPIQuery} object.
      * @param {NPSAPIQuery} query The query to execute
      * @param {NPSAPIWorkerManager} workerMgr the worker manager to route the request to
+     * @param {function(boolean, Array<NPSModel>): void ?} callback Optional callback that is called when the data is obtained. The first parameter is
+     *                                                     a boolean value that is true if and only if the operation succeeded.
      * @return {Array<NPSModel>|null} Array of model objects, or null if there are no items to be retrieved
      * @throws Error if the response could not be parsed
      */
-    static async retrieve(query, workerMgr) {
+    static async retrieve(query, workerMgr, callback) {
         let response = await query.execute(workerMgr);
 
         if (!response.ok()) {
+            if (callback) {
+                callback(response.ok(), null);
+            }
+
             throw new Error(response.getData());
         }
 
@@ -74,6 +80,10 @@ class NPSModel {
             });
         } else {
             console.log("Hit end!"); // Debug msg
+        }
+
+        if (callback) {
+            callback(response.ok(), out);
         }
 
         return out;

@@ -28,6 +28,7 @@ function getUrlParameter(name) {
  * Function that gets called when the page is loaded.
  */
 function onPageLoad() {
+    // TODO: Write unit tests that assert these types of method side effects work as intended
     let workerMgr = new worker.NPSAPIWorkerManager('{{ script_dir }}/{{ worker_script }}');
     let w = new widget.Widget("searchResults", workerMgr, {});
     let dsource = new widget.DataSource();

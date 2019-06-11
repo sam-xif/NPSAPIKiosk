@@ -34,8 +34,8 @@ class DataSource {
         this.data = this.data.concat(itemsArr.map(this.wrap));
     }
 
-    set(itemsArr) {
-        this.data = itemsArr.map(this.wrap);
+    insert(index, item) {
+        this.data.splice(index, 0, this.wrap(item));
     }
 
     remove(item) {
@@ -46,16 +46,59 @@ class DataSource {
 
     }
 
+    update(index, newItem) {
+        this.removeAt(index);
+        this.insert(index, newItem);
+    }
+
+    set(itemsArr) {
+        this.data = itemsArr.map(this.wrap);
+    }
+
     getSnapshot() {
-        return this.data.map(this.unwrap);
+        return this.data.slice(0);
     }
 
-    getAt(index) {
-        return this.data[index]; // Returns undefined if index out of bounds
+    getSnapshotRaw() {
+        return this.getSnapshot.map(this.unwrap);
     }
 
-    getWithId(id) {
+    /**
+     * <p>Returns a list of operations that, when applied to the given previous snapshot, will result in this instance's
+     * data.</p>
+     * @param {Array} previousSnapshot
+     * @return {Array}
+     */
+    getDelta(previousSnapshot) {
+        let ops = [];
 
+        // Two ids can never swap places, because of how the counter is incremented after every addition or
+        // insertion, which greatly simplifies computing deltas.
+        let thisSnapshot = this.getSnapshot();
+
+        let previousIds = previousSnapshot.map(item => item.id);
+        let thisIds = thisSnapshot.map(item => item.id);
+        /*let previousIds = previousSnapshot.reduce((acc, item, idx) => {
+            acc[idx] = item.id;
+        }, {});*/
+
+        // TODO
+        previousIds.forEach((id, index) => {
+            if (!thisIds.includes(id)) {
+                ops.push({op: "remove", id: id});
+            }
+        });
+
+        thisIds.forEach((id, index) => {
+            if (!previousIds.includes(id)) {
+                ops.push({ op: "insertAt",
+                    index: index,
+                    data: this.unwrap(thisSnapshot[index])
+                }); // -1 encodes insert at the beginning
+            }
+        });
+
+        return ops;
     }
 }
 
@@ -83,7 +126,10 @@ class Widget {
         this.dataSource = dataSource;
         this.dataTemplate = dataTemplate;
 
-        // Render initial view
+        // Save snapshot of data
+        this.lastSnapshot = this.dataSource.getSnapshot();
+
+        // Renders initial view
         this.render();
     }
 
@@ -98,15 +144,37 @@ class Widget {
             throw new Error("Data must be bound before updating");
         }
 
-        this.render();
+        let deltaOps = this.dataSource.getDelta(this.lastSnapshot);
+        let idToIndexMap = this.lastSnapshot.reduce((acc, item, index) => {
+            acc[item.id] = index;
+        }, {});
+
+        deltaOps.forEach(op => {
+            switch (op.op) {
+                case "remove":
+                    view.ViewUtil.removeNthChild(this.containerID, idToIndexMap[op.id]);
+                    break;
+                case "insertAfter":
+                    this.dataTemplate.renderInsert(op.index, this.containerID, { data: op.data });
+                    break;
+                default: // Ignore unrecognized or throw error?
+            }
+        });
     }
 
+
+    /**
+     * <p>Renders (or re-renders) data source in its current state. This is less efficient than update() because
+     * it always clears out all of the rendered fragments and re-renders everything, so it is recommended to use
+     * update() for repeated updates to the same dataset.</p>
+     * @throws {Error} if
+     */
     render() {
         if (!this.dataSource || !this.dataTemplate) {
             throw new Error("Data must be bound before rendering");
         }
 
-        let data = this.dataSource.getSnapshot();
+        let data = this.dataSource.getSnapshot().map(this.dataSource.unwrap);
 
         view.ViewUtil.clearTag(this.containerID);
         data.forEach(item => {
