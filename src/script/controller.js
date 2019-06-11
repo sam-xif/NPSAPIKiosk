@@ -6,7 +6,13 @@ const $ = require('jquery');
 const widget = require('./widget');
 
 class Controller {
-    constructor() {}
+    /**
+     *
+     * @param {NPSAPIWorkerManager} workerMgr
+     */
+    constructor(workerMgr) {
+        this.workerMgr = workerMgr;
+    }
 
     go() {
         throw new Error("'go()' must be implemented on subclasses of Controller");
@@ -84,8 +90,8 @@ class SearchController extends Controller {
      * @param api_key
      * @constructor
      */
-    constructor(resource, queryString, api_endpoint, api_key) {
-        super();
+    constructor(workerMgr, resource, queryString) {
+        super(workerMgr);
         this.resource = resource;
         this.queryString = queryString;
         this.renderer = new view.TemplateRenderer('{{ views_dir }}');
@@ -139,23 +145,67 @@ class SearchController extends Controller {
     }
 }
 
+class NewSearchController extends Controller {
+    constructor(workerMgr, resource, queryString) {
+        super(workerMgr);
+        this.qb = new client.NPSAPIQueryBuilder();
+        this.containerId = '#{{ containerIDs.searchResults }}';
 
-class NewIndexController {
-    constructor(api_endpoint, api_key) {
+        this.resource = resource;
+        this.queryString = queryString;
+
+        this.template = new view.Template('{{ views_dir }}', '{{ views.searchResult }}');
+
+        this.searchSource = new widget.DataSource();
+        this.searchWidget = new widget.Widget(this.containerId, this.workerMgr);
+
+        this.searchWidget.bind(this.searchSource, this.template);
+
+        this.searchSource.addOnUpdateHandler(snapshot => this.searchWidget.update());
+    }
+
+    go() {
+        this.qb
+            .from(this.resource)
+            .setLimit(5)
+            .setQueryString(this.queryString);
+
+        let spinnerRemoved = false;
+
+
+        // gets 5 * 10 = 50 (ish, because of off-by-one errors from the API) alerts
+        for (let i = 0; i < 10; i++) {
+            model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
+                .then(results => {
+                    if (!spinnerRemoved) {
+                        let spinnerID = "#spinner";
+                        $(spinnerID).remove();
+                        spinnerRemoved = false;
+                    }
+
+                    this.searchSource.addAll(results);
+                });
+            this.qb.nextPage();
+        }
+    }
+}
+
+
+class NewIndexController extends Controller {
+    constructor(workerMgr) {
+        super(workerMgr);
+        this.qb = new client.NPSAPIQueryBuilder();
         this.containerId = '#{{ containerIDs.alerts }}';
 
         this.alertsSource = new widget.DataSource();
 
-        this.qb = new client.NPSAPIQueryBuilder();
-        this.workerMgr = new worker.NPSAPIWorkerManager('{{ script_dir }}/{{ worker_script }}');
-
         this.template = new view.Template('{{ views_dir }}', '{{ views.alert }}');
 
-        this.alertsWidget = new widget.Widget(this.containerId, this.workerMgr, {});
+        this.alertsWidget = new widget.Widget(this.containerId, this.workerMgr);
         this.alertsWidget.bind(this.alertsSource, this.template);
 
         // Add event handler
-        this.alertsSource.addOnUpdateHandler(dataSource => this.alertsWidget.update());
+        this.alertsSource.addOnUpdateHandler(snapshot => this.alertsWidget.update());
     }
 
     go() {
@@ -165,12 +215,16 @@ class NewIndexController {
         for (let i = 0; i < 10; i++) {
             model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
                 .then(results => {
-                    this.alertsSource.addAll(results);
                     if (!slideshowCreated) {
+                        let spinnerID = "#spinner";
+                        $(spinnerID).remove();
                         view.ViewUtil.createSlideshow(this.containerId, 1500, 6000);
                         slideshowCreated = true;
                     }
+
+                    this.alertsSource.addAll(results);
                 });
+            this.qb.nextPage();
         }
     }
 }
@@ -180,5 +234,6 @@ module.exports = {
     Controller : Controller,
     IndexController : IndexController,
     SearchController : SearchController,
-    NewIndexController : NewIndexController
+    NewIndexController : NewIndexController,
+    NewSearchController : NewSearchController
 };

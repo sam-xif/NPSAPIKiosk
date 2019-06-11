@@ -14,14 +14,14 @@ class DataSource {
 
     /**
      *
-     * @param {function(DataSource): void} fn
+     * @param {function(Array<{id:int, data: *}>): void} fn
      */
     addOnUpdateHandler(fn) {
         this.onUpdateCallbacks.push(fn);
     }
 
     fireOnUpdateEvent() {
-        this.onUpdateCallbacks.forEach(fn => fn(this));
+        this.onUpdateCallbacks.forEach(fn => fn(this.getSnapshot()));
     }
 
     wrap(item) {
@@ -78,7 +78,7 @@ class DataSource {
     }
 
     getSnapshotRaw() {
-        return this.getSnapshot.map(this.unwrap);
+        return this.getSnapshot.map(item => this.unwrap(item));
     }
 
     /**
@@ -96,11 +96,7 @@ class DataSource {
 
         let previousIds = previousSnapshot.map(item => item.id);
         let thisIds = thisSnapshot.map(item => item.id);
-        /*let previousIds = previousSnapshot.reduce((acc, item, idx) => {
-            acc[idx] = item.id;
-        }, {});*/
 
-        // TODO
         previousIds.forEach((id, index) => {
             if (!thisIds.includes(id)) {
                 ops.push({op: "remove", id: id});
@@ -127,12 +123,10 @@ class Widget {
     /**
      * @param {String} containerId ID of the desired container of the widget
      * @param {NPSAPIWorkerManager} workerMgr
-     * @param context
      */
-    constructor(containerId, workerMgr, context) {
+    constructor(containerId, workerMgr) {
         this.containerID = containerId;
         this.workerMgr = workerMgr;
-        this.context = context;
     }
 
     /**
@@ -147,8 +141,9 @@ class Widget {
         // Save snapshot of data
         this.lastSnapshot = this.dataSource.getSnapshot();
 
-        // Renders initial view
-        this.render();
+        if (this.lastSnapshot.length > 0) {
+            this.render();
+        }
     }
 
     /**
@@ -178,8 +173,6 @@ class Widget {
                     break;
                 case "insertAt":
                     if (op.index === 0) {
-                        console.log("INDEX = 0");
-                        console.log(op);
                         this.dataTemplate.renderPrepend(this.containerID, {data: op.data});
                     } else {
                         this.dataTemplate.renderInsertAfter(op.index - 1, this.containerID, {data: op.data});

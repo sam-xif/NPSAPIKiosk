@@ -101,18 +101,6 @@ class NPSAlert extends NPSModel {
         super();
         Object.assign(this, source);
     }
-
-    getDescription() {
-        return this.description;
-    }
-
-    getUrl() {
-        return this.url;
-    }
-
-    getTitle() {
-        return this.title;
-    }
 }
 
 /**
@@ -126,14 +114,6 @@ class NPSPark extends NPSModel {
     constructor(source) {
         super();
         Object.assign(this, source);
-    }
-
-    getDescription() {
-        return this.description;
-    }
-
-    getUrl() {
-        return this.url;
     }
 
     getTitle() {

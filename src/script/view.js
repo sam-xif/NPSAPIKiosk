@@ -15,6 +15,8 @@ class Template {
         nunjucks.configure(templatesRoot, { autoescape: true });
     }
 
+    // TODO: Consider implementing strategy pattern for these different render methods
+
     /**
      *
      * @param containerId
