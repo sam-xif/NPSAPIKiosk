@@ -44,18 +44,12 @@ class SearchController extends Controller {
             .setLimit(5)
             .setQueryString(this.queryString);
 
-        let spinnerRemoved = false;
-
-
         // gets 5 * 10 = 50 (ish, because of off-by-one errors from the API) alerts
         for (let i = 0; i < 10; i++) {
             model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
                 .then(results => {
-                    if (!spinnerRemoved) {
-                        let spinnerID = "#spinner";
-                        $(spinnerID).remove();
-                        spinnerRemoved = false;
-                    }
+                    let spinnerID = "#spinner";
+                    $(spinnerID).remove();
 
                     if (results == null) {
                         return;
@@ -88,17 +82,13 @@ class IndexController extends Controller {
 
     go() {
         this.qb.from("alerts").setLimit(5);
-        let slideshowCreated = false;
+        view.ViewUtil.createSlideshow(this.containerId, 1500, 6000);
 
         for (let i = 0; i < 10; i++) {
             model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
                 .then(results => {
-                    if (!slideshowCreated) {
-                        let spinnerID = "#spinner";
-                        $(spinnerID).remove();
-                        view.ViewUtil.createSlideshow(this.containerId, 1500, 6000);
-                        slideshowCreated = true;
-                    }
+                    let spinnerID = "#spinner";
+                    $(spinnerID).remove();
 
                     if (results == null) {
                         return;
