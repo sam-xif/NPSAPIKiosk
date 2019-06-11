@@ -29,11 +29,11 @@ function onPageLoad() {
 
     // TODO: Perhaps add logic to each page that decides what controller to use to avoid doing it here
     if (getUrlParameter('query') && getUrlParameter('resource')) {
-        let ctrl = new controller.NewSearchController(workerMgr, getUrlParameter('resource'),
+        let ctrl = new controller.SearchController(workerMgr, getUrlParameter('resource'),
             getUrlParameter('query'));
         ctrl.go();
     } else {
-        let ctrl = new controller.NewIndexController(workerMgr);
+        let ctrl = new controller.IndexController(workerMgr);
         ctrl.go();
     }
 }
