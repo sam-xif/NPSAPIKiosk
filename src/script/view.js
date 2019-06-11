@@ -31,8 +31,12 @@ class Template {
      * @param containerId
      * @param context
      */
-    renderInsert(index, containerId, context) {
-        $(containerId + `:nth-child(${index + 1})`).after(nunjucks.render(this.templateName, context));
+    renderInsertAfter(index, containerId, context) {
+        $(containerId + ` > *:nth-child(${index + 1})`).after(nunjucks.render(this.templateName, context));
+    }
+
+    renderPrepend(containerId, context) {
+        $(containerId).prepend(nunjucks.render(this.templateName, context));
     }
 }
 
@@ -113,7 +117,7 @@ class ViewUtil {
      * @param index
      */
     static removeNthChild(tagID, index) {
-        $(tagID + `:nth-child(${index + 1}`).remove();
+        $(tagID + ` > *:nth-child(${index + 1}`).remove();
     }
 }
 

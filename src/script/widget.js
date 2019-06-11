@@ -165,19 +165,33 @@ class Widget {
         let deltaOps = this.dataSource.getDelta(this.lastSnapshot);
         let idToIndexMap = this.lastSnapshot.reduce((acc, item, index) => {
             acc[item.id] = index;
+            return acc;
         }, {});
 
+        console.log(idToIndexMap);
+
+        // Apply delta
         deltaOps.forEach(op => {
             switch (op.op) {
                 case "remove":
                     view.ViewUtil.removeNthChild(this.containerID, idToIndexMap[op.id]);
                     break;
-                case "insertAfter":
-                    this.dataTemplate.renderInsert(op.index, this.containerID, { data: op.data });
+                case "insertAt":
+                    if (op.index === 0) {
+                        console.log("INDEX = 0");
+                        console.log(op);
+                        this.dataTemplate.renderPrepend(this.containerID, {data: op.data});
+                    } else {
+                        this.dataTemplate.renderInsertAfter(op.index - 1, this.containerID, {data: op.data});
+                    }
                     break;
-                default: // Ignore unrecognized or throw error?
+                default:
+                    throw new Error("Unrecognized delta operation"); // should not be reached, here for insurance
             }
         });
+
+        // Finally, update lastSnapshot with the new snapshot
+        this.lastSnapshot = this.dataSource.getSnapshot();
     }
 
 

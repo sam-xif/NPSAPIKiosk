@@ -155,7 +155,7 @@ class NewIndexController {
         this.alertsWidget.bind(this.alertsSource, this.template);
 
         // Add event handler
-        this.alertsSource.addOnUpdateHandler(dataSource => this.alertsWidget.render());
+        this.alertsSource.addOnUpdateHandler(dataSource => this.alertsWidget.update());
     }
 
     go() {
