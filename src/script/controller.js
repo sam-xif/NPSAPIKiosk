@@ -4,6 +4,9 @@ const model = require('model');
 const widget = require('widget');
 const $ = require('jquery');
 
+/**
+ *
+ */
 class Controller {
     /**
      *
@@ -13,11 +16,17 @@ class Controller {
         this.workerMgr = workerMgr;
     }
 
+    /**
+     *
+     */
     go() {
         throw new Error("'go()' must be implemented on subclasses of Controller");
     }
 }
 
+/**
+ *
+ */
 class SingleViewController extends Controller {
     /**
      *
@@ -44,6 +53,9 @@ class SingleViewController extends Controller {
         this.dataSource.addOnUpdateHandler(snapshot => this.singleViewWidget.update());
     }
 
+    /**
+     * 
+     */
     fetchData() {
         let fetchMore = true;
         let maxPages = 10;
@@ -69,33 +81,33 @@ class SingleViewController extends Controller {
 
     // Hooks (to be implemented by subclasses)
 
+    /**
+     *
+     * @param data
+     */
     before(data) {
         return;
     }
 
+    /**
+     *
+     * @param data
+     */
     after(data) {
         return;
     }
 }
 
-class SearchController extends SingleViewController {
-    constructor(workerMgr, templatesRoot, templateName, resource, queryString) {
-        let qb = new client.NPSAPIQueryBuilder();
-        super(workerMgr,
-            '#{{ containerIDs.searchResults }}',
-            qb.from(resource).setQueryString(queryString).setLimit(5),
-            templatesRoot,
-            templateName);
-    }
-
-    before(data) {
-        let spinnerID = "#spinner";
-        $(spinnerID).remove();
-    }
-}
-
-
+/**
+ *
+ */
 class IndexController extends SingleViewController {
+    /**
+     *
+     * @param workerMgr
+     * @param templatesRoot
+     * @param templateName
+     */
     constructor(workerMgr, templatesRoot, templateName) {
         let qb = new client.NPSAPIQueryBuilder();
         super(workerMgr,
@@ -108,6 +120,33 @@ class IndexController extends SingleViewController {
     go() {
         view.ViewUtil.createSlideshow(this.containerId, 1500, 6000);
         super.go();
+    }
+
+    before(data) {
+        let spinnerID = "#spinner";
+        $(spinnerID).remove();
+    }
+}
+
+/**
+ *
+ */
+class SearchController extends SingleViewController {
+    /**
+     *
+     * @param workerMgr
+     * @param templatesRoot
+     * @param templateName
+     * @param resource
+     * @param queryString
+     */
+    constructor(workerMgr, templatesRoot, templateName, resource, queryString) {
+        let qb = new client.NPSAPIQueryBuilder();
+        super(workerMgr,
+            '#{{ containerIDs.searchResults }}',
+            qb.from(resource).setQueryString(queryString).setLimit(5),
+            templatesRoot,
+            templateName);
     }
 
     before(data) {

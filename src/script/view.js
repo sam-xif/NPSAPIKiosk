@@ -2,12 +2,16 @@ const $ = require('jquery');
 const nunjucks = require('nunjucks');
 
 /**
- *
+ * A template that is capable of rendering data fragments with different strategies.
  */
 class Template {
     /**
-     * @param templatesRoot
-     * @param templateName
+     * <p>
+     *     Creates a new template instance, searching for the template to use with the given <code>templatename</code>
+     *     in the given <code>templatesRoot</code>.
+     * </p>
+     * @param templatesRoot The directory to search for templates
+     * @param templateName The name of the template file to use
      */
     constructor(templatesRoot, templateName) {
         this.templatesRoot = templatesRoot;
@@ -18,9 +22,12 @@ class Template {
     // TODO: Consider implementing strategy pattern for these different render methods
 
     /**
-     *
-     * @param containerId
-     * @param context
+     * <p>
+     *     Renders this template with the given context into the DOM element with the given ID. This method appends
+     *     the data as the last child of the container element.
+     * </p>
+     * @param {String} containerId The ID of the DOM element into which to render
+     * @param {Object} context The context with which to render
      */
     render(containerId, context) {
         $(containerId).append(nunjucks.render(this.templateName, context));
@@ -37,14 +44,21 @@ class Template {
         $(containerId + ` > *:nth-child(${index + 1})`).after(nunjucks.render(this.templateName, context));
     }
 
+    /**
+     *
+     * @param containerId
+     * @param context
+     */
     renderPrepend(containerId, context) {
         $(containerId).prepend(nunjucks.render(this.templateName, context));
     }
 }
 
 /**
- * <p>Renders templated HTML to the DOM. Allows use of multiple templates, referenced by names given to the
- * registerTemplate function.</p>
+ * <p>
+ *     Renders templated HTML to the DOM. Allows use of multiple templates, referenced by names given to the
+ *     registerTemplate function.
+ * </p>
  */
 class TemplateRenderer {
     /**
@@ -80,6 +94,9 @@ class TemplateRenderer {
     }
 }
 
+/**
+ *
+ */
 class ViewUtil {
     // TODO: Perhaps make a slideshow class that is more configurable
     /**
