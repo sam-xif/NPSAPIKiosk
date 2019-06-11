@@ -194,7 +194,7 @@ class Widget {
             throw new Error("Data must be bound before rendering");
         }
 
-        let data = this.dataSource.getSnapshot().map(this.dataSource.unwrap);
+        let data = this.dataSource.getSnapshotRaw();
 
         view.ViewUtil.clearTag(this.containerID);
         data.forEach(item => {
