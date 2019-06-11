@@ -1,10 +1,10 @@
 
 <div class="alert">
     <h4>
-        {{ data.title }}
+        {{ data.getTitle() }}
     </h4>
-    <p>{{ data.description }}</p>
-    {% if data.url %}
-    <p class="text-muted"><a href="{{ alert.url }}" class="graylink">more...</a></p>
+    <p>{{ data.getDescription() }}</p>
+    {% if data.getUrl() %}
+    <p class="text-muted"><a href="{{ alert.getUrl() }}" class="graylink">more...</a></p>
     {% endif %}
 </div>
