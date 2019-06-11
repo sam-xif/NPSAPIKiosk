@@ -2,33 +2,64 @@ const $ = require('jquery');
 const nunjucks = require('nunjucks');
 
 /**
- * Renders templated HTML to the DOM.
+ *
+ */
+class Template {
+    /**
+     * @param templatesRoot
+     * @param templateName
+     */
+    constructor(templatesRoot, templateName) {
+        this.templatesRoot = templatesRoot;
+        this.templateName = templateName;
+        nunjucks.configure(templatesRoot, { autoescape: true });
+    }
+
+    /**
+     *
+     * @param containerID
+     * @param context
+     */
+    render(containerID, context) {
+        $(containerID).append(nunjucks.render(this.templateName, context));
+    }
+}
+
+/**
+ * <p>Renders templated HTML to the DOM. Allows use of multiple templates, referenced by names given to the
+ * registerTemplate function.</p>
  */
 class TemplateRenderer {
     /**
-     * @constructor
+     * @param templatesRoot
      */
-    constructor(templatesPath) {
+    constructor(templatesRoot) {
         this.templates = {};
-        nunjucks.configure(templatesPath, { autoescape: true });
+        this.templatesRoot = templatesRoot;
     }
 
     /**
      * Binds the given template file to the given name.
-     * @param {String} templateName The name to assign to the template
+     * @param {String} name The name to assign to the template
      * @param {String} file The file name, relative to the template root folder.
      */
-    registerTemplate(templateName, file) {
-        this.templates[templateName] = file;
+    registerTemplate(name, file) {
+        this.templates[name] = new Template(this.templatesRoot, file);
     }
 
-    renderToHTML(tagID, templateName, context) {
+    /**
+     *
+     * @param containerID
+     * @param templateName
+     * @param context
+     * @throws {Error} if ...
+     */
+    renderToHTML(containerID, templateName, context) {
         if (!(templateName in this.templates)) {
             throw new Error("'templateName' must be in registered templates.");
         }
 
-        let templateCopy = nunjucks.render(this.templates[templateName], context);
-        $(tagID).append(templateCopy);
+        this.templates[templateName].render(containerID, context);
     }
 }
 
@@ -68,6 +99,7 @@ class ViewUtil {
 }
 
 module.exports = {
+    Template : Template,
     TemplateRenderer : TemplateRenderer,
     ViewUtil : ViewUtil
 };

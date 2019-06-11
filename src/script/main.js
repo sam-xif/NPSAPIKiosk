@@ -1,4 +1,8 @@
 const controller = require('controller');
+const client = require('client');
+const view = require('view');
+const worker = require('worker');
+const widget = require('./widget');
 
 /**
  * Entry point and controller logic.
@@ -24,6 +28,14 @@ function getUrlParameter(name) {
  * Function that gets called when the page is loaded.
  */
 function onPageLoad() {
+    let workerMgr = new worker.NPSAPIWorkerManager('{{ script_dir }}/{{ worker_script }}');
+    let w = new widget.Widget("searchResults", workerMgr, {});
+    let dsource = new widget.DataSource();
+    w.bind(dsource, new view.Template('{{ views_dir }}', '{{ views.searchResult }}'));
+    dsource.add({ text : 'test'});
+    console.log(dsource);
+    console.log(w.dataSource);
+
     // TODO: Perhaps add logic to each page that decides what controller to use to avoid doing it here
     if (getUrlParameter('query') && getUrlParameter('resource')) {
         let ctrl = new controller.SearchController(getUrlParameter('resource'),

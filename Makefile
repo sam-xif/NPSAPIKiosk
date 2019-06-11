@@ -13,7 +13,7 @@ WORKER_SCRIPTS=clientWorkerMain.js
 
 # Command options
 LIB_BUNDLE_OPTS=-r ./model.js:model -r ./client.js:client -r ./controller.js:controller -r ./view.js:view -r ./clientWorkerManager.js:worker
-MAIN_BUNDLE_OPTS=-x controller
+MAIN_BUNDLE_OPTS=-x model -x client -x controller -x view -x worker
 
 # In the worker bundle, unlike the main bundle, we re-require model and client because the worker cannot
 #  refer to lib as it runs in a separate context.
