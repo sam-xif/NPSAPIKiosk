@@ -7,7 +7,7 @@
  */
 class NPSModel {
     /**
-     * @constructor
+     * @param {JSON} source Source JSON object from the API to use to construct the object
      */
     constructor(source) {
         Object.assign(this, source);
@@ -42,8 +42,9 @@ class NPSModel {
      * Asynchronously fetch {@link NPSModel} objects using the given {@link NPSAPIQuery} object.
      * @param {NPSAPIQuery} query The query to execute
      * @param {NPSAPIWorkerManager} workerMgr the worker manager to route the request to
-     * @param {function(boolean, Array<NPSModel>): void ?} callback Optional callback that is called when the data is obtained. The first parameter is
-     *                                                     a boolean value that is true if and only if the operation succeeded.
+     * @param {function(boolean, Array<NPSModel>): void ?} callback Optional callback that is called when the data
+     *                                                     is obtained. The first parameter is a boolean value that is
+     *                                                     true if and only if the operation succeeded.
      * @return {Array<NPSModel>|null} Array of model objects, or null if there are no items to be retrieved
      * @throws Error if the response could not be parsed
      */
@@ -77,8 +78,6 @@ class NPSModel {
             data.forEach((obj) => {
                 out.push(models[resource] !== undefined ? new models[resource](obj) : new NPSModel(obj));
             });
-        } else {
-            console.log("Hit end!"); // Debug msg
         }
 
         if (callback) {
@@ -94,7 +93,7 @@ class NPSModel {
  */
 class NPSAlert extends NPSModel {
     /**
-     * @param {JSON} source Source JSON object from the API to use to construct the object.
+     * @param {JSON} source Source JSON object from the API to use to construct the object
      */
     constructor(source) {
         super(source);
@@ -106,8 +105,7 @@ class NPSAlert extends NPSModel {
  */
 class NPSPark extends NPSModel {
     /**
-     * @param source Source JSON object from the API to use to construct the object.
-     * @constructor
+     * @param source Source JSON object from the API to use to construct the object
      */
     constructor(source) {
         super(source);
@@ -118,7 +116,7 @@ class NPSPark extends NPSModel {
     }
 
     /**
-     *
+     * Checks whether this park instances has images associated with it.
      * @return {boolean}
      */
     hasImages() {

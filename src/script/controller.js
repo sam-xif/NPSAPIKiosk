@@ -2,22 +2,22 @@ const view = require('view');
 const client = require('client');
 const model = require('model');
 const widget = require('widget');
-const $ = require('jquery');
+const $ = require('jquery'); // TODO: Remove dependency on jQuery for this module
 
 /**
- *
+ * Controller interface that defines only the go() method, which executes this controller's logic.
  */
 class Controller {
     /**
-     *
-     * @param {NPSAPIWorkerManager} workerMgr
+     * Creates a new Controller instance with the given worker thread manager.
+     * @param {NPSAPIWorkerManager} workerMgr The worker manager to use to communicate with the API
      */
     constructor(workerMgr) {
         this.workerMgr = workerMgr;
     }
 
     /**
-     *
+     * Executes this controller's logic.
      */
     go() {
         throw new Error("'go()' must be implemented on subclasses of Controller");
@@ -25,16 +25,16 @@ class Controller {
 }
 
 /**
- *
+ * Base class for controllers which render to a single view on a page.
  */
 class SingleViewController extends Controller {
     /**
      *
-     * @param workerMgr
-     * @param containerId
-     * @param queryBuilder
-     * @param templatesRoot
-     * @param templateName
+     * @param workerMgr The worker manager to use to communicate with the API.
+     * @param containerId The container id to render to
+     * @param queryBuilder The query builder to use to execute queries
+     * @param templatesRoot The root directory of templates
+     * @param templateName The name of the template in <code>templatesRoot</code> to use to render data
      */
     constructor(workerMgr, containerId, queryBuilder, templatesRoot, templateName) {
         super(workerMgr);

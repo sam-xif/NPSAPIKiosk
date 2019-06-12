@@ -5,9 +5,9 @@ const axios = require('axios/index');
  */
 class NPSAPIProxy {
     /**
-     * @param api_key The API key to use
-     * @param api_endpoint The API endpoint to access
-     * @constructor
+     * Creates a new instance with the given API key and endpoint.
+     * @param {String} api_key The API key to use
+     * @param {String} api_endpoint The API endpoint to access
      */
     constructor(api_key, api_endpoint) {
         this.api_key = api_key;
@@ -15,6 +15,12 @@ class NPSAPIProxy {
 
     }
 
+    /**
+     * Makes an API call to the given resource with the given parameters.
+     * @param {String} resource The API resource to access
+     * @param {Object} params The query parameters
+     * @return {Promise<Object>} The data object
+     */
     async get(resource, params) {
         params["api_key"] = this.api_key;
         let result = await axios.get(this.api_endpoint + resource, {
@@ -56,16 +62,6 @@ class NPSAPIQuery {
         };
     }
 
-    capture(response) {
-        if (response.status === 'error') {
-            this.status = response.status;
-            return;
-        }
-
-        let data = response.data;
-
-    }
-
     /**
      * Executes this query by sending a request to the given API worker manager.
      * @param {NPSAPIWorkerManager} workerMgr The worker manager
@@ -73,7 +69,7 @@ class NPSAPIQuery {
      */
     async execute(workerMgr) {
         let response = await (new Promise((resolve) => {
-            workerMgr.request(this, (response) => { this.capture(response); resolve(response); });
+            workerMgr.request(this, response => resolve(response));
         }));
 
         return response;
