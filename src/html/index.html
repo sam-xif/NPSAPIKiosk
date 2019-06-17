@@ -8,25 +8,15 @@
 {% block scripts %}
 {{ super() }}
 <script src="{{ script_dir }}/main.js"></script>
+<script>let CONTROLLER='{{ controllers.index }}';</script>
 {% endblock %}
-
 
 {% block header %}
-{% call layout.navbar([{ "text":"Home", "link":"index.html" }], collapse=True, data_target="navbarHeader") %}
-    <div class="row">
-        <div class="col-sm-8 col-md-7 py-4">
-            <h4 class="text-white">Search</h4>
-            <p class="text-muted">
-                Welcome to a virtual information kiosk for the National Park Service!</p>
-        </div>
-    </div>
-{% endcall %}
+{{ layout.navbar([{ "text":"Home", "link":"index.html" }], collapse=False, data_target=None) }}
 {% endblock %}
 
 
-{% block content %}
-<script>let CONTROLLER='{{ controllers.index }}';</script>
-
+{% block main %}
 {% call(title) layout.section("Search", section_id="search", container_class="bg-overlay") %}
     <div class="container text-center">
         <div class="row"><div class="col"><h2>{{ title }}</h2></div></div>
