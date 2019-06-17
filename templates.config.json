@@ -5,8 +5,8 @@
     "api_key": "bGpxFeQ0v8stp7tM6fuxocR57DsjdxrKDuWzrLl9",
     "api_endpoint": "https://developer.nps.gov/api/v1/",
     "containerIDs": {
-      "alerts": "slideshowParent",
-      "searchResults": "resultsParent"
+      "alerts": "nps-slideshow-parent",
+      "searchResults": "nps-results-parent"
     }
   },
   "rules": [
