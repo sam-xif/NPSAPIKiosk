@@ -43,3 +43,34 @@ a.graylink {
     height: 450px;
     padding-top: 50px;
 }
+
+/* custom styles */
+html {
+    height: 100%;
+}
+
+body {
+    background-image: url("../img/gallery/park1.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    height: inherit;
+}
+
+main {
+    height: inherit;
+}
+
+#nps-body {
+    color: white;
+    height: inherit;
+}
+
+#nps-body .container, #nps-body .row {
+    height: inherit;
+}
+
+#nps-main-col {
+    background-color: rgba(1.0, 1.0, 1.0, 0.5);
+    height: inherit;
+}

@@ -1,9 +1,13 @@
 {% extends "skeleton.html" %}
 
 {% block content %}
-<div id="nps-main-col">
-{% block main %}
+<div id="nps-body">
+    <div class="container">
+        <div class="row" id="nps-main-col">
+        {% block main %}
 
-{% endblock %}
+        {% endblock %}
+        </div>
+    </div>
 </div>
 {% endblock %}
