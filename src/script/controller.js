@@ -147,6 +147,14 @@ class SearchController extends SingleViewController {
             qb.from(resource).setQueryString(queryString).setLimit(5),
             templatesRoot,
             templateName);
+
+        // Set default value for dropdown
+        $("#nps-search-resource-select").children("option").each((i, itm) => {
+            let child = $(itm);
+            if (child.attr("value") === resource) {
+                child.attr("selected", "selected");
+            }
+        });
     }
 
     before(data) {
