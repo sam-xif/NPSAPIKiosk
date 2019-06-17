@@ -7,6 +7,9 @@
 <script>let CONTROLLER='{{ controllers.searchResults }}';</script>
 {% endblock %}
 
+{% block header %}
+{{ layout.navbar([{ "text":"Home", "link":"index.html" }], collapse=False, data_target=None) }}
+{% endblock %}
 
 {% block main %}
 

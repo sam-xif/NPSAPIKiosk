@@ -46,7 +46,7 @@ a.graylink {
 
 /* custom styles */
 html {
-    height: 100%;
+
 }
 
 body {
@@ -55,23 +55,23 @@ body {
     background-size: cover;
     background-position: center center;
     background-attachment: fixed;
-    height: inherit;
+
 }
 
 main {
-    height: inherit;
+
 }
 
 #nps-body {
     color: white;
-    height: inherit;
+
 }
 
 #nps-body .container, #nps-body .row {
-    height: inherit;
+
 }
 
 #nps-main-col {
     background-color: rgba(1.0, 1.0, 1.0, 0.5);
-    height: inherit;
+
 }
