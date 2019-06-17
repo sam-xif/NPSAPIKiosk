@@ -1,11 +1,15 @@
 {% extends "skeleton.html" %}
 
+{% block scripts %}
+{{ super() }}
+<script src="{{ script_dir }}/main.js"></script>
+{% endblock %}
+
 {% block content %}
 <div id="nps-body">
     <div class="container">
         <div class="row" id="nps-main-col">
         {% block main %}
-
         {% endblock %}
         </div>
     </div>

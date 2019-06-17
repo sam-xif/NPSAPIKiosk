@@ -118,8 +118,8 @@ class IndexController extends SingleViewController {
     }
 
     go() {
-        view.ViewUtil.createSlideshow(this.containerId, 1500, 6000);
-        super.go();
+        //view.ViewUtil.createSlideshow(this.containerId, 1500, 6000);
+        //super.go();
     }
 
     before(data) {
