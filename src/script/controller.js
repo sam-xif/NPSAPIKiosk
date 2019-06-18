@@ -60,8 +60,10 @@ class SingleViewController extends Controller {
         let fetchMore = true;
         let maxPages = 10;
 
+        let dataPromises = [];
+
         for (let i = 0; fetchMore && i < maxPages; i++) {
-            model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
+            dataPromises.push(model.NPSModel.retrieve(this.qb.build(), this.workerMgr)
                 .then(results => {
                     if (results == null) {
                         fetchMore = false;
@@ -70,9 +72,19 @@ class SingleViewController extends Controller {
                     this.before(results);
                     this.dataSource.addAll(results);
                     this.after(results);
-                });
+                }));
             this.qb.nextPage();
         }
+
+        // Wait handle
+        Promise.all(dataPromises)
+            .then((function (context) {
+                return () => {
+                    if (context.dataSource.getSnapshot().length === 0) {
+                        context.noData();
+                    }
+                };
+            })(this));
     }
 
     go() {
@@ -95,6 +107,10 @@ class SingleViewController extends Controller {
      */
     after(data) {
         return;
+    }
+
+    noData() {
+
     }
 }
 
@@ -160,6 +176,19 @@ class SearchController extends SingleViewController {
     before(data) {
         let spinnerID = "#spinner";
         $(spinnerID).remove();
+    }
+
+    noData() {
+        let spinnerID = "#spinner";
+        $(spinnerID).remove();
+
+        this.template.render(this.containerId, {
+            data: {
+                getTitle: () => "No results",
+                getDescription: () => "Please enter a different query",
+                getUrl: () => null
+            }
+        });
     }
 }
 
