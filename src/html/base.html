@@ -5,6 +5,11 @@
 <script src="{{ script_dir }}/main.js"></script>
 {% endblock %}
 
+{% block header %}
+{{ layout.navbar([{ "text":"Home", "link":"index.html" }], collapse=False, data_target=None) }}
+{% endblock %}
+
+
 {% block content %}
 <div id="nps-body">
     <div class="container">

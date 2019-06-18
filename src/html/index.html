@@ -10,11 +10,6 @@
 <script>let CONTROLLER='{{ controllers.index }}';</script>
 {% endblock %}
 
-{% block header %}
-{{ layout.navbar([{ "text":"Home", "link":"index.html" }], collapse=False, data_target=None) }}
-{% endblock %}
-
-
 {% block main %}
 {% call(title) layout.section("Search", section_id="search") %}
     <div class="container text-center">

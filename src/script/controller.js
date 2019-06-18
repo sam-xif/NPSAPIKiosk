@@ -80,7 +80,7 @@ class SingleViewController extends Controller {
         Promise.all(dataPromises)
             .then((function (context) {
                 return () => {
-                    if (context.dataSource.getSnapshot().length === 0) {
+                    if (context.dataSource.isEmpty()) {
                         context.noData();
                     }
                 };

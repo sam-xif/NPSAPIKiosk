@@ -1,14 +1,11 @@
 {% extends "base.html" %}
 {% import "layout.html" as layout %}
 
+{% block title %}Search{% endblock %}
 
 {% block scripts %}
 {{ super() }}
 <script>let CONTROLLER='{{ controllers.searchResults }}';</script>
-{% endblock %}
-
-{% block header %}
-{{ layout.navbar([{ "text":"Home", "link":"index.html" }], collapse=False, data_target=None) }}
 {% endblock %}
 
 {% block main %}
@@ -44,7 +41,7 @@
         </form>
     </div>
 {% endcall %}
-{% call(title) layout.section("Search Results", section_id="resultsParent", container_class="py-4") %}
+{% call(title) layout.section("Search Results", section_id=containerIDs.searchResults, container_class="py-4") %}
     <!--<div class="row">
         <div class="col-sm-auto col-md-auto">
             <h2>{{ title }}</h2>

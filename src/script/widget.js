@@ -169,6 +169,10 @@ class DataSource {
 
         return ops;
     }
+
+    isEmpty() {
+        return this.data.length === 0;
+    }
 }
 
 /**
