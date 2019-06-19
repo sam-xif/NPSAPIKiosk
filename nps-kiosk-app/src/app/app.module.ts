@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import {WindowRefService} from "./window-ref.service";
+import {NPSModelDAOProviderService} from "./npsmodel-daoprovider.service";
 
 @NgModule({
   declarations: [
@@ -11,7 +12,7 @@ import {WindowRefService} from "./window-ref.service";
   imports: [
     BrowserModule,
   ],
-  providers: [ WindowRefService ],
+  providers: [ WindowRefService, NPSModelDAOProviderService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
