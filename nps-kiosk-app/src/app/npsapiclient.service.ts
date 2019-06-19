@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { NPSAPIWorkerManager } from './clientWorkerManager';
-import { NPSAPIQuery } from './client';
-import { NPSModel } from './model';
+import { NPSAPIWorkerManager } from './lib/clientWorkerManager';
+import { NPSAPIQuery } from './lib/client';
+import { NPSModel } from './lib/model';
 import {WindowRefService} from "./window-ref.service";
 
 @Injectable({

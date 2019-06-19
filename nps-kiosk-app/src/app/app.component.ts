@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { NPSAPIQueryBuilder } from "./npsmodel/client";
-import { NPSAPIClientService } from './npsmodel/npsapiclient.service';
+import { NPSAPIClientService } from './npsapiclient.service';
 
 @Component({
   selector: 'app-root',

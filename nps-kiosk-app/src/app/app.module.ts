@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import {WindowRefService} from "./npsmodel/window-ref.service";
+import {WindowRefService} from "./window-ref.service";
 
 @NgModule({
   declarations: [
