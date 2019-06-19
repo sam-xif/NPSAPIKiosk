@@ -13,7 +13,7 @@ export interface INPSModel {
 }
 
 export interface INPSModelDAO {
-  retrieve(query: INPSAPIQuery, callback: any): Promise<Array<INPSModel>>;
+  retrieve(query: INPSAPIQuery, callback?: any): Promise<Array<INPSModel>>;
 }
 
 /**
@@ -35,7 +35,7 @@ export class NPSModelDAO implements INPSModelDAO {
    * @return {Array<NPSModel>|null} Array of model objects, or null if there are no items to be retrieved
    * @throws Error if the response could not be parsed
    */
-  public async retrieve(query: INPSAPIQuery, callback: any)
+  public async retrieve(query: INPSAPIQuery, callback?: any)
       : Promise<Array<INPSModel>> {
     let response: INPSAPIResponse = await query.execute(this.workerMgr);
 

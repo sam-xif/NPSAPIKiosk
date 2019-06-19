@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import INPSAPIWorkerManager, { NPSAPIWorkerManager } from '../nps/NPSAPIWorkerManager';
 import INPSAPIQuery from '../nps/NPSAPIQuery';
-import { INPSModelDAO, NPSModelDAO } from '../nps/NPSModel';
+import { INPSModelDAO } from '../nps/NPSModel';
 import { WindowRefService } from "./window-ref.service";
 import { NPSModelDAOProviderService } from "./npsmodel-daoprovider.service";
 
@@ -22,6 +22,6 @@ export class NPSAPIClientService {
   }
 
   retrieve(query : INPSAPIQuery) {
-    return this.dao.retrieve(query, this.workerMgr);
+    return this.dao.retrieve(query);
   }
 }
