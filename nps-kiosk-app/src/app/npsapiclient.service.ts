@@ -1,22 +1,24 @@
 import { Injectable } from '@angular/core';
-import { NPSAPIWorkerManager } from './lib/clientWorkerManager';
-import { NPSAPIQuery } from './lib/client';
-import { NPSModel } from './lib/model';
-import {WindowRefService} from "./window-ref.service";
+import INPSAPIWorkerManager, { NPSAPIWorkerManager } from '../nps/NPSAPIWorkerManager';
+import INPSAPIQuery from '../nps/NPSAPIQuery';
+import { NPSModel } from '../nps/model';
+import { WindowRefService } from "./window-ref.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class NPSAPIClientService {
-  workerMgr;
+  workerMgr : INPSAPIWorkerManager;
 
   constructor(private windowRef : WindowRefService) {
-    this.workerMgr = new NPSAPIWorkerManager(
-      'assets/js/worker.js',
-      windowRef.nativeWindow);
+    if (windowRef.nativeWindow) {
+      this.workerMgr = new NPSAPIWorkerManager(
+        'assets/js/worker.js',
+        windowRef.nativeWindow);
+    }
   }
 
-  retrieve(query : NPSAPIQuery) {
+  retrieve(query : INPSAPIQuery) {
     return NPSModel.retrieve(query, this.workerMgr);
   }
 }

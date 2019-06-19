@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import { NPSAPIQueryBuilder } from "./lib/client";
+import NPSAPIQueryBuilder from "../nps/NPSAPIQueryBuilder";
 import { NPSAPIClientService } from './npsapiclient.service';
 
 @Component({
