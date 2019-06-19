@@ -5,6 +5,7 @@ JSBUNDLER=browserify
 SRC=build/script
 OUT=dist/script
 BACK=../..
+LIB_OUT=dist/lib
 
 # The entry point file and its path relative to the current directory
 MAIN=main.js
@@ -21,6 +22,7 @@ WORKER_BUNDLE_OPTS=-r ./client.js:client
 
 # Output file name and relative path
 LIB_BUNDLE=lib.js
+LIB_STANDALONE=lib.standalone.js
 WORKER_BUNDLE=worker.js
 MAIN_BUNDLE=main.js
 
@@ -34,6 +36,14 @@ MK_OUT_DIR=mkdir -p $(OUT)
 # Make all targets
 .PHONY: all
 all: $(OUT)/$(MAIN_BUNDLE) $(OUT)/$(WORKER_BUNDLE) $(OUT)/$(LIB_BUNDLE)
+
+# Compiles a standalone library module with all of the code
+.PHONY: lib-standalone
+lib-standalone: $(LIB_OUT)/$(LIB_STANDALONE)
+
+$(LIB_OUT)/$(LIB_STANDALONE): $(filter-out $(add-prefix $(SRC)/,$(WORKER_SCRIPTS)), $(wildcard $(SRC)/*.js))
+	mkdir -p $(LIB_OUT)
+	pushd $(SRC) && $(JSBUNDLER) $(LIB_BUNDLE_OPTS) > $(BACK)/$(LIB_OUT)/$(LIB_STANDALONE) && popd
 
 # Build the main bundle
 $(OUT)/$(MAIN_BUNDLE): $(OUT)/$(LIB_BUNDLE)
