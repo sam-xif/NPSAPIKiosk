@@ -4,7 +4,7 @@ export default interface INPSAPIResponse {
   currentPage() : number;
   pagesLeft() : number;
   ok() : boolean;
-  getData() : object;
+  getData() : Array<object>;
   getResource() : string;
 }
 
@@ -17,7 +17,7 @@ export class NPSAPIResponse implements INPSAPIResponse {
   private readonly start : number;
   private readonly limit : number;
   private readonly total : number;
-  private readonly data : object;
+  private readonly data : Array<object>;
 
   /**
    * @param status The status of the response
@@ -75,7 +75,7 @@ export class NPSAPIResponse implements INPSAPIResponse {
    * </p>
    * @return {Object} The data of this response
    */
-  getData() {
+  getData() : Array<object> {
     return this.data;
   }
 
@@ -95,7 +95,7 @@ export class NPSAPIResponse implements INPSAPIResponse {
    * @return {NPSAPIResponse} The new object
    * @throws Error if parsing the data failed
    */
-  from(responseObj) {
+  static from(responseObj) {
     if (responseObj.status === undefined) {
       throw new Error("Cannot parse malformed response. Expected a 'status' property.");
     }

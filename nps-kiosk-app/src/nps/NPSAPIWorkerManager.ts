@@ -1,4 +1,4 @@
-import { NPSAPIResponse } from './client';
+import { NPSAPIResponse } from './NPSAPIResponse';
 import INPSAPIQuery from './NPSAPIQuery';
 
 export default interface INPSAPIWorkerManager {
