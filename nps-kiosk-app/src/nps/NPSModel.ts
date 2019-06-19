@@ -5,7 +5,7 @@ import INPSAPIQuery from "./NPSAPIQuery";
 import INPSAPIWorkerManager from "./NPSAPIWorkerManager";
 import INPSAPIResponse from "./NPSAPIResponse";
 
-export interface INPSModel {
+export interface INPSObject {
   getTitle(): string;
   getDescription(): string;
   getUrl(): string;
@@ -13,7 +13,7 @@ export interface INPSModel {
 }
 
 export interface INPSModelDAO {
-  retrieve(query: INPSAPIQuery, callback?: any): Promise<Array<INPSModel>>;
+  retrieve(query: INPSAPIQuery, callback?: any): Promise<Array<INPSObject>>;
 }
 
 /**
@@ -27,16 +27,16 @@ export class NPSModelDAO implements INPSModelDAO {
   }
 
   /**
-   * Asynchronously fetch {@link NPSModel} objects using the given {@link NPSAPIQuery} object.
+   * Asynchronously fetch {@link NPSObject} objects using the given {@link NPSAPIQuery} object.
    * @param {NPSAPIQuery} query The query to execute
-   * @param {function(boolean, Array<NPSModel>): void ?} callback Optional callback that is called when the data
+   * @param {function(boolean, Array<NPSObject>): void ?} callback Optional callback that is called when the data
    *                                                     is obtained. The first parameter is a boolean value that is
    *                                                     true if and only if the operation succeeded.
-   * @return {Array<NPSModel>|null} Array of model objects, or null if there are no items to be retrieved
+   * @return {Array<NPSObject>|null} Array of model objects, or null if there are no items to be retrieved
    * @throws Error if the response could not be parsed
    */
   public async retrieve(query: INPSAPIQuery, callback?: any)
-      : Promise<Array<INPSModel>> {
+      : Promise<Array<INPSObject>> {
     let response: INPSAPIResponse = await query.execute(this.workerMgr);
 
     if (!response.ok()) {
@@ -84,7 +84,7 @@ export class NPSModelDAO implements INPSModelDAO {
 /**
  * Abstract base class for models of data objects from the NPS API.
  */
-abstract class NPSModel implements INPSModel {
+abstract class NPSObject implements INPSObject {
   private readonly title: string;
   private readonly description: string;
   private readonly url: string;
@@ -117,7 +117,7 @@ abstract class NPSModel implements INPSModel {
   //  * @return {String} A description
   //  */
   // getDescription() {
-  //   //throw new Error("'getDescription()' must be implemented on a subclass of NPSModel");
+  //   //throw new Error("'getDescription()' must be implemented on a subclass of NPSObject");
   //   return this.description;
   // }
   //
@@ -141,7 +141,7 @@ abstract class NPSModel implements INPSModel {
 /**
  * Data model of an alert issued by the NPS.
  */
-class NPSAlert extends NPSModel {
+class NPSAlert extends NPSObject {
   /**
    * @param {JSON} source Source JSON object from the API to use to construct the object
    */
@@ -153,7 +153,7 @@ class NPSAlert extends NPSModel {
 /**
  * Data model of a park in the NPS's database.
  */
-class NPSPark extends NPSModel {
+class NPSPark extends NPSObject {
   /**
    * @param source Source JSON object from the API to use to construct the object
    */
@@ -173,7 +173,7 @@ class NPSPark extends NPSModel {
 /**
  *
  */
-class NPSNewsRelease extends NPSModel {
+class NPSNewsRelease extends NPSObject {
   constructor(source) {
     super(source.title, source.abstract, source.url);
   }
