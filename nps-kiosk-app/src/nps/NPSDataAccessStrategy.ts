@@ -1,15 +1,9 @@
 import INPSAPIQuery from "./NPSAPIQuery";
-import {INPSObject, INPSModelDAO} from "./NPSModel";
+import {INPSModelDAO} from "./NPSModel";
 import NPSDataSource from "./NPSDataSource";
 
-export interface INPSDataCollection extends Iterable<INPSObject> {
-  hasNextSubCollection(): boolean;
-  nextSubCollection(): INPSDataCollection;
-  getDataSource(): NPSDataSource;
-}
-
 export interface INPSDataAccessStrategy {
-  getData(query: INPSAPIQuery, dao: INPSModelDAO): Promise<INPSDataCollection>;
+  getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource;
 }
 
 export class NPSDataAccessStrategyBuilder {
@@ -20,13 +14,16 @@ export class NPSDataAccessStrategyBuilder {
     this.strategy = new DefaultNPSDataAccessStrategy();
   }
 
-  use(identifier: string, config: object): NPSDataAccessStrategyBuilder {
+  use(identifier: string, config: object = {}): NPSDataAccessStrategyBuilder {
     switch (identifier) {
       case "default":
         this.strategy = new DefaultNPSDataAccessStrategy();
         break;
       case "batch":
         this.strategy = new BatchNPSDataAccessStrategy(config);
+        break;
+      case "filter":
+        this.strategy = new FilteredNPSDataAccessStrategy(config, this.strategy);
         break;
       default:
         throw new Error("Unrecognized strategy identifier");
@@ -46,7 +43,7 @@ abstract class ANPSDataAccessStrategy implements INPSDataAccessStrategy {
     this.config = config;
   }
 
-  abstract getData(query: INPSAPIQuery, dao: INPSModelDAO): Promise<INPSDataCollection>;
+  abstract getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource;
 }
 
 class FilteredNPSDataAccessStrategy extends ANPSDataAccessStrategy {
@@ -62,18 +59,19 @@ class FilteredNPSDataAccessStrategy extends ANPSDataAccessStrategy {
     this.delegate = delegate;
   }
 
-  async getData(query: INPSAPIQuery, dao: INPSModelDAO): Promise<INPSDataCollection> {
-    let results = await this.delegate.getData(query, dao);
-    let dataSource = new NPSDataSource();
+  getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource {
+    let dataSource = this.delegate.getData(query, dao);
+    let outDataSource = new NPSDataSource();
 
-    for (let result in results) {
-      if (this.predicate(result)) {
-        dataSource.add(result);
-      }
-    }
+    dataSource.addOnUpdateHandler(snapshot => {
+      snapshot.forEach(item => {
+        if (this.predicate(item)) {
+          outDataSource.add(item);
+        }
+      });
+    });
 
-    let outCollection = new NPSDataCollection(dataSource);
-    return outCollection;
+    return outDataSource;
   }
 }
 
@@ -82,11 +80,11 @@ class DefaultNPSDataAccessStrategy extends ANPSDataAccessStrategy {
     super({});
   }
 
-  async getData(query: INPSAPIQuery, dao: INPSModelDAO): Promise<INPSDataCollection> {
-    let result: INPSObject[] = await dao.retrieve(query);
-    let ds = new NPSDataSource();
-    ds.addAll(result);
-    return new NPSDataCollection(ds);
+  getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource {
+    let dataSource = new NPSDataSource();
+    dao.retrieve(query)
+      .then((results) => dataSource.addAll(results));
+    return dataSource;
   }
 }
 
@@ -95,32 +93,7 @@ class BatchNPSDataAccessStrategy extends ANPSDataAccessStrategy {
     super(config);
   }
 
-  getData(query: INPSAPIQuery, dao: INPSModelDAO): Promise<INPSDataCollection> {
+  getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource {
     throw new Error("Unimplemented");
-  }
-}
-
-// TODO: Probably can just get rid of this and use only NPSDataSource
-class NPSDataCollection implements INPSDataCollection {
-  private readonly dataSource: NPSDataSource;
-
-  constructor(dataSource: NPSDataSource) {
-    this.dataSource = dataSource;
-  }
-
-  [Symbol.iterator](): Iterator<INPSObject> {
-    return this.dataSource[Symbol.iterator]();
-  }
-
-  getDataSource(): NPSDataSource {
-    return this.dataSource;
-  }
-
-  hasNextSubCollection(): boolean {
-    return false;
-  }
-
-  nextSubCollection(): INPSDataCollection {
-    return undefined;
   }
 }

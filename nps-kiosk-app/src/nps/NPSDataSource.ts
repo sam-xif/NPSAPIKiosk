@@ -28,7 +28,7 @@ export default class NPSDataSource implements Iterable<any> {
    * Fires the "on update" event.
    */
   fireOnUpdateEvent() {
-    this.onUpdateCallbacks.forEach(fn => fn(this.getSnapshot()));
+    this.onUpdateCallbacks.forEach(fn => fn(this.getSnapshotRaw()));
   }
 
   /**

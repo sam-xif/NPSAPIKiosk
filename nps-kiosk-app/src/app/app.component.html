@@ -5,6 +5,12 @@
       <a href="#" class="navbar-brand d-flex align-items-center">
         <strong>Home</strong>
       </a>
+      <a href="#" class="navbar-brand d-flex align-items-center">
+        <strong>Search</strong>
+      </a>
+      <a href="#" class="navbar-brand d-flex align-items-center">
+        <strong>Learn</strong>
+      </a>
     </div>
   </div>
 </section>
@@ -19,8 +25,15 @@
       <button class="btn btn-primary col-2" (click)="callAPI()">Call API</button>
       <input class="col-10" [(ngModel)]="queryString" type="text"/>
     </div>
-    <ul *ngFor="let datum of data">
-      <p>{{ datum.getTitle() }}</p>
-    </ul>
+    <div class="row">
+      <div class="col container">
+        <ul class="list-group" *ngFor="let datum of data">
+          <li class="list-group-item">
+            <p>{{ datum.getTitle() }}</p>
+            <p>{{ datum.getUrl() }}</p>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>

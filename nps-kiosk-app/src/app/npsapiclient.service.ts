@@ -4,7 +4,8 @@ import INPSAPIQuery from '../nps/NPSAPIQuery';
 import { INPSModelDAO } from '../nps/NPSModel';
 import { WindowRefService } from "./window-ref.service";
 import { NPSModelDAOProviderService } from "./npsmodel-daoprovider.service";
-import {INPSDataAccessStrategy, INPSDataCollection} from "../nps/NPSDataAccessStrategy";
+import {INPSDataAccessStrategy} from "../nps/NPSDataAccessStrategy";
+import NPSDataSource from "../nps/NPSDataSource";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class NPSAPIClientService {
     this.dao = daoProvider.getDAOBuilder()(this.workerMgr);
   }
 
-  retrieve(query: INPSAPIQuery, strategy: INPSDataAccessStrategy): Promise<INPSDataCollection> {
+  retrieve(query: INPSAPIQuery, strategy: INPSDataAccessStrategy): NPSDataSource {
     return strategy.getData(query, this.dao);
   }
 }
