@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import NPSAPIQueryBuilder from "../nps/NPSAPIQueryBuilder";
 import { NPSAPIClientService } from './npsapiclient.service';
 import {INPSObject} from "../nps/NPSModel";
-import {NPSDataAccessStrategyBuilder} from "../nps/NPSDataAccessStrategy";
+import {INPSDataCollection, NPSDataAccessStrategyBuilder} from "../nps/NPSDataAccessStrategy";
 
 @Component({
   selector: 'app-root',
@@ -33,12 +33,13 @@ export class AppComponent implements OnInit {
       qb.setQueryString(this.queryString);
     }
 
-    let strategy = (new NPSDataAccessStrategyBuilder()).use("default").build();
+    let strategy = (new NPSDataAccessStrategyBuilder())
+      .use("default", {})
+      .build();
 
     this.client.retrieve(qb.build(), strategy)
-      .then(result => {
-        console.log(result);
-        this.data = result;
+      .then((result: INPSDataCollection) => {
+        this.data = result.getDataSource().getSnapshotRaw();
       });
   }
 }
