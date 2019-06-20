@@ -25,6 +25,9 @@ export class NPSDataAccessStrategyBuilder {
       case "default":
         this.strategy = new DefaultNPSDataAccessStrategy();
         break;
+      case "batch":
+        this.strategy = new BatchNPSDataAccessStrategy(config);
+        break;
       default:
         throw new Error("Unrecognized strategy identifier");
     }
@@ -44,6 +47,34 @@ abstract class ANPSDataAccessStrategy implements INPSDataAccessStrategy {
   }
 
   abstract getData(query: INPSAPIQuery, dao: INPSModelDAO): Promise<INPSDataCollection>;
+}
+
+class FilteredNPSDataAccessStrategy extends ANPSDataAccessStrategy {
+  delegate: INPSDataAccessStrategy;
+  predicate: any;
+
+  constructor(config: object, delegate: INPSDataAccessStrategy) {
+    super(config);
+    if ('predicate' in config) {
+      this.predicate = config['predicate'];
+    }
+
+    this.delegate = delegate;
+  }
+
+  async getData(query: INPSAPIQuery, dao: INPSModelDAO): Promise<INPSDataCollection> {
+    let results = await this.delegate.getData(query, dao);
+    let dataSource = new NPSDataSource();
+
+    for (let result in results) {
+      if (this.predicate(result)) {
+        dataSource.add(result);
+      }
+    }
+
+    let outCollection = new NPSDataCollection(dataSource);
+    return outCollection;
+  }
 }
 
 class DefaultNPSDataAccessStrategy extends ANPSDataAccessStrategy {
@@ -69,6 +100,7 @@ class BatchNPSDataAccessStrategy extends ANPSDataAccessStrategy {
   }
 }
 
+// TODO: Probably can just get rid of this and use only NPSDataSource
 class NPSDataCollection implements INPSDataCollection {
   private readonly dataSource: NPSDataSource;
 
@@ -76,8 +108,8 @@ class NPSDataCollection implements INPSDataCollection {
     this.dataSource = dataSource;
   }
 
-  *[Symbol.iterator](): Iterator<INPSObject> {
-    throw new Error("Not implemented");
+  [Symbol.iterator](): Iterator<INPSObject> {
+    return this.dataSource[Symbol.iterator]();
   }
 
   getDataSource(): NPSDataSource {

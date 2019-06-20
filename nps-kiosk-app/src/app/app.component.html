@@ -1,12 +1,26 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <button (click)="callAPI()">Call API</button>
-  <input [(ngModel)]="queryString" type="text"/>
-  <ul *ngFor="let datum of data">
-    <p>{{ datum.getTitle() }}</p>
-  </ul>
-</div>
-
+<section role="banner">
+  <div class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container d-flex justify-content-between">
+      <a href="#" class="navbar-brand d-flex align-items-center">
+        <strong>Home</strong>
+      </a>
+    </div>
+  </div>
+</section>
+<section role="main">
+  <div class="container">
+    <div class="row">
+      <h1>
+        Welcome to {{ title }}!
+      </h1>
+    </div>
+    <div class="row">
+      <button class="btn btn-primary col-2" (click)="callAPI()">Call API</button>
+      <input class="col-10" [(ngModel)]="queryString" type="text"/>
+    </div>
+    <ul *ngFor="let datum of data">
+      <p>{{ datum.getTitle() }}</p>
+    </ul>
+  </div>
+</section>

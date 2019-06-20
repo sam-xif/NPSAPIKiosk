@@ -1,8 +1,8 @@
 /**
  * A data source object which can be dynamically written to and read from.
  */
-export default class NPSDataSource {
-  private data: Array<object>;
+export default class NPSDataSource implements Iterable<any> {
+  private data: Array<any>;
   private counter: number;
   private onUpdateCallbacks: Array<any>;
 
@@ -10,6 +10,10 @@ export default class NPSDataSource {
     this.data = [];
     this.counter = 0;
     this.onUpdateCallbacks = [];
+  }
+
+  [Symbol.iterator](): Iterator<any> {
+    return this.getSnapshot()[Symbol.iterator]();
   }
 
   /**
@@ -121,7 +125,7 @@ export default class NPSDataSource {
    * </p>
    * @return {Array} The snapshot of the data
    */
-  getSnapshot() {
+  getSnapshot(): Array<any> {
     return this.data.slice(0);
   }
 
