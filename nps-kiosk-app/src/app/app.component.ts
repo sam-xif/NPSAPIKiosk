@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import NPSAPIQueryBuilder from "../nps/NPSAPIQueryBuilder";
-import { NPSAPIClientService } from './npsapiclient.service';
+import { NPSAPIClientService } from './services/npsapiclient.service';
 import {INPSObject} from "../nps/NPSModel";
 import {NPSDataAccessStrategyBuilder} from "../nps/NPSDataAccessStrategy";
 import NPSDataSource from "../nps/NPSDataSource";

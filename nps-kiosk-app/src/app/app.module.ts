@@ -2,8 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
-import {WindowRefService} from "./window-ref.service";
-import {NPSModelDAOProviderService} from "./npsmodel-daoprovider.service";
+import {WindowRefService} from "./services/window-ref.service";
+import {NPSModelDAOProviderService} from "./services/npsmodel-daoprovider.service";
 import {FormsModule} from "@angular/forms";
 
 @NgModule({
