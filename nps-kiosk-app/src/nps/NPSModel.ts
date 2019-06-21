@@ -143,7 +143,8 @@ class NPSPark extends ANPSObject {
     }
 
     // First, if the config has the long text flag set, then we add paragraph elements
-    this.displayElements.push(this);
+    this.displayElements.push(new NPSDisplayParagraph("Park Summary", this.getDescription(), this.getUrl()));
+
     if ('weatherInfo' in source) {
       this.displayElements.push(new NPSDisplayParagraph("Weather Info",
         source['weatherInfo'],

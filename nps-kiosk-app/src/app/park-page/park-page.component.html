@@ -1,54 +1,50 @@
 <section role="main">
   <ng-template [ngIf]="park !== undefined">
-    <div class="container card">
+    <div class="container my-2">
       <div class="row">
-        <div class="col card-header">
-          <h1>Park Summary</h1>
+        <div class="col">
+          <h1>{{ park.getTitle() }}</h1>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <div class="container" id="left">
-              <ul class="list-group" *ngFor="let displayElement of park.getDisplayElements()">
-                <li class="list-group-item card my-2 mx-1"
-                    *ngIf="displayElement.getDisplayElementType() === DISPLAY_PARAGRAPH">
-                  <h2>{{ displayElement.getTitle() }}</h2>
-                  <div class="card-body">
-                    <p>
-                      {{ displayElement.getDescription() }}
-                    </p>
-                    <ng-template [ngIf]="displayElement.getUrl() !== undefined || displayElement.getUrl() !== ''">
-                      <a [href]="displayElement.getUrl()">Read more...</a>
-                    </ng-template>
-                  </div>
-                </li>
-              </ul>
-          </div>
+            <ul class="list-group" *ngFor="let displayElement of park.getDisplayElements()">
+              <li class="list-group-item card my-2 mx-1"
+                  *ngIf="displayElement.getDisplayElementType() === DISPLAY_PARAGRAPH">
+                <h2>{{ displayElement.getTitle() }}</h2>
+                <div class="card-body">
+                  <p>
+                    {{ displayElement.getDescription() }}
+                  </p>
+                  <ng-template [ngIf]="displayElement.getUrl() !== undefined && displayElement.getUrl() !== ''">
+                    <a [href]="displayElement.getUrl()">Read more...</a>
+                  </ng-template>
+                </div>
+              </li>
+            </ul>
         </div>
       </div>
     </div>
-    <div class="container card my-2">
+    <div class="container my-2">
       <div class="row">
-        <div class="col card-header">
+        <div class="col">
           <h1>Gallery</h1>
         </div>
       </div>
       <div class="row">
         <div class="col">
-          <div class="container" id="right">
-            <ul class="list-group" *ngFor="let displayElement of park.getDisplayElements()">
-              <li class="list-group-item card my-2 mx-1"
-                  *ngIf="displayElement.getDisplayElementType() === DISPLAY_IMAGE">
-                <img [src]="displayElement.getUrl()"
-                     [alt]="displayElement.getDescription()" style="width:50%;"
-                     class="float-right">
-                <div>
-                  <p class="font-weight-bold mt-1 mb-0">{{ displayElement.getTitle() }}</p>
-                  <p class="my-1">{{ displayElement.getDescription() }}</p>
-                </div>
-              </li>
-            </ul>
-          </div>
+          <ul class="list-group" *ngFor="let displayElement of park.getDisplayElements()">
+            <li class="list-group-item card my-2 mx-1"
+                *ngIf="displayElement.getDisplayElementType() === DISPLAY_IMAGE">
+              <img [src]="displayElement.getUrl()"
+                   [alt]="displayElement.getDescription()" style="width:50%;"
+                   class="float-right">
+              <div>
+                <p class="font-weight-bold mt-1 mb-0">{{ displayElement.getTitle() }}</p>
+                <p class="my-1">{{ displayElement.getDescription() }}</p>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
