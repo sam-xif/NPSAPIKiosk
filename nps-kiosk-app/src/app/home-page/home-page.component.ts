@@ -47,5 +47,4 @@ export class HomePageComponent implements OnInit {
   goToLearnPage(datum) {
     this.router.navigateByUrl("");
   }
-
 }

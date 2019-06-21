@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NPSModelDAO } from "../../nps/NPSModel";
+import { NPSModelDAO } from "../../nps/NPSModelDAO";
 import INPSAPIWorkerManager from "../../nps/NPSAPIWorkerManager";
 
 @Injectable({

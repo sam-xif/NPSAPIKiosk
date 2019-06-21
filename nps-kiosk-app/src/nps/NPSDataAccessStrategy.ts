@@ -1,5 +1,5 @@
 import INPSAPIQuery from "./NPSAPIQuery";
-import {INPSModelDAO} from "./NPSModel";
+import {INPSModelDAO} from "./NPSModelDAO";
 import NPSDataSource from "./NPSDataSource";
 
 export interface INPSDataAccessStrategy {
@@ -7,7 +7,6 @@ export interface INPSDataAccessStrategy {
 }
 
 export class NPSDataAccessStrategyBuilder {
-  private readonly dao: INPSModelDAO;
   private strategy: INPSDataAccessStrategy;
 
   constructor() {

@@ -11,13 +11,13 @@ import NPSDataSource from "../../nps/NPSDataSource";
   providedIn: 'root'
 })
 export class NPSAPIClientService {
-  workerMgr : INPSAPIWorkerManager;
-  dao : INPSModelDAO;
+  private readonly workerMgr : INPSAPIWorkerManager;
+  private readonly dao : INPSModelDAO;
 
   constructor(private windowRef : WindowRefService, private daoProvider : NPSModelDAOProviderService) {
     if (windowRef.nativeWindow) {
       this.workerMgr = new NPSAPIWorkerManager(
-        'assets/js/worker.js',
+        'assets/js/worker.js', // This is a singleton instance, so no duplicate workers are created
         windowRef.nativeWindow);
     }
     this.dao = daoProvider.getDAOBuilder()(this.workerMgr);

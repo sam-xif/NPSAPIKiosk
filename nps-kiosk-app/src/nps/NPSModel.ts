@@ -1,103 +1,75 @@
 /**
  * Definitions for JavaScript class representations of data objects provided by the NPS API.
  */
-import INPSAPIQuery from "./NPSAPIQuery";
-import INPSAPIWorkerManager from "./NPSAPIWorkerManager";
-import INPSAPIResponse from "./NPSAPIResponse";
+import {NPSAPIQueryOptions} from "./NPSAPIQuery";
+
+export class NPSObjectBuilder {
+  private data: object;
+  private resource: string;
+  private config: NPSAPIQueryOptions;
+
+  constructor() {
+    this.config = new NPSAPIQueryOptions();
+  }
+
+  useResource(resource: string): NPSObjectBuilder {
+    this.resource = resource;
+    return this;
+  }
+
+  useData(data): NPSObjectBuilder {
+    this.data = data;
+    return this;
+  }
+
+  withQueryConfig(config: NPSAPIQueryOptions) {
+    this.config = config;
+    return this;
+  }
+
+  build() : INPSObject {
+    return ANPSObject.from(this.resource, this.data, this.config);
+  }
+}
 
 export interface INPSObject {
+  // These getters are commonly used properties for easy access
   getTitle(): string;
   getDescription(): string;
   getUrl(): string;
-  // TODO:  getImages(): Array<NPSImage>
+
+  getDisplayElements(): Array<INPSDisplayElement>;
 }
 
-export interface INPSModelDAO {
-  retrieve(query: INPSAPIQuery, callback?: any): Promise<Array<INPSObject>>;
+export enum NPSDisplayElementType {
+  PARAGRAPH,
+  IMAGE
 }
 
-/**
- * Data Access Object implementation for the NPS API.
- */
-export class NPSModelDAO implements INPSModelDAO {
-  private readonly workerMgr: INPSAPIWorkerManager;
-
-  constructor(workerMgr) {
-    this.workerMgr = workerMgr;
-  }
-
-  /**
-   * Asynchronously fetch {@link NPSObject} objects using the given {@link NPSAPIQuery} object.
-   * @param {NPSAPIQuery} query The query to execute
-   * @param {function(boolean, Array<NPSObject>): void ?} callback Optional callback that is called when the data
-   *                                                     is obtained. The first parameter is a boolean value that is
-   *                                                     true if and only if the operation succeeded.
-   * @return {Array<NPSObject>|null} Array of model objects, or null if there are no items to be retrieved
-   * @throws Error if the response could not be parsed
-   */
-  public async retrieve(query: INPSAPIQuery, callback?: any)
-      : Promise<Array<INPSObject>> {
-    let response: INPSAPIResponse = await query.execute(this.workerMgr);
-
-    if (!response.ok()) {
-      if (callback) {
-        callback(response.ok(), null);
-      }
-
-      // @ts-ignore
-      throw new Error(response.getData());
-    }
-
-    let resource = response.getResource();
-    let data = response.getData(); // This data is the actual API response in its entirety
-
-    let out = [];
-
-    let models = {
-      'parks' : NPSPark,
-      'alerts' : NPSAlert,
-      'newsreleases' : NPSNewsRelease
-    };
-
-    if (response.totalPages() == 0) {
-      return null;
-    }
-
-    if (response.pagesLeft() > 0) {
-      data.forEach((obj) => {
-        if (!models[resource]) {
-          throw new Error("Unsupported resource");
-        }
-
-        out.push(new models[resource](obj));
-      });
-    }
-
-    if (callback) {
-      callback(response.ok(), out);
-    }
-
-    return out;
-  }
+export interface INPSDisplayElement extends INPSObject {
+  getDisplayElementType(): NPSDisplayElementType;
 }
+
 
 /**
  * Abstract base class for models of data objects from the NPS API.
  */
-abstract class NPSObject implements INPSObject {
+abstract class ANPSObject implements INPSDisplayElement {
   private readonly title: string;
   private readonly description: string;
   private readonly url: string;
+  protected readonly config: NPSAPIQueryOptions;
 
   /**
    * @param title
    * @param description
    * @param url
    */
-  protected constructor(title: string, description: string, url: string) {
+  protected constructor(title: string, description: string, url: string, config: NPSAPIQueryOptions) {
     this.title = title;
     this.description = description;
     this.url = url;
+    this.config = config;
   }
 
   getDescription(): string {
@@ -112,70 +84,132 @@ abstract class NPSObject implements INPSObject {
     return this.url;
   }
 
-  // /**
-  //  * Gets a description of this NPS data object.
-  //  * @return {String} A description
-  //  */
-  // getDescription() {
-  //   //throw new Error("'getDescription()' must be implemented on a subclass of NPSObject");
-  //   return this.description;
-  // }
-  //
-  // /**
-  //  * Gets a URL that links to more information about this NPS data object.
-  //  * @return {String} A URL
-  //  */
-  // getUrl() {
-  //   return this.url;
-  // }
-  //
-  // /**
-  //  * Gets a title that is fitting for this NPS data object.
-  //  * @return {String} A title
-  //  */
-  // getTitle() {
-  //   return this.title;
-  // }
+  abstract getDisplayElements(): Array<INPSDisplayElement>;
+  abstract getDisplayElementType(): NPSDisplayElementType;
+
+  static from(resource: string, data: object, config: NPSAPIQueryOptions): INPSObject {
+    switch (resource) {
+      case 'parks':
+        return new NPSPark(data, config);
+      case 'alerts':
+        return new NPSAlert(data, config);
+      case 'newsreleases':
+        return new NPSNewsRelease(data, config);
+      default:
+        throw new Error('Unsupported resource');
+    }
+  }
 }
 
 /**
  * Data model of an alert issued by the NPS.
  */
-class NPSAlert extends NPSObject {
+class NPSAlert extends ANPSObject {
   /**
    * @param {JSON} source Source JSON object from the API to use to construct the object
    */
-  constructor(source) {
-    super(source.title, source.description, source.url);
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.title, source.description, source.url, config);
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.PARAGRAPH;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return [];
   }
 }
 
 /**
  * Data model of a park in the NPS's database.
  */
-class NPSPark extends NPSObject {
+class NPSPark extends ANPSObject {
+  private readonly images: Array<INPSDisplayElement>;
+  private readonly displayElements: Array<INPSDisplayElement>;
+
   /**
    * @param source Source JSON object from the API to use to construct the object
    */
-  constructor(source) {
-    super(source.fullName, source.description, source.url);
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.fullName, source.description, source.url, config);
+    this.images = [];
+    this.displayElements = [];
+
+    if ('images' in source) {
+      source['images'].forEach(imgData => {
+        this.images.push(new NPSImage(imgData, this.config));
+      })
+    }
+
+    // First, if the config has the long text flag set, then we add paragraph elements
+    this.displayElements.push(this);
+    if ('weatherInfo' in source) {
+      this.displayElements.push(new NPSDisplayParagraph("Weather Info",
+        source['weatherInfo'],
+        undefined));
+    }
+    if ('directionsInfo' in source) {
+      this.displayElements.push(new NPSDisplayParagraph("Directions",
+        source['directionsInfo'],
+        source['directionsUrl']));
+    }
+
+    // Next, add all images to the display elements list
+    this.images.forEach(img => this.displayElements.push(img));
   }
 
-  /**
-   * Checks whether this park instances has images associated with it.
-   * @return {boolean}
-   */
-  hasImages() {
-    //return this.images !== undefined;
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.PARAGRAPH;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return this.displayElements;
   }
 }
 
 /**
  *
  */
-class NPSNewsRelease extends NPSObject {
-  constructor(source) {
-    super(source.title, source.abstract, source.url);
+class NPSNewsRelease extends ANPSObject {
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.title, source.abstract, source.url, config);
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.PARAGRAPH;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return [];
+  }
+}
+
+class NPSImage extends ANPSObject {
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.title + " (Credit: " + source.credit + ")", source.caption, source.url, config);
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.IMAGE;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return [];
+  }
+}
+
+class NPSDisplayParagraph extends ANPSObject {
+  constructor(title: string, description: string, url: string) {
+    super(title, description, url, new NPSAPIQueryOptions);
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.PARAGRAPH;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return [];
   }
 }
 

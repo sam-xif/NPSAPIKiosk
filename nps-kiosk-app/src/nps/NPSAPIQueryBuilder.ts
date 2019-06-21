@@ -1,4 +1,4 @@
-import {NPSAPIQuery} from "./NPSAPIQuery";
+import {NPSAPIQuery, NPSAPIQueryOptions} from "./NPSAPIQuery";
 
 /**
  * Factory for {@link NPSAPIQuery} objects that can be executed on the NPS API.
@@ -9,6 +9,8 @@ export default class NPSAPIQueryBuilder {
   private limit : number;
   private start : number;
   private resource : string;
+  private options : NPSAPIQueryOptions;
+  private fields : Array<string>;
 
   constructor() {
     this.reset();
@@ -23,6 +25,13 @@ export default class NPSAPIQueryBuilder {
     this.queryString = null;
     this.limit = 50;
     this.start = 0;
+    this.options = new NPSAPIQueryOptions();
+    this.fields = [];
+    return this;
+  }
+
+  longText(long: boolean) {
+    this.options.setLong(true);
     return this;
   }
 
@@ -123,17 +132,11 @@ export default class NPSAPIQueryBuilder {
     let params = {};
 
     if (this.parkCodes.length > 0) {
-      params["parkCode"] = ((parkCodes) => {
-        let out = "";
-        for (let i = 0; i < parkCodes.length; i++) {
-          if (i < parkCodes.length - 1) {
-            out += parkCodes[i] + ",";
-          } else {
-            out += parkCodes[i];
-          }
-        }
-        return out;
-      })(this.parkCodes);
+      params["parkCode"] = this.arrayToCommaDelimitedString(this.parkCodes);
+    }
+
+    if (this.fields.length > 0) {
+      params["fields"] = this.arrayToCommaDelimitedString(this.fields);
     }
 
     params["limit"] = this.limit;
@@ -143,6 +146,23 @@ export default class NPSAPIQueryBuilder {
       params["q"] = this.queryString;
     }
 
-    return new NPSAPIQuery(this.resource, params);
+    return new NPSAPIQuery(this.resource, params, this.options);
+  }
+
+  private arrayToCommaDelimitedString = (items) => {
+    let out = "";
+    for (let i = 0; i < items.length; i++) {
+        if (i < items.length - 1) {
+          out += items[i] + ",";
+        } else {
+          out += items[i];
+        }
+      }
+    return out;
+  };
+
+  includeField(field) {
+    this.fields.push(field);
+    return this;
   }
 }

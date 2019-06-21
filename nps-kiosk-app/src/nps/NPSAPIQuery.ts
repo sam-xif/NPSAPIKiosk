@@ -3,6 +3,7 @@ import INPSAPIResponse from './NPSAPIResponse';
 
 export default interface INPSAPIQuery {
   execute(workerMgr : INPSAPIWorkerManager) : Promise<INPSAPIResponse>;
+  getConfig(): NPSAPIQueryOptions
 }
 
 /**
@@ -11,16 +12,17 @@ export default interface INPSAPIQuery {
 export class NPSAPIQuery implements INPSAPIQuery {
   private readonly resource : string;
   private readonly params: object;
+  private readonly options: NPSAPIQueryOptions;
 
   /**
    * @param resource The API resource to query
    * @param params The query parameters
    * @constructor
    */
-  constructor(resource, params) {
+  constructor(resource: string, params: object, options: NPSAPIQueryOptions) {
     this.resource = resource;
     this.params = params;
-
+    this.options = options;
   }
 
   /**
@@ -46,5 +48,24 @@ export class NPSAPIQuery implements INPSAPIQuery {
 
     // @ts-ignore
     return response;
+  }
+
+  getConfig() {
+    return this.options;
+  }
+}
+
+export class NPSAPIQueryOptions {
+  private long: boolean = false;
+
+  constructor() {}
+
+  setLong(long: boolean): NPSAPIQueryOptions {
+    this.long = long;
+    return this;
+  }
+
+  getLong(): boolean {
+    return this.long;
   }
 }

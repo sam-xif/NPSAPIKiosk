@@ -5,8 +5,8 @@ import {ParkPageComponent} from "./park-page/park-page.component";
 import {HomePageComponent} from "./home-page/home-page.component";
 
 const routes: Routes = [
-  { path: '', component: HomePageComponent },
-  { path: 'park/:parkCode', component: ParkPageComponent}
+  { path: 'park/:parkCode', component: ParkPageComponent, pathMatch: 'full'},
+  { path: '', component: HomePageComponent }
 ];
 
 @NgModule({
