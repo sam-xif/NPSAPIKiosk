@@ -8,13 +8,17 @@ import { ParkPageComponent } from './park-page/park-page.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomePageComponent } from './home-page/home-page.component';
 import { AppComponent } from './app.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { SearchPageComponent } from './search-page/search-page.component';
 
 
 @NgModule({
   declarations: [
     ParkPageComponent,
     HomePageComponent,
-    AppComponent
+    AppComponent,
+    PageNotFoundComponent,
+    SearchPageComponent
   ],
   imports: [
     BrowserModule,
