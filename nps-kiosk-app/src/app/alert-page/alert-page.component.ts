@@ -5,6 +5,7 @@ import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import {INPSObject} from "../../nps/NPSModel";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
+import {ParkStoreService} from "../services/park-store.service";
 
 @Component({
   selector: 'app-alert-page',
@@ -13,6 +14,7 @@ import {NPSAPIClientService} from "../services/npsapiclient.service";
 })
 export class AlertPageComponent implements OnInit, OnDestroy {
   private parkCode: string;
+  private park: INPSObject;
   private paramMap$: Observable<ParamMap>;
   private paramMapSubscription: Subscription;
   private alerts: Array<INPSObject>;
@@ -22,19 +24,47 @@ export class AlertPageComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiClient: NPSAPIClientService
+    private apiClient: NPSAPIClientService,
+    private parkStore: ParkStoreService
   ) {
     this.alerts = [];
   }
 
   ngOnInit() {
     this.parkCode = this.route.snapshot.paramMap.get('parkCode');
+
+    if (this.parkStore.hasObject()) {
+      this.park = this.parkStore.getObject();
+    } else {
+      let query = new NPSAPIQueryBuilder()
+        .addParkCode(this.parkCode)
+        .longText(false)
+        .setLimit(5)
+        .from('parks')
+        .build();
+
+      let strategy = new NPSDataAccessStrategyBuilder()
+        .use('default')
+        .build();
+
+      let parkSource = this.apiClient.retrieve(query, strategy);
+      parkSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+        if (snapshot.length < 1) {
+          this.router.navigateByUrl('/page-not-found');
+          return;
+        }
+
+        this.park = snapshot[0];
+      });
+    }
+
     this.paramMap$ = this.route.paramMap;
     this.paramMapSubscription = this.paramMap$.subscribe(
       x => this.onParamMapUpdate(x),
       err => console.error('Error in paramMap observable'),
       () => console.log("Completed")
     );
+
     this.fetchData();
   }
 

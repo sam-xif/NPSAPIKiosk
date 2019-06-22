@@ -6,6 +6,7 @@ import {NPSAPIClientService} from "../services/npsapiclient.service";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import NPSDataSource from "../../nps/NPSDataSource";
 import {INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
+import {ParkStoreService} from "../services/park-store.service";
 
 @Component({
   selector: 'app-park-page',
@@ -27,7 +28,8 @@ export class ParkPageComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiClient: NPSAPIClientService
+    private apiClient: NPSAPIClientService,
+    private parkStore: ParkStoreService
   ) {
     this.park = undefined;
     this.parkAlerts = [];
@@ -72,10 +74,11 @@ export class ParkPageComponent implements OnInit, OnDestroy {
     let parkSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
     parkSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
       if (snapshot.length < 1) {
-        throw new Error("Need at least one park response");
+        this.router.navigateByUrl('/page-not-found');
       }
 
       this.park = snapshot[0];
+      this.parkStore.setObject(this.park);
     });
 
     query = new NPSAPIQueryBuilder()

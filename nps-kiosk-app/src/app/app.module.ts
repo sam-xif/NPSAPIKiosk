@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SearchPageComponent } from './search-page/search-page.component';
 import { AlertPageComponent } from './alert-page/alert-page.component';
+import {ParkStoreService} from "./services/park-store.service";
 
 
 @NgModule({
@@ -27,7 +28,7 @@ import { AlertPageComponent } from './alert-page/alert-page.component';
     FormsModule,
     AppRoutingModule
   ],
-  providers: [ WindowRefService, NPSModelDAOProviderService ],
+  providers: [ WindowRefService, NPSModelDAOProviderService, ParkStoreService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
