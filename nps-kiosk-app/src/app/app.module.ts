@@ -10,6 +10,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SearchPageComponent } from './search-page/search-page.component';
+import { AlertPageComponent } from './alert-page/alert-page.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { SearchPageComponent } from './search-page/search-page.component';
     HomePageComponent,
     AppComponent,
     PageNotFoundComponent,
-    SearchPageComponent
+    SearchPageComponent,
+    AlertPageComponent
   ],
   imports: [
     BrowserModule,

@@ -47,7 +47,8 @@ export interface INPSObject {
 }
 
 export enum NPSDisplayElementType {
-  PARAGRAPH,
+  SUMMARY,
+  META,
   IMAGE
 }
 
@@ -110,21 +111,21 @@ abstract class ANPSObject implements INPSDisplayElement {
  * Data model of an alert issued by the NPS.
  */
 class NPSAlert extends ANPSObject {
-  private readonly id: string;
+  private readonly parkCode: string;
   /**
    * @param {JSON} source Source JSON object from the API to use to construct the object
    */
   constructor(source, config: NPSAPIQueryOptions) {
     super(source.title, source.description, source.url, config);
-    this.id = source.id;
+    this.parkCode = source.parkCode;
   }
 
   getUniqueId(): string {
-    return this.id;
+    return this.parkCode;
   }
 
   getDisplayElementType(): NPSDisplayElementType {
-    return NPSDisplayElementType.PARAGRAPH;
+    return NPSDisplayElementType.META;
   }
 
   getDisplayElements(): Array<INPSDisplayElement> {
@@ -178,7 +179,7 @@ class NPSPark extends ANPSObject {
   }
 
   getDisplayElementType(): NPSDisplayElementType {
-    return NPSDisplayElementType.PARAGRAPH;
+    return NPSDisplayElementType.SUMMARY;
   }
 
   getDisplayElements(): Array<INPSDisplayElement> {
@@ -199,7 +200,7 @@ class NPSNewsRelease extends ANPSObject {
   }
 
   getDisplayElementType(): NPSDisplayElementType {
-    return NPSDisplayElementType.PARAGRAPH;
+    return NPSDisplayElementType.SUMMARY;
   }
 
   getDisplayElements(): Array<INPSDisplayElement> {
@@ -238,7 +239,7 @@ class NPSDisplayParagraph extends ANPSObject {
   }
 
   getDisplayElementType(): NPSDisplayElementType {
-    return NPSDisplayElementType.PARAGRAPH;
+    return NPSDisplayElementType.SUMMARY;
   }
 
   getDisplayElements(): Array<INPSDisplayElement> {

@@ -17,7 +17,7 @@
         <div class="input-group md-form form-sm my-2">
           <input name="query" class="form-control" type="text" [(ngModel)]="query" (keyup.enter)="onSubmit()" placeholder="Search" aria-label="Search">
           <div class="input-group-append" [routerLink]="['/search', resource, query]">
-            <button class="btn btn-outline-secondary input-group-text">
+            <button class="btn btn-outline-primary input-group-text">
               Search <span class="pl-2"><i class="fas fa-search"></i></span>
             </button>
           </div>

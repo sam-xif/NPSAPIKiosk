@@ -10,7 +10,7 @@
         <div class="col">
             <div class="card-group" *ngFor="let displayElement of park.getDisplayElements()">
               <div class="card my-2 mx-1"
-                  *ngIf="displayElement.getDisplayElementType() === DISPLAY_PARAGRAPH">
+                  *ngIf="displayElement.getDisplayElementType() === DISPLAY_SUMMARY">
                 <div class="card-header"><h2>{{ displayElement.getTitle() }}</h2></div>
                 <div class="card-body">
                   <p>
@@ -25,6 +25,32 @@
         </div>
       </div>
     </div>
+    <ng-template [ngIf]="parkAlerts.length > 0">
+      <div class="container my-2">
+        <div class="row">
+          <div class="col">
+            <h1>Active Alerts</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="card-group" *ngFor="let displayElement of parkAlerts">
+              <div class="card alert-warning my-2 mx-1">
+                <div class="card-header"><h4>{{ displayElement.getTitle() }}</h4></div>
+                <div class="card-body">
+                  <p>
+                    {{ displayElement.getDescription() }}
+                  </p>
+                  <ng-template [ngIf]="displayElement.getUrl() !== undefined && displayElement.getUrl() !== ''">
+                    <a [href]="displayElement.getUrl()">Read more...</a>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
     <div class="container my-2">
       <div class="row">
         <div class="col">

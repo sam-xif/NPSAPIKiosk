@@ -17,16 +17,20 @@ export class ParkPageComponent implements OnInit, OnDestroy {
   private paramMapSubscription: Subscription;
   private parkCode: string;
   private park: INPSObject;
+  private parkAlerts: Array<INPSObject>;
 
   // NPS Display Element Type bindings for use in the view
   private readonly DISPLAY_IMAGE = NPSDisplayElementType.IMAGE;
-  private readonly DISPLAY_PARAGRAPH = NPSDisplayElementType.PARAGRAPH;
+  private readonly DISPLAY_SUMMARY = NPSDisplayElementType.SUMMARY;
+  private readonly DISPLAY_META = NPSDisplayElementType.META;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiClient: NPSAPIClientService) {
+    private apiClient: NPSAPIClientService
+  ) {
     this.park = undefined;
+    this.parkAlerts = [];
   }
 
   ngOnInit() {
@@ -65,13 +69,25 @@ export class ParkPageComponent implements OnInit, OnDestroy {
       .use('default')
       .build();
 
-    let dataSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
-    dataSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+    let parkSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
+    parkSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
       if (snapshot.length < 1) {
         throw new Error("Need at least one park response");
       }
 
       this.park = snapshot[0];
+    });
+
+    query = new NPSAPIQueryBuilder()
+      .from('alerts')
+      .addParkCode(this.parkCode)
+      .longText(false)
+      .setLimit(5)
+      .build();
+
+    let alertsSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
+    alertsSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+      this.parkAlerts = snapshot;
     });
   }
 }
