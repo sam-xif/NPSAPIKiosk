@@ -57,6 +57,7 @@ export class NPSModelDAO implements INPSModelDAO {
         out.push(
           objBuilder.useResource(resource)
             .useData(obj)
+            .withQueryConfig(query.getConfig())
             .build()
         );
       });
