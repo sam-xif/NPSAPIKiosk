@@ -6,6 +6,7 @@ import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import NPSDataSource from "../../nps/NPSDataSource";
 import {INPSObject} from "../../nps/NPSModel";
+import {ParkStoreService} from "../services/park-store.service";
 
 @Component({
   selector: 'app-search-page',
@@ -33,7 +34,8 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiClient: NPSAPIClientService
+    private apiClient: NPSAPIClientService,
+    private parkStore: ParkStoreService
   ) {
     // Defaults
     this.resource = 'alerts';
@@ -89,6 +91,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     this.data = [];
 
     this.datumRouterLink = this.datumRouterLinkGenerator(this.resource);
+    this.parkStore.setObject(undefined);
 
     let query = new NPSAPIQueryBuilder()
       .from(this.resource)
