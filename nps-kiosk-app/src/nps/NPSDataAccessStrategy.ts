@@ -1,6 +1,7 @@
 import INPSAPIQuery from "./NPSAPIQuery";
 import {INPSModelDAO} from "./NPSModelDAO";
 import NPSDataSource from "./NPSDataSource";
+import NPSAPIQueryBuilder from "./NPSAPIQueryBuilder";
 
 export interface INPSDataAccessStrategy {
   getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource;
@@ -94,6 +95,7 @@ class DefaultNPSDataAccessStrategy extends ANPSDataAccessStrategy {
 class BatchNPSDataAccessStrategy extends ANPSDataAccessStrategy {
   private batches = 10;
   private batchSize: number = 5;
+  private builder: NPSAPIQueryBuilder;
 
   constructor(config: object) {
     super(config);
@@ -103,6 +105,11 @@ class BatchNPSDataAccessStrategy extends ANPSDataAccessStrategy {
     if ('batches' in config) {
       this.batches = config['batches'];
     }
+    if ('queryBuilder' in config) {
+      this.builder = config['queryBuilder'];
+    } else {
+      throw new Error("Batch strategy requires NPSAPIQueryBuilder instance to build paginated queries");
+    }
   }
 
   getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource {
@@ -110,13 +117,14 @@ class BatchNPSDataAccessStrategy extends ANPSDataAccessStrategy {
     const dataSource = new NPSDataSource();
     const promiseArr: Array<Promise<any>> = [];
     for (let i = 0; i < this.batches && fetchMore; i++) {
-       promiseArr.push(dao.retrieve(query, { 'limit': this.batchSize })
+       promiseArr.push(dao.retrieve(this.builder.build(), { 'limit': this.batchSize })
          .then((results) => {
            if (results.length === 0) {
              fetchMore = false;
            }
            dataSource.addAll(results);
          }));
+       this.builder.nextPage();
     }
     Promise.all(promiseArr)
       .then((values) => {
