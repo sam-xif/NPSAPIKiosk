@@ -1,0 +1,28 @@
+<section role="main">
+  <div class="container-fluid px-0">
+    <img src="assets/img/park1.jpg" width="100%" />
+  </div>
+  <div class="container">
+    <div class="row">
+      <h1>
+        Welcome to {{ title }}!
+      </h1>
+    </div>
+    <div class="row">
+      <button class="btn btn-primary col-2" (click)="callAPI()">Call API</button>
+      <input class="col-10" [(ngModel)]="queryString" type="text"/>
+    </div>
+    <div class="row my-2">
+      <div class="col container">
+        <ul class="list-group" *ngFor="let datum of data">
+          <li class="list-group-item">
+            <div (click)="goToLearnPage(datum)">
+              <p class="my-0"><b>{{ datum.getTitle() }}</b></p>
+              <p class="my-0">{{ datum.getDescription() }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

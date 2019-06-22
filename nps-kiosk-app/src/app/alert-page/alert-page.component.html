@@ -1,0 +1,32 @@
+<section role="main">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h2 class="mt-2">Active Alerts at</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="container my-2">
+          <div class="row">
+            <div class="col">
+              <div class="card-group" *ngFor="let displayElement of alerts">
+                <div class="card alert-warning my-2 mx-1">
+                  <div class="card-header"><h4>{{ displayElement.getTitle() }}</h4></div>
+                  <div class="card-body">
+                    <p>
+                      {{ displayElement.getDescription() }}
+                    </p>
+                    <ng-template [ngIf]="displayElement.getUrl() !== undefined && displayElement.getUrl() !== ''">
+                      <a [href]="displayElement.getUrl()">Read more...</a>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
