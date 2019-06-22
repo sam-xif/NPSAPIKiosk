@@ -16,16 +16,30 @@
 
         <div class="input-group md-form form-sm my-2">
           <input name="query" class="form-control" type="text" [(ngModel)]="query" (keyup.enter)="onSubmit()" placeholder="Search" aria-label="Search">
-          <div class="input-group-append" [routerLink]="['/search', resource, query]">
+          <div class="input-group-append" [routerLink]="query ? ['/search', resource, query] : ['/search', resource]">
             <button class="btn btn-outline-primary input-group-text">
               Search <span class="pl-2"><i class="fas fa-search"></i></span>
             </button>
           </div>
         </div>
 
-        <!--<div class="text-center my-2">
-          <button class="btn btn-primary" [routerLink]="['/search', resource, query]">Search!</button>
-        </div>-->
+        <!-- Each resource defines its own filters -->
+        <ng-template [ngIf]="resource == 'parks'">
+          <div><h4>State Filters</h4></div>
+          <select name="stateFilters"
+                  class="custom-select form-control my-2"
+                  (change)="addStateFilter(selectedState)"
+                  [(ngModel)]="selectedState">
+            <option *ngFor="let state of stateCodes" value="{{ state }}">{{ state }}</option>
+          </select>
+
+          <div class="container-fluid">
+            <button *ngFor="let filter of stateFilters" class="btn btn-outline-secondary mx-2 my-1"
+                (click)="removeStateFilter(filter)">
+              <span class="pr-2"><i class="fas fa-times"></i></span>{{filter}}
+            </button>
+          </div>
+        </ng-template>
       </div>
       <div class="col"></div>
     </div>
