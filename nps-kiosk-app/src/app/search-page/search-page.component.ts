@@ -93,17 +93,18 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     this.datumRouterLink = this.datumRouterLinkGenerator(this.resource);
     this.parkStore.setObject(undefined);
 
-    let query = new NPSAPIQueryBuilder()
+    let queryBuilder = new NPSAPIQueryBuilder()
       .from(this.resource)
       .setQueryString(this.query)
-      .longText(false)
-      .build();
+      .longText(false);
 
     let strategy = new NPSDataAccessStrategyBuilder()
-      .use('batch')
+      .use('batch', {
+        'queryBuilder': queryBuilder
+      })
       .build();
 
-    let dataSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
+    let dataSource: NPSDataSource = this.apiClient.retrieve(queryBuilder.build(), strategy);
     dataSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
       if (snapshot.length > 0) {
         this.waiting = false;
