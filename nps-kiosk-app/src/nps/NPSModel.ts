@@ -32,7 +32,41 @@ export class NPSObjectBuilder {
   }
 }
 
+export interface INPSResourceDescription {
+  getDesignations(): Array<string>;
+}
+
+export class NPSResourceDescriptionBuilder {
+  static get(resourceName: string) {
+    switch (resourceName) {
+      case 'parks':
+        return new NPSResourceDescription(
+          ['National Park', 'National Monument', 'Recreation Area']
+        );
+      case 'alerts':
+        return new NPSResourceDescription(
+          [ 'Danger', 'Caution', 'Information', 'Park Closure' ]
+        );
+    }
+  }
+}
+
+class NPSResourceDescription implements INPSResourceDescription {
+  private readonly designations: Array<string>;
+
+  constructor(designations: Array<string>) {
+    this.designations = designations;
+  }
+
+  getDesignations(): Array<string> {
+    return this.designations;
+  }
+}
+
 export interface INPSObject {
+  applyPredicate(pred: (obj: object) => boolean): boolean;
+  getResourceDescription(): INPSResourceDescription;
+
   // These getters are commonly used properties for easy access
   getTitle(): string;
   getDescription(): string;
@@ -63,17 +97,21 @@ abstract class ANPSObject implements INPSDisplayElement {
   private readonly title: string;
   private readonly description: string;
   private readonly url: string;
+  protected readonly sourceData: object;
   protected readonly config: NPSAPIQueryOptions;
+  protected readonly resourceName: string;
 
   /**
    * @param title
    * @param description
    * @param url
    */
-  protected constructor(title: string, description: string, url: string, config: NPSAPIQueryOptions) {
+  protected constructor(title: string, description: string, url: string, resourceName: string, sourceData: object, config: NPSAPIQueryOptions) {
     this.title = title;
     this.description = description;
     this.url = url;
+    this.resourceName = resourceName;
+    this.sourceData = sourceData;
     this.config = config;
   }
 
@@ -92,6 +130,22 @@ abstract class ANPSObject implements INPSDisplayElement {
   abstract getDisplayElements(): Array<INPSDisplayElement>;
   abstract getDisplayElementType(): NPSDisplayElementType;
   abstract getUniqueId(): string;
+
+  getResourceDescription(): INPSResourceDescription {
+    if (this.resourceName) {
+      return NPSResourceDescriptionBuilder.get(this.resourceName);
+    } else {
+      throw new Error("Object does not have an associated resource");
+    }
+  }
+
+  applyPredicate(pred: (obj: object) => boolean): boolean {
+    if (this.sourceData) {
+      return pred(this.sourceData);
+    } else {
+      return false;
+    }
+  }
 
   static from(resource: string, data: object, config: NPSAPIQueryOptions): INPSObject {
     switch (resource) {
@@ -116,7 +170,7 @@ class NPSAlert extends ANPSObject {
    * @param {JSON} source Source JSON object from the API to use to construct the object
    */
   constructor(source, config: NPSAPIQueryOptions) {
-    super(source.title, source.description, source.url, config);
+    super(source.title, source.description, source.url, 'alerts', source, config);
     this.parkCode = source.parkCode;
   }
 
@@ -145,7 +199,7 @@ class NPSPark extends ANPSObject {
    * @param source Source JSON object from the API to use to construct the object
    */
   constructor(source, config: NPSAPIQueryOptions) {
-    super(source.fullName, source.description, source.url, config);
+    super(source.fullName, source.description, source.url, 'parks', source, config);
     this.images = [];
     this.displayElements = [];
     this.parkCode = source.parkCode;
@@ -156,18 +210,20 @@ class NPSPark extends ANPSObject {
       })
     }
 
-    // First, if the config has the long text flag set, then we add paragraph elements
     this.displayElements.push(new NPSDisplayParagraph("Park Summary", this.getDescription(), this.getUrl()));
 
-    if ('weatherInfo' in source) {
-      this.displayElements.push(new NPSDisplayParagraph("Weather Info",
-        source['weatherInfo'],
-        undefined));
-    }
-    if ('directionsInfo' in source) {
-      this.displayElements.push(new NPSDisplayParagraph("Directions",
-        source['directionsInfo'],
-        source['directionsUrl']));
+    // if the config has the long text flag set, then we add paragraph elements
+    if (this.config.getLong()) {
+      if ('weatherInfo' in source) {
+        this.displayElements.push(new NPSDisplayParagraph("Weather Info",
+          source['weatherInfo'],
+          undefined));
+      }
+      if ('directionsInfo' in source) {
+        this.displayElements.push(new NPSDisplayParagraph("Directions",
+          source['directionsInfo'],
+          source['directionsUrl']));
+      }
     }
 
     // Next, add all images to the display elements list
@@ -192,7 +248,7 @@ class NPSPark extends ANPSObject {
  */
 class NPSNewsRelease extends ANPSObject {
   constructor(source, config: NPSAPIQueryOptions) {
-    super(source.title, source.abstract, source.url, config);
+    super(source.title, source.abstract, source.url, 'newsreleases', source, config);
   }
 
   getUniqueId(): string {
@@ -212,7 +268,7 @@ class NPSImage extends ANPSObject {
   private readonly id: string;
 
   constructor(source, config: NPSAPIQueryOptions) {
-    super(source.title + " (Credit: " + source.credit + ")", source.caption, source.url, config);
+    super(source.title + " (Credit: " + source.credit + ")", source.caption, source.url, undefined, source, config);
     this.id = source.id;
   }
 
@@ -231,7 +287,7 @@ class NPSImage extends ANPSObject {
 
 class NPSDisplayParagraph extends ANPSObject {
   constructor(title: string, description: string, url: string) {
-    super(title, description, url, new NPSAPIQueryOptions);
+    super(title, description, url, undefined, undefined, new NPSAPIQueryOptions);
   }
 
   getUniqueId(): string {
