@@ -36,7 +36,8 @@ export class NPSModelDAO implements INPSModelDAO {
       }
 
       // @ts-ignore
-      throw new Error(response.getData());
+      //throw new Error(response.getData());
+      return [];
     }
 
     let resource = response.getResource();
