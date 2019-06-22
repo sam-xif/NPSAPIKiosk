@@ -6,6 +6,7 @@ import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import {INPSObject} from "../../nps/NPSModel";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
 import {ParkStoreService} from "../services/park-store.service";
+import {query} from "@angular/animations";
 
 @Component({
   selector: 'app-alert-page',
@@ -36,18 +37,19 @@ export class AlertPageComponent implements OnInit, OnDestroy {
     if (this.parkStore.hasObject()) {
       this.park = this.parkStore.getObject();
     } else {
-      let query = new NPSAPIQueryBuilder()
+      let queryBuilder = new NPSAPIQueryBuilder()
         .addParkCode(this.parkCode)
         .longText(false)
         .setLimit(5)
-        .from('parks')
-        .build();
+        .from('parks');
 
       let strategy = new NPSDataAccessStrategyBuilder()
-        .use('default')
+        .use('batch', {
+          queryBuilder: queryBuilder
+        })
         .build();
 
-      let parkSource = this.apiClient.retrieve(query, strategy);
+      let parkSource = this.apiClient.retrieve(queryBuilder.build(), strategy);
       parkSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
         if (snapshot.length < 1) {
           this.router.navigateByUrl('/page-not-found');
