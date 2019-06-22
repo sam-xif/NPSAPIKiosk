@@ -22,6 +22,13 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   private data: Array<INPSObject>;
   private waiting: boolean;
   private noResults: boolean;
+  private datumRouterLink: any;
+  private datumRouterLinkGenerator =
+    (resource: string) => {
+      return (datum: INPSObject) => {
+        return ['/', resource, datum.getUniqueId()];
+      }
+    };
 
   constructor(
     private route: ActivatedRoute,
@@ -65,15 +72,23 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.router.navigate([
+      '/search',
+      this.resource,
+      this.query
+    ]);
+    /*
     if (!this.waiting) {
       this.fetchData();
-    }
+    }*/
   }
 
   fetchData() {
     this.waiting = true;
     this.noResults = false;
     this.data = [];
+
+    this.datumRouterLink = this.datumRouterLinkGenerator(this.resource);
 
     let query = new NPSAPIQueryBuilder()
       .from(this.resource)

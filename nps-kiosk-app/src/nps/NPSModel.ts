@@ -39,6 +39,11 @@ export interface INPSObject {
   getUrl(): string;
 
   getDisplayElements(): Array<INPSDisplayElement>;
+
+  /**
+   * Gets a unique string associated with this object
+   */
+  getUniqueId(): string;
 }
 
 export enum NPSDisplayElementType {
@@ -49,7 +54,6 @@ export enum NPSDisplayElementType {
 export interface INPSDisplayElement extends INPSObject {
   getDisplayElementType(): NPSDisplayElementType;
 }
-
 
 /**
  * Abstract base class for models of data objects from the NPS API.
@@ -86,6 +90,7 @@ abstract class ANPSObject implements INPSDisplayElement {
 
   abstract getDisplayElements(): Array<INPSDisplayElement>;
   abstract getDisplayElementType(): NPSDisplayElementType;
+  abstract getUniqueId(): string;
 
   static from(resource: string, data: object, config: NPSAPIQueryOptions): INPSObject {
     switch (resource) {
@@ -105,11 +110,17 @@ abstract class ANPSObject implements INPSDisplayElement {
  * Data model of an alert issued by the NPS.
  */
 class NPSAlert extends ANPSObject {
+  private readonly id: string;
   /**
    * @param {JSON} source Source JSON object from the API to use to construct the object
    */
   constructor(source, config: NPSAPIQueryOptions) {
     super(source.title, source.description, source.url, config);
+    this.id = source.id;
+  }
+
+  getUniqueId(): string {
+    return this.id;
   }
 
   getDisplayElementType(): NPSDisplayElementType {
@@ -127,6 +138,7 @@ class NPSAlert extends ANPSObject {
 class NPSPark extends ANPSObject {
   private readonly images: Array<INPSDisplayElement>;
   private readonly displayElements: Array<INPSDisplayElement>;
+  private readonly parkCode: string;
 
   /**
    * @param source Source JSON object from the API to use to construct the object
@@ -135,6 +147,7 @@ class NPSPark extends ANPSObject {
     super(source.fullName, source.description, source.url, config);
     this.images = [];
     this.displayElements = [];
+    this.parkCode = source.parkCode;
 
     if ('images' in source) {
       source['images'].forEach(imgData => {
@@ -160,6 +173,10 @@ class NPSPark extends ANPSObject {
     this.images.forEach(img => this.displayElements.push(img));
   }
 
+  getUniqueId(): string {
+    return this.parkCode;
+  }
+
   getDisplayElementType(): NPSDisplayElementType {
     return NPSDisplayElementType.PARAGRAPH;
   }
@@ -177,6 +194,10 @@ class NPSNewsRelease extends ANPSObject {
     super(source.title, source.abstract, source.url, config);
   }
 
+  getUniqueId(): string {
+    throw new Error("Not implemented");
+  }
+
   getDisplayElementType(): NPSDisplayElementType {
     return NPSDisplayElementType.PARAGRAPH;
   }
@@ -187,8 +208,15 @@ class NPSNewsRelease extends ANPSObject {
 }
 
 class NPSImage extends ANPSObject {
+  private readonly id: string;
+
   constructor(source, config: NPSAPIQueryOptions) {
     super(source.title + " (Credit: " + source.credit + ")", source.caption, source.url, config);
+    this.id = source.id;
+  }
+
+  getUniqueId(): string {
+    return this.id;
   }
 
   getDisplayElementType(): NPSDisplayElementType {
@@ -203,6 +231,10 @@ class NPSImage extends ANPSObject {
 class NPSDisplayParagraph extends ANPSObject {
   constructor(title: string, description: string, url: string) {
     super(title, description, url, new NPSAPIQueryOptions);
+  }
+
+  getUniqueId(): string {
+    throw new Error("Unsupported Operation: getUniqueId on NPSDisplayParagraph");
   }
 
   getDisplayElementType(): NPSDisplayElementType {

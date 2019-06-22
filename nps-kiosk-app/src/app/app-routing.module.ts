@@ -7,7 +7,7 @@ import {PageNotFoundComponent} from "./page-not-found/page-not-found.component";
 import {SearchPageComponent} from "./search-page/search-page.component";
 
 const routes: Routes = [
-  { path: 'park/:parkCode', component: ParkPageComponent, pathMatch: 'full'},
+  { path: 'parks/:parkCode', component: ParkPageComponent, pathMatch: 'full'},
   { path: 'search', component: SearchPageComponent },
   { path: 'search/:resource', component: SearchPageComponent },
   { path: 'search/:resource/:query', component: SearchPageComponent },
