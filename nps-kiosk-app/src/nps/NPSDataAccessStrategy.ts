@@ -59,8 +59,8 @@ class FilteredNPSDataAccessStrategy extends ANPSDataAccessStrategy {
   }
 
   getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource {
-    let dataSource = this.delegate.getData(query, dao);
-    let outDataSource = new NPSDataSource();
+    const dataSource = this.delegate.getData(query, dao);
+    const outDataSource = new NPSDataSource();
 
     dataSource.addOnUpdateHandler(snapshot => {
       snapshot.forEach(item => {
@@ -81,7 +81,7 @@ class DefaultNPSDataAccessStrategy extends ANPSDataAccessStrategy {
   }
 
   getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource {
-    let dataSource = new NPSDataSource();
+    const dataSource = new NPSDataSource();
     dao.retrieve(query)
       .then((results) => {
         dataSource.addAll(results);
@@ -92,11 +92,37 @@ class DefaultNPSDataAccessStrategy extends ANPSDataAccessStrategy {
 }
 
 class BatchNPSDataAccessStrategy extends ANPSDataAccessStrategy {
+  private batches = 10;
+  private batchSize: number = 5;
+
   constructor(config: object) {
     super(config);
+    if ('batchSize' in config) {
+      this.batchSize = config['batchSize'];
+    }
+    if ('batches' in config) {
+      this.batches = config['batches'];
+    }
   }
 
   getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource {
-    throw new Error("Unimplemented");
+    let fetchMore = true;
+    const dataSource = new NPSDataSource();
+    const promiseArr: Array<Promise<any>> = [];
+    for (let i = 0; i < this.batches && fetchMore; i++) {
+       promiseArr.push(dao.retrieve(query, { 'limit': this.batchSize })
+         .then((results) => {
+           if (results.length === 0) {
+             fetchMore = false;
+           }
+           dataSource.addAll(results);
+         }));
+    }
+    Promise.all(promiseArr)
+      .then((values) => {
+        dataSource.complete();
+      });
+
+    return dataSource;
   }
 }

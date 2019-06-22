@@ -2,7 +2,7 @@ import INPSAPIWorkerManager from './NPSAPIWorkerManager';
 import INPSAPIResponse from './NPSAPIResponse';
 
 export default interface INPSAPIQuery {
-  execute(workerMgr : INPSAPIWorkerManager) : Promise<INPSAPIResponse>;
+  execute(workerMgr : INPSAPIWorkerManager, paramsOverride: object) : Promise<INPSAPIResponse>;
   getConfig(): NPSAPIQueryOptions
 }
 
@@ -41,7 +41,11 @@ export class NPSAPIQuery implements INPSAPIQuery {
    * @param {NPSAPIWorkerManager} workerMgr The worker manager
    * @return {Promise<NPSAPIResponse>} The response object
    */
-  async execute(workerMgr : INPSAPIWorkerManager) : Promise<INPSAPIResponse> {
+  async execute(workerMgr: INPSAPIWorkerManager, paramsOverride: object = {}) : Promise<INPSAPIResponse> {
+    for (let field in paramsOverride) {
+      this.params[field] = paramsOverride[field]; // Set override parameters
+    }
+
     let response = await (new Promise((resolve) => {
       workerMgr.request(this, response => resolve(response));
     }));

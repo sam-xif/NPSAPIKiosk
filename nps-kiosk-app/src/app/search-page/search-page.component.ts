@@ -97,11 +97,15 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       .build();
 
     let strategy = new NPSDataAccessStrategyBuilder()
-      .use('default')
+      .use('batch')
       .build();
 
     let dataSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
     dataSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+      if (snapshot.length > 0) {
+        this.waiting = false;
+      }
+
       this.data = snapshot;
     });
     dataSource.addOnCompletedHandler((snapshot: Array<INPSObject>) => {
