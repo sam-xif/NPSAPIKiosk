@@ -8,10 +8,10 @@
       </div>
       <div class="row">
         <div class="col">
-            <ul class="list-group" *ngFor="let displayElement of park.getDisplayElements()">
-              <li class="list-group-item card my-2 mx-1"
+            <div class="card-group" *ngFor="let displayElement of park.getDisplayElements()">
+              <div class="card my-2 mx-1"
                   *ngIf="displayElement.getDisplayElementType() === DISPLAY_PARAGRAPH">
-                <h2>{{ displayElement.getTitle() }}</h2>
+                <div class="card-header"><h2>{{ displayElement.getTitle() }}</h2></div>
                 <div class="card-body">
                   <p>
                     {{ displayElement.getDescription() }}
@@ -20,8 +20,8 @@
                     <a [href]="displayElement.getUrl()">Read more...</a>
                   </ng-template>
                 </div>
-              </li>
-            </ul>
+              </div>
+            </div>
         </div>
       </div>
     </div>

@@ -5,15 +5,25 @@ export default class NPSDataSource implements Iterable<any> {
   private data: Array<any>;
   private counter: number;
   private onUpdateCallbacks: Array<any>;
+  private onCompletedCallbacks: Array<any>;
 
   constructor() {
     this.data = [];
     this.counter = 0;
     this.onUpdateCallbacks = [];
+    this.onCompletedCallbacks = [];
   }
 
   [Symbol.iterator](): Iterator<any> {
     return this.getSnapshot()[Symbol.iterator]();
+  }
+
+  addOnCompletedHandler(fn) {
+    this.onCompletedCallbacks.push(fn);
+  }
+
+  complete() {
+    this.onCompletedCallbacks.forEach(fn => fn(this.getSnapshotRaw()));
   }
 
   /**
@@ -27,7 +37,7 @@ export default class NPSDataSource implements Iterable<any> {
   /**
    * Fires the "on update" event.
    */
-  fireOnUpdateEvent() {
+  private fireOnUpdateEvent() {
     this.onUpdateCallbacks.forEach(fn => fn(this.getSnapshotRaw()));
   }
 
@@ -70,8 +80,10 @@ export default class NPSDataSource implements Iterable<any> {
    * @param {Array} itemsArr The array of items
    */
   addAll(itemsArr) {
-    this.data = this.data.concat(itemsArr.map(item => this.wrap(item)));
-    this.fireOnUpdateEvent();
+    if (itemsArr && itemsArr.length > 0) {
+      this.data = this.data.concat(itemsArr.map(item => this.wrap(item)));
+      this.fireOnUpdateEvent();
+    }
   }
 
   /**

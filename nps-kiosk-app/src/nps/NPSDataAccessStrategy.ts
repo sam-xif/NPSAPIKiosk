@@ -68,6 +68,7 @@ class FilteredNPSDataAccessStrategy extends ANPSDataAccessStrategy {
           outDataSource.add(item);
         }
       });
+      outDataSource.complete();
     });
 
     return outDataSource;
@@ -82,7 +83,10 @@ class DefaultNPSDataAccessStrategy extends ANPSDataAccessStrategy {
   getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource {
     let dataSource = new NPSDataSource();
     dao.retrieve(query)
-      .then((results) => dataSource.addAll(results));
+      .then((results) => {
+        dataSource.addAll(results);
+        dataSource.complete();
+      });
     return dataSource;
   }
 }

@@ -23,7 +23,7 @@ export class NPSModelDAO implements INPSModelDAO {
    * @param {function(boolean, Array<ANPSObject>): void ?} callback Optional callback that is called when the data
    *                                                     is obtained. The first parameter is a boolean value that is
    *                                                     true if and only if the operation succeeded.
-   * @return {Array<ANPSObject>|null} Array of model objects, or null if there are no items to be retrieved
+   * @return {Array<ANPSObject>} Array of model objects retrieved. It is empty if there are no results
    * @throws Error if the response could not be parsed
    */
   public async retrieve(query: INPSAPIQuery, callback?: any)
@@ -46,7 +46,7 @@ export class NPSModelDAO implements INPSModelDAO {
 
 
     if (response.totalPages() == 0) {
-      return null;
+      return [];
     }
 
     let objBuilder = new NPSObjectBuilder();

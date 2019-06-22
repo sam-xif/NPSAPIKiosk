@@ -8,9 +8,11 @@ import {SearchPageComponent} from "./search-page/search-page.component";
 
 const routes: Routes = [
   { path: 'park/:parkCode', component: ParkPageComponent, pathMatch: 'full'},
-  { path: 'search/:resource/:query', component: SearchPageComponent, pathMatch: 'full'},
+  { path: 'search', component: SearchPageComponent },
+  { path: 'search/:resource', component: SearchPageComponent },
+  { path: 'search/:resource/:query', component: SearchPageComponent },
   { path: '', component: HomePageComponent },
-  { path: '**', component: PageNotFoundComponent}
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({

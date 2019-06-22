@@ -32,15 +32,13 @@ export class ParkPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Set initial value with snapshot
     this.parkCode = this.route.snapshot.paramMap.get('parkCode');
-    console.log(this.parkCode);
-
     this.paramMap$ = this.route.paramMap;
-
     this.paramMapSubscription =  this.paramMap$.subscribe(
       x => this.onParamMapChange(x),
       err => console.error("parkCode observer encountered error: " + err),
       () => console.log("Complete notification")
     );
+    this.fetchData();
   }
 
   ngOnDestroy(): void {
@@ -49,9 +47,10 @@ export class ParkPageComponent implements OnInit, OnDestroy {
   }
 
   onParamMapChange(newMap: ParamMap) {
-    this.parkCode = newMap.get('parkCode');
-    this.fetchData();
-    // TODO: Refetch relevant data from API
+    let parkCode = newMap.get('parkCode');
+    if (parkCode != this.parkCode) {
+      this.fetchData();
+    }
   }
 
   fetchData() {

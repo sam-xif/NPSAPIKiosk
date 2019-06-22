@@ -1,3 +1,63 @@
-<p>
-  search-page works!
-</p>
+<section role="main">
+  <div class="container">
+    <div class="row">
+      <div class="col mt-2">
+        <h1>Search the NPS Database</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col"></div>
+      <div class="col-lg-6" id="nps-search-bar">
+        <!-- Search form -->
+        <select name="resource" class="custom-select form-control my-2" [(ngModel)]="resource">
+          <option value="alerts">Alerts</option>
+          <option value="parks">Parks</option>
+        </select>
+
+        <div class="input-group md-form form-sm my-2">
+          <input name="query" class="form-control" type="text" [(ngModel)]="query" (keyup.enter)="onSubmit()" placeholder="Search" aria-label="Search">
+          <div class="input-group-append" [routerLink]="['/search', resource, query]">
+            <button class="btn btn-outline-primary input-group-text">
+              Search <span class="pl-2"><i class="fas fa-search"></i></span>
+            </button>
+          </div>
+        </div>
+
+        <!--<div class="text-center my-2">
+          <button class="btn btn-primary" [routerLink]="['/search', resource, query]">Search!</button>
+        </div>-->
+      </div>
+      <div class="col"></div>
+    </div>
+    <div class="row pt-1">
+      <div class="col">
+        <ng-template [ngIf]="noResults == true">
+          <div class="d-flex justify-content-center w-100">
+            <p class="alert alert-danger flex-shrink-1" role="alert">No results were found for the given search terms.</p>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="waiting == true">
+          <div class="text-center w-100">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="noResults == false && waiting == false">
+          <div class="card-group" *ngFor="let datum of data" routerLink="/">
+            <div class="card my-1">
+              <div class="card-header">
+                <h4 class="my-0">{{ datum.getTitle() }}</h4>
+              </div>
+              <div class="card-body">
+                <p>
+                  {{ datum.getDescription() }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</section>

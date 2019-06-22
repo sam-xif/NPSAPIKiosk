@@ -22,7 +22,7 @@ export default class NPSAPIQueryBuilder {
    */
   reset() {
     this.parkCodes = [];
-    this.queryString = null;
+    this.queryString = undefined;
     this.limit = 50;
     this.start = 0;
     this.options = new NPSAPIQueryOptions();
@@ -142,7 +142,7 @@ export default class NPSAPIQueryBuilder {
     params["limit"] = this.limit;
     params["start"] = this.start;
 
-    if (this.queryString != null) {
+    if (this.queryString) {
       params["q"] = this.queryString;
     }
 
