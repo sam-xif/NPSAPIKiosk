@@ -12,6 +12,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { SearchPageComponent } from './search-page/search-page.component';
 import { AlertPageComponent } from './alert-page/alert-page.component';
 import {ParkStoreService} from "./services/park-store.service";
+import {CommonModule} from "@angular/common";
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import {ParkStoreService} from "./services/park-store.service";
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     FormsModule,
     AppRoutingModule
   ],

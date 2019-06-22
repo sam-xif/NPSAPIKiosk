@@ -7,6 +7,7 @@ import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import NPSDataSource from "../../nps/NPSDataSource";
 import {INPSObject} from "../../nps/NPSModel";
 import {ParkStoreService} from "../services/park-store.service";
+import {STATE_CODES} from "../../nps/Constants";
 
 @Component({
   selector: 'app-search-page',
@@ -31,6 +32,11 @@ export class SearchPageComponent implements OnInit, OnDestroy {
       }
     };
 
+  // Variables for state filter
+  private readonly stateCodes = STATE_CODES;
+  private selectedState: string;
+  private stateFilters: Array<string>;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -42,6 +48,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
     this.query = undefined;
     this.waiting = false;
     this.noResults = false;
+    this.stateFilters = [];
   }
 
   ngOnInit() {
@@ -92,33 +99,65 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
     this.datumRouterLink = this.datumRouterLinkGenerator(this.resource);
     this.parkStore.setObject(undefined);
-
+    console.log(this.resource);
     let queryBuilder = new NPSAPIQueryBuilder()
       .from(this.resource)
       .setQueryString(this.query)
       .longText(false);
 
-    let strategy = new NPSDataAccessStrategyBuilder()
+    let strategyBuilder = new NPSDataAccessStrategyBuilder()
       .use('batch', {
         'queryBuilder': queryBuilder
-      })
-      .build();
+      });
 
-    let dataSource: NPSDataSource = this.apiClient.retrieve(queryBuilder.build(), strategy);
+    if (this.stateFilters.length > 0) {
+      strategyBuilder.use('filter', {
+        predicate: ((acceptableStateCodes: Array<string>) => {
+          return (result: INPSObject) => {
+            return result.applyPredicate((obj: object) => {
+              if ('states' in obj) {
+                let statesStr: string = obj['states'];
+                let stateStrSplit: string[] = statesStr.split(',');
+
+                return stateStrSplit.map(
+                  (stateCode: string) => acceptableStateCodes.includes(stateCode)
+                ).reduce(
+                  (acc: boolean, val: boolean) => acc || val, false
+                );
+              }
+            });
+          }
+        })(this.stateFilters)
+      })
+    }
+
+    let dataSource: NPSDataSource = this.apiClient.retrieve(queryBuilder.build(), strategyBuilder.build());
     dataSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
       if (snapshot.length > 0) {
         this.waiting = false;
       }
-
       this.data = snapshot;
     });
     dataSource.addOnCompletedHandler((snapshot: Array<INPSObject>) => {
-      if (snapshot.length == 0) {
-        this.noResults = true;
-      }
-
+      this.noResults = snapshot.length == 0;
       this.waiting = false;
     });
   }
 
+  addStateFilter(stateCode: string) {
+    this.stateFilters.push(stateCode);
+    this.fetchData();
+    console.log("Attempt to add state", stateCode);
+  }
+
+  removeStateFilter(stateCode: string) {
+    this.stateFilters = this.stateFilters.reduce((acc, val) => {
+      if (val !== stateCode) {
+        acc.push(val);
+      }
+      return acc;
+    }, []);
+    this.fetchData();
+    console.log("Attempt to remove state", stateCode);
+  }
 }
