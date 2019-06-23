@@ -19,10 +19,10 @@
     <div class="row">
       <div class="col">
         <!-- lesson plans -->
-        <div class="card-group py-2" *ngFor="let lessonPlan of lessonPlans">
-          <div class="card">
+        <div class="card-columns py-2" >
+          <div class="card" *ngFor="let lessonPlan of lessonPlans">
             <div class="card-header">
-              <h4><a href="{{ lessonPlan.getUrl() }}">{{ lessonPlan.getTitle() }}</a></h4>
+              <h4 class="card-title">{{ lessonPlan.getTitle() }}</h4>
             </div>
             <div class="card-body">
               <p [innerHTML]="lessonPlan.getDescription() | keepHtml"></p>
@@ -31,6 +31,7 @@
                   <span class="font-weight-bold">{{ displayElement.getTitle() }}</span> {{ displayElement.getDescription() }}
                 </ng-template>
               </p>
+              <a class="card-link" href="{{ lessonPlan.getUrl() }}">more...</a>
             </div>
           </div>
         </div>
