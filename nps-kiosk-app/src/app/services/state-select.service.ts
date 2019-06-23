@@ -21,4 +21,8 @@ export class StateSelectService {
   getState(): string {
     return this.selectedState;
   }
+
+  clearState() {
+    this.selectedState = undefined;
+  }
 }

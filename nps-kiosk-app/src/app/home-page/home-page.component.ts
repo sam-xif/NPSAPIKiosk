@@ -8,7 +8,6 @@ import {ADataViewComponent} from "../DataViewComponent";
 import {ObjectStoreService} from "../services/object-store.service";
 import {STATE_CODES} from "../../nps/Constants";
 import {StateSelectService} from "../services/state-select.service";
-import {Observable, Subscriber, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-home-page',

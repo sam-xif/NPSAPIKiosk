@@ -63,7 +63,11 @@ export class CampgroundListPageComponent extends ADataViewComponent {
         this.store(this.receivedObject);
       }
     } else if (!this.stateCode) {
-      this.router.navigateByUrl('/page-not-found');
+      console.log(this.route.parent);
+      alert("To view campgrounds, you must select a state or park");
+      this.router.navigate(['.'], {
+        relativeTo: this.route.parent
+      });
     }
 
     super.ngOnInit();
