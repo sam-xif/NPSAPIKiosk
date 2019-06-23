@@ -5,7 +5,7 @@ import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import {INPSObject} from "../../nps/NPSModel";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
-import {ParkStoreService} from "../services/park-store.service";
+import {ObjectStoreService} from "../services/object-store.service";
 import {ADataViewComponent} from "../DataViewComponent";
 
 @Component({
@@ -24,7 +24,7 @@ export class AlertPageComponent extends ADataViewComponent {
     protected route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
-    private parkStore: ParkStoreService
+    private parkStore: ObjectStoreService
   ) {
     super(route, router, apiClient);
     this.alerts = [];

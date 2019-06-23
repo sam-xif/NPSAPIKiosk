@@ -5,6 +5,7 @@ import {NPSAPIClientService} from "../services/npsapiclient.service";
 import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import {INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
+import {ObjectStoreService} from "../services/object-store.service";
 
 @Component({
   selector: 'app-event-page',
@@ -13,7 +14,6 @@ import {INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
 })
 export class EventPageComponent extends ADataViewComponent {
   private parkCode: string;
-  private events: Array<INPSObject>;
 
   private readonly DISPLAY_PROPERTY = NPSDisplayElementType.PROPERTY;
   private readonly DISPLAY_PARAGRAPH = NPSDisplayElementType.SUMMARY;
@@ -21,37 +21,22 @@ export class EventPageComponent extends ADataViewComponent {
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
-    protected apiClient: NPSAPIClientService
+    protected apiClient: NPSAPIClientService,
+    protected storeService: ObjectStoreService
   ) {
-    super(route, router, apiClient);
+    super(route, router, apiClient, storeService);
+  }
+
+  ngOnInit(): void {
+    super.ngOnInit();
+
+    if (this.receivedObject === undefined) {
+      this.router.navigateByUrl('/page-not-found');
+    }
   }
 
   fetchData(): void {
-    let queryBuilder = new NPSAPIQueryBuilder();
 
-    let query = queryBuilder
-      .from('events')
-      .addParkCode(this.parkCode)
-      .longText(true)
-      .build();
-
-    let strategyBuilder = new NPSDataAccessStrategyBuilder();
-    let strategy = strategyBuilder
-      .use('batch', {
-        queryBuilder: queryBuilder,
-        batchSize: 15
-      })
-      .build();
-
-    let eventsSource = this.apiClient.retrieve(query, strategy);
-    eventsSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
-      if (snapshot.length < 1) {
-        this.router.navigateByUrl('/page-not-found');
-        return;
-      }
-
-      this.events = snapshot;
-    });
   }
 
   onParamMapChange(newParamMap: ParamMap) {

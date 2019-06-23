@@ -6,7 +6,7 @@ import {NPSAPIClientService} from "../services/npsapiclient.service";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import NPSDataSource from "../../nps/NPSDataSource";
 import {INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
-import {ParkStoreService} from "../services/park-store.service";
+import {ObjectStoreService} from "../services/object-store.service";
 import {ADataViewComponent} from "../DataViewComponent";
 
 @Component({
@@ -31,9 +31,9 @@ export class ParkPageComponent extends ADataViewComponent {
     protected route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
-    private parkStore: ParkStoreService
+    protected storeService: ObjectStoreService
   ) {
-    super(route, router, apiClient);
+    super(route, router, apiClient, storeService);
     this.park = undefined;
     this.parkAlerts = [];
     this.parkEvents = [];
@@ -68,7 +68,7 @@ export class ParkPageComponent extends ADataViewComponent {
       }
 
       this.park = snapshot[0];
-      this.parkStore.setObject(this.park);
+      this.storeService.setObject(this.park);
     });
 
     query = queryBuilder
@@ -88,7 +88,7 @@ export class ParkPageComponent extends ADataViewComponent {
       .reset()
       .from('events')
       .addParkCode(this.parkCode)
-      .longText(false)
+      .longText(true)
       .setLimit(5)
       .build();
 

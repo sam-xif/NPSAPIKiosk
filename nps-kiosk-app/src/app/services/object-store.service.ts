@@ -4,24 +4,28 @@ import {INPSObject} from "../../nps/NPSModel";
 @Injectable({
   providedIn: 'root'
 })
-export class ParkStoreService {
-  private park: INPSObject;
+export class ObjectStoreService {
+  private obj: INPSObject;
 
   constructor() {
-    this.park = undefined;
+    this.obj = undefined;
   }
 
   // TODO: Maybe implement a queue if necessary
 
   hasObject(): boolean {
-    return this.park !== undefined;
+    return this.obj !== undefined;
   }
 
   getObject(): INPSObject {
-    return this.park;
+    return this.obj;
   }
 
   setObject(park: INPSObject) {
-    this.park = park;
+    this.obj = park;
+  }
+
+  clearObject() {
+    this.obj = undefined;
   }
 }

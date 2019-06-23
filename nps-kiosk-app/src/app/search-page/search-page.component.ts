@@ -6,7 +6,7 @@ import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import NPSDataSource from "../../nps/NPSDataSource";
 import {INPSObject} from "../../nps/NPSModel";
-import {ParkStoreService} from "../services/park-store.service";
+import {ObjectStoreService} from "../services/object-store.service";
 import {STATE_CODES} from "../../nps/Constants";
 import {ADataViewComponent} from "../DataViewComponent";
 
@@ -39,7 +39,7 @@ export class SearchPageComponent extends ADataViewComponent {
     protected route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
-    private parkStore: ParkStoreService
+    private parkStore: ObjectStoreService
   ) {
     super(route, router, apiClient);
     // Defaults

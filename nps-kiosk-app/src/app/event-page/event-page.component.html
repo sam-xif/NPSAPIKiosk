@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <div class="col">
-        <div class="container" *ngFor="let event of events">
+        <div class="container">
           <div class="row">
             <div class="col-6">
               <div class="card">
@@ -15,7 +15,7 @@
                   Event Info
                 </h5>
                 <div class="card-body">
-                  <div *ngFor="let displayElement of event.getDisplayElements()">
+                  <div *ngFor="let displayElement of receivedObject.getDisplayElements()">
                     <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PROPERTY">
                       <div class="col">
                         {{ displayElement.getTitle() }} {{ displayElement.getDescription() }}
@@ -27,7 +27,7 @@
             </div>
             <div class="col-6">
               <div class="container">
-                <div class="row" *ngFor="let displayElement of event.getDisplayElements()">
+                <div class="row" *ngFor="let displayElement of receivedObject.getDisplayElements()">
                   <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PARAGRAPH">
                     <div class="col">
                       <div class="card">
