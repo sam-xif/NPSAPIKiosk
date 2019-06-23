@@ -19,6 +19,21 @@
     <div class="row">
       <div class="col">
         <!-- lesson plans -->
+        <div class="card-group py-2" *ngFor="let lessonPlan of lessonPlans">
+          <div class="card">
+            <div class="card-header">
+              <h4><a href="{{ lessonPlan.getUrl() }}">{{ lessonPlan.getTitle() }}</a></h4>
+            </div>
+            <div class="card-body">
+              <p [innerHTML]="lessonPlan.getDescription() | keepHtml"></p>
+              <p *ngFor="let displayElement of lessonPlan.getDisplayElements()">
+                <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PROPERTY">
+                  <span class="font-weight-bold">{{ displayElement.getTitle() }}</span> {{ displayElement.getDescription() }}
+                </ng-template>
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">

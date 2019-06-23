@@ -69,6 +69,7 @@ export class NPSAPIQueryOptions {
     return this;
   }
 
+  // TODO: Change the name to something more boolean-like
   getLong(): boolean {
     return this.long;
   }
