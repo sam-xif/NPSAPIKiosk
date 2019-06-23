@@ -137,6 +137,8 @@ abstract class ANPSObject implements INPSDisplayElement {
         return new NPSNewsRelease(data, config);
       case 'events':
         return new NPSEvent(data, config);
+      case 'campgrounds':
+        return new NPSCampground(data, config);
       default:
         throw new Error('Unsupported resource');
     }
@@ -341,6 +343,44 @@ class NPSEvent extends ANPSObject {
     }
   }
 
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.SUMMARY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return this.displayElements;
+  }
+
+  getUniqueId(): string {
+    return this.id;
+  }
+}
+
+class NPSCampground extends ANPSObject {
+  private displayElements: Array<INPSDisplayElement>;
+  private id: string;
+
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.name, source.description, undefined, 'campgrounds', source, config);
+    this.id = source.id;
+    this.displayElements = [];
+
+    if (this.config.getLong()) {
+      if ('regulationsoverview' in this.sourceData && this.sourceData['regulationsoverview'] !== '') {
+        this.displayElements.push(new NPSDisplayParagraph('Regulations Overview', this.sourceData['regulationsoverview'],
+          this.sourceData['regulationsurl'] === '' ? undefined : this.sourceData['regulationsurl']));
+      }
+
+      if ('weatheroverview' in this.sourceData && this.sourceData['weatheroverview'] !== '') {
+        this.displayElements.push(new NPSDisplayParagraph('Weather Overview', this.sourceData['weatheroverview'], undefined));
+      }
+
+      if ('directionsoverview' in this.sourceData && this.sourceData['directionsoverview'] !== '') {
+        this.displayElements.push(new NPSDisplayParagraph('Directions Overview', this.sourceData['directionsoverview'],
+          this.sourceData['directionsurl'] === '' ? undefined : this.sourceData['directionsurl']));
+      }
+    }
+  }
   getDisplayElementType(): NPSDisplayElementType {
     return NPSDisplayElementType.SUMMARY;
   }

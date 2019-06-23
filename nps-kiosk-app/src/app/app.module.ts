@@ -15,6 +15,8 @@ import {ObjectStoreService} from "./services/object-store.service";
 import {CommonModule} from "@angular/common";
 import {EscapeHtmlPipe} from "./pipes/keep-html.pipe";
 import { EventPageComponent } from './event-page/event-page.component';
+import { CampgroundPageComponent } from './campground-page/campground-page.component';
+import { CampgroundListPageComponent } from './campground-list-page/campground-list-page.component';
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import { EventPageComponent } from './event-page/event-page.component';
     SearchPageComponent,
     AlertPageComponent,
     EscapeHtmlPipe,
-    EventPageComponent
+    EventPageComponent,
+    CampgroundPageComponent,
+    CampgroundListPageComponent
   ],
   imports: [
     BrowserModule,
