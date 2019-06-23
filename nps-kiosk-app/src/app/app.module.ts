@@ -13,6 +13,7 @@ import { SearchPageComponent } from './search-page/search-page.component';
 import { AlertPageComponent } from './alert-page/alert-page.component';
 import {ParkStoreService} from "./services/park-store.service";
 import {CommonModule} from "@angular/common";
+import {EscapeHtmlPipe} from "./pipes/keep-html.pipe";
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {CommonModule} from "@angular/common";
     AppComponent,
     PageNotFoundComponent,
     SearchPageComponent,
-    AlertPageComponent
+    AlertPageComponent,
+    EscapeHtmlPipe
   ],
   imports: [
     BrowserModule,

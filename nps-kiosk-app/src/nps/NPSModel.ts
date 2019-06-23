@@ -47,6 +47,10 @@ export class NPSResourceDescriptionBuilder {
         return new NPSResourceDescription(
           [ 'Danger', 'Caution', 'Information', 'Park Closure' ]
         );
+      case 'events':
+        return new NPSResourceDescription(
+          []
+        );
     }
   }
 }
@@ -155,6 +159,8 @@ abstract class ANPSObject implements INPSDisplayElement {
         return new NPSAlert(data, config);
       case 'newsreleases':
         return new NPSNewsRelease(data, config);
+      case 'events':
+        return new NPSEvent(data, config);
       default:
         throw new Error('Unsupported resource');
     }
@@ -300,6 +306,28 @@ class NPSDisplayParagraph extends ANPSObject {
 
   getDisplayElements(): Array<INPSDisplayElement> {
     return [];
+  }
+}
+
+class NPSEvent extends ANPSObject {
+  private readonly id: string;
+
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.title, source.description, source.url, 'events', source, config);
+    this.id = source.id;
+    console.log("NEW EVENT CREATED");
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.SUMMARY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return [];
+  }
+
+  getUniqueId(): string {
+    return this.id;
   }
 }
 
