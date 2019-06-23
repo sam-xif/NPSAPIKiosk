@@ -9,20 +9,23 @@
       <div class="col">
         <div class="container" *ngFor="let event of events">
           <div class="row">
-            <div class="col">
-              <div class="container">
-                <div class="row" *ngFor="let displayElement of event.getDisplayElements()">
-                  <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PROPERTY">
-                    <div class="col">
-                      {{ displayElement.getTitle() }} -- {{ displayElement.getDescription() }}
-                    </div>
-                  </ng-template>
+            <div class="col-6">
+              <div class="card">
+                <h5 class="card-header">
+                  Event Info
+                </h5>
+                <div class="card-body">
+                  <div *ngFor="let displayElement of event.getDisplayElements()">
+                    <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PROPERTY">
+                      <div class="col">
+                        {{ displayElement.getTitle() }} {{ displayElement.getDescription() }}
+                      </div>
+                    </ng-template>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="col">
+            <div class="col-6">
               <div class="container">
                 <div class="row" *ngFor="let displayElement of event.getDisplayElements()">
                   <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PARAGRAPH">
