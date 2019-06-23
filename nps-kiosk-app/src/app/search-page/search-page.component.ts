@@ -4,7 +4,7 @@ import {NPSAPIClientService} from "../services/npsapiclient.service";
 import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import NPSDataSource from "../../nps/NPSDataSource";
-import {INPSObject} from "../../nps/NPSModel";
+import {INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
 import {ObjectStoreService} from "../services/object-store.service";
 import {STATE_CODES} from "../../nps/Constants";
 import {ADataViewComponent} from "../DataViewComponent";
@@ -33,6 +33,8 @@ export class SearchPageComponent extends ADataViewComponent {
   private readonly stateCodes = STATE_CODES;
   private selectedState: string;
   private stateFilters: Array<string>;
+
+  private readonly DISPLAY_PROPERTY = NPSDisplayElementType.PROPERTY;
 
   constructor(
     protected route: ActivatedRoute,
@@ -85,12 +87,13 @@ export class SearchPageComponent extends ADataViewComponent {
     let queryBuilder = new NPSAPIQueryBuilder()
       .from(this.resource)
       .setQueryString(this.query)
-      .longText(false)
+      .useLongForm(false)
+      .useSearchResultForm(true)
       .addAllStateCodes(this.stateFilters);
 
     let strategyBuilder = new NPSDataAccessStrategyBuilder()
       .use('batch', {
-        'queryBuilder': queryBuilder
+        queryBuilder: queryBuilder
       });
 
     let dataSource: NPSDataSource = this.apiClient.retrieve(queryBuilder.build(), strategyBuilder.build());

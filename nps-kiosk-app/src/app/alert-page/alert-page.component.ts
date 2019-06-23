@@ -35,7 +35,7 @@ export class AlertPageComponent extends ADataViewComponent {
     if (!this.receivedObject) {
       let queryBuilder = new NPSAPIQueryBuilder()
         .addParkCode(this.parkCode)
-        .longText(false)
+        .useLongForm(false)
         .setLimit(5)
         .from('parks');
 
@@ -71,7 +71,7 @@ export class AlertPageComponent extends ADataViewComponent {
   fetchData() {
     let queryBuilder = new NPSAPIQueryBuilder()
       .from('alerts')
-      .longText(false);
+      .useLongForm(false);
 
     if (this.parkCode !== undefined) {
       queryBuilder.addParkCode(this.parkCode);
