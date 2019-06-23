@@ -1,0 +1,103 @@
+<section role="main">
+  <div class="container">
+    <div class="row pt-2">
+      <div class="col text-center">
+        <ng-template [ngIf]="park"><h1>{{ park.getTitle() }}</h1></ng-template>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col text-center">
+        <h5><a (click)="store(park)" [routerLink]="['/parks', parkCode]">See Park Summary</a></h5>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <h2>Lesson Plans</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <!-- lesson plans -->
+        <div class="card-columns py-2" >
+          <div class="card" *ngFor="let lessonPlan of lessonPlans">
+            <div class="card-header">
+              <h4 class="card-title">{{ lessonPlan.getTitle() }}</h4>
+            </div>
+            <div class="card-body">
+              <p [innerHTML]="lessonPlan.getDescription() | keepHtml"></p>
+              <p *ngFor="let displayElement of lessonPlan.getDisplayElements()">
+                <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PROPERTY">
+                  <span class="font-weight-bold">{{ displayElement.getTitle() }}</span> {{ displayElement.getDescription() }}
+                </ng-template>
+              </p>
+              <a class="card-link" href="{{ lessonPlan.getUrl() }}">more...</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <h2>People</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <!-- people -->
+        <div class="card-columns py-2" >
+          <div class="card" *ngFor="let person of people">
+            <div class="card-header">
+              <h4 class="card-title">{{ person.getTitle() }}</h4>
+            </div>
+            <div class="card-body">
+              <p [innerHTML]="person.getDescription() | keepHtml"></p>
+              <p *ngFor="let displayElement of person.getDisplayElements()">
+                <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PROPERTY">
+                  <span class="font-weight-bold">{{ displayElement.getTitle() }}</span> {{ displayElement.getDescription() }}
+                </ng-template>
+              </p>
+              <a class="card-link" href="{{ person.getUrl() }}">more...</a>
+            </div>
+            <ng-template [ngIf]="person.getDisplayElements().length > 0
+             && person.getDisplayElements()[0].getDisplayElementType() == DISPLAY_IMAGE">
+              <img class="card-img-bottom" src="{{ person.getDisplayElements()[0].getUrl() }}" />
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <h2>Places</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <!-- places -->
+        <div class="card-columns py-2" >
+          <div class="card" *ngFor="let place of places">
+            <div class="card-header">
+              <h4 class="card-title">{{ place.getTitle() }}</h4>
+            </div>
+            <div class="card-body">
+              <p [innerHTML]="place.getDescription() | keepHtml"></p>
+              <p *ngFor="let displayElement of place.getDisplayElements()">
+                <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PROPERTY">
+                  <span class="font-weight-bold">{{ displayElement.getTitle() }}</span> {{ displayElement.getDescription() }}
+                </ng-template>
+              </p>
+              <a class="card-link" href="{{ place.getUrl() }}">more...</a>
+            </div>
+            <ng-template [ngIf]="place.getDisplayElements().length > 0
+             && place.getDisplayElements()[0].getDisplayElementType() == DISPLAY_IMAGE">
+              <img class="card-img-bottom" src="{{ place.getDisplayElements()[0].getUrl() }}" />
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

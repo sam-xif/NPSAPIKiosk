@@ -33,8 +33,26 @@ export class NPSObjectBuilder {
   }
 }
 
+/**
+ *
+ */
 export interface INPSObject {
+  /**
+   *
+   * @param pred
+   */
   applyPredicate(pred: (obj: object) => boolean): boolean;
+
+  /**
+   * Applies a transform function to the interal source data of this INPSObject, returning the result.
+   * @param fn The transform function to apply
+   * @return The result
+   */
+  applyTransform(fn: (obj: object) => any): any;
+
+  /**
+   *
+   */
   getResourceDescription(): INPSResourceDescription;
 
   // These getters are commonly used properties for easy access
@@ -127,6 +145,15 @@ abstract class ANPSObject implements INPSDisplayElement {
     }
   }
 
+  protected sourceHas(propName: string) {
+    return propName in this.sourceData && this.sourceData[propName] !== '';
+  }
+
+
+  applyTransform(fn: (obj: object) => any): any {
+    return fn(this.sourceData);
+  }
+
   static from(resource: string, data: object, config: NPSAPIQueryOptions): INPSObject {
     switch (resource) {
       case 'parks':
@@ -139,6 +166,12 @@ abstract class ANPSObject implements INPSDisplayElement {
         return new NPSEvent(data, config);
       case 'campgrounds':
         return new NPSCampground(data, config);
+      case 'lessonplans':
+        return new NPSLessonPlan(data, config);
+      case 'people':
+        return new NPSPerson(data, config);
+      case 'places':
+        return new NPSPlace(data, config);
       default:
         throw new Error('Unsupported resource');
     }
@@ -324,11 +357,11 @@ class NPSEvent extends ANPSObject {
         this.displayElements.push(new NPSDisplayProperty('Fee Info:', this.sourceData['feeinfo']));
       }
 
-      if (this.sourceData['contacttelephonenumber'] !== '') {
+      if (this.sourceHas('contacttelephonenumber')) {
         this.displayElements.push(new NPSDisplayProperty('Contact:', this.sourceData['contacttelephonenumber']));
       }
 
-      if (this.sourceData['regresinfo'] !== '') {
+      if (this.sourceHas('regresinfo')) {
         this.displayElements.push(new NPSDisplayProperty('Registration Info:', this.sourceData['regresinfo']));
       }
 
@@ -366,16 +399,16 @@ class NPSCampground extends ANPSObject {
     this.displayElements = [];
 
     if (this.config.getLong()) {
-      if ('regulationsoverview' in this.sourceData && this.sourceData['regulationsoverview'] !== '') {
+      if (this.sourceHas('regulationsoverview')) {
         this.displayElements.push(new NPSDisplayParagraph('Regulations Overview', this.sourceData['regulationsoverview'],
           this.sourceData['regulationsurl'] === '' ? undefined : this.sourceData['regulationsurl']));
       }
 
-      if ('weatheroverview' in this.sourceData && this.sourceData['weatheroverview'] !== '') {
+      if (this.sourceHas('weatheroverview')) {
         this.displayElements.push(new NPSDisplayParagraph('Weather Overview', this.sourceData['weatheroverview'], undefined));
       }
 
-      if ('directionsoverview' in this.sourceData && this.sourceData['directionsoverview'] !== '') {
+      if (this.sourceHas('directionsoverview')) {
         this.displayElements.push(new NPSDisplayParagraph('Directions Overview', this.sourceData['directionsoverview'],
           this.sourceData['directionsurl'] === '' ? undefined : this.sourceData['directionsurl']));
       }
@@ -394,7 +427,101 @@ class NPSCampground extends ANPSObject {
   }
 }
 
+class NPSLessonPlan extends ANPSObject {
+  private displayElements: Array<INPSDisplayElement>;
+  private id: string;
 
-// TODO: Write model classes for the rest of the resources
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.title, source.questionobjective, source.url, 'lessonplans', source, config);
+    this.id = source.id;
+    this.displayElements = [];
+
+    if (this.config.getLong()) {
+      if (this.sourceHas('subject')) {
+        this.displayElements.push(new NPSDisplayProperty('Subject:', this.sourceData['subject']));
+      }
+
+      if (this.sourceHas('duration')) {
+        this.displayElements.push(new NPSDisplayProperty('Duration:', this.sourceData['duration']));
+      }
+    }
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.SUMMARY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return this.displayElements;
+  }
+
+  getUniqueId(): string {
+    return this.id;
+  }
+}
+
+class NPSPerson extends ANPSObject {
+  private displayElements: Array<INPSDisplayElement>;
+  private id: string;
+
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.title, source.listingdescription, source.url, 'people', source, config);
+    this.id = source.id;
+    this.displayElements = [];
+
+    if (this.config.getLong()) {
+      if (this.sourceHas('listingimage')) {
+        if (this.sourceData['listingimage']['url'] != '') {
+          this.displayElements.push(new NPSImage(this.sourceData['listingimage'], this.config));
+        }
+      }
+    }
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.SUMMARY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return this.displayElements;
+  }
+
+  getUniqueId(): string {
+    return this.id;
+  }
+}
+
+class NPSPlace extends ANPSObject {
+  private displayElements: Array<INPSDisplayElement>;
+  private id: string;
+
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.title, source.listingdescription, source.url, 'places', source, config);
+    this.id = source.id;
+    this.displayElements = [];
+
+    if (this.config.getLong()) {
+      if (this.sourceHas('listingimage')) {
+        if (this.sourceData['listingimage']['url'] != '') {
+          this.displayElements.push(new NPSImage(this.sourceData['listingimage'], this.config));
+        }
+      }
+    }
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.SUMMARY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return this.displayElements;
+  }
+
+  getUniqueId(): string {
+    return this.id;
+  }
+}
+
+// TODO: Abstract more common behaviors out of these models
 
 
