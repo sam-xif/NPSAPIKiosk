@@ -102,8 +102,8 @@ class BatchNPSDataAccessStrategy extends ANPSDataAccessStrategy {
     if ('batchSize' in config) {
       this.batchSize = config['batchSize'];
     }
-    if ('numBatches' in config) {
-      this.batches = config['numBatches'];
+    if ('batches' in config) {
+      this.batches = config['batches'];
     }
     if ('queryBuilder' in config) {
       this.builder = config['queryBuilder'];

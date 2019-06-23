@@ -17,7 +17,7 @@ export interface IDataViewComponent extends OnInit, OnDestroy {
 
 
 // TODO: Abstract more boolean flags and control flow into this class
-//  (such as the `waiting` flag for when a request is being processed) <-- DO THIS!
+//  (such as the `waiting` flag for when a request is being processed)
 export abstract class ADataViewComponent implements IDataViewComponent {
   protected paramMap$: Observable<ParamMap>;
   protected paramMapSubscription: Subscription;

@@ -1,37 +1,27 @@
 <section role="main">
+  <div class="container-fluid px-0">
+    <img src="assets/img/park1.jpg" width="100%" />
+  </div>
   <div class="container">
     <div class="row">
-      <div class="col text-center">
-        <h1>
-          Welcome to the NPS Information Kiosk!
-        </h1>
-      </div>
+      <h1>
+        Welcome to {{ title }}!
+      </h1>
     </div>
     <div class="row">
-      <div class="col">
-        <div id="home-page-carousel" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item" *ngFor="let image of images; let first = first" [ngClass]="{ active: first }">
-              <div class="d-block w-100 nps-carousel-images-wrapper">
-                <div class="d-flex justify-content-center">
-                  <img class="nps-carousel-image" src="{{ image.getUrl() }}" alt="{{ image.getDescription() }}">
-                </div>
-              </div>
-              <div class="carousel-caption d-none d-md-block">
-                <h5>{{ image.getTitle() }}</h5>
-                <p>{{ image.getDescription() }}</p>
-              </div>
+      <button class="btn btn-primary col-2" (click)="callAPI()">Call API</button>
+      <input class="col-10" [(ngModel)]="queryString" type="text"/>
+    </div>
+    <div class="row my-2">
+      <div class="col container">
+        <ul class="list-group" *ngFor="let datum of data">
+          <li class="list-group-item">
+            <div (click)="goToLearnPage(datum)">
+              <p class="my-0"><b>{{ datum.getTitle() }}</b></p>
+              <p class="my-0">{{ datum.getDescription() }}</p>
             </div>
-          </div>
-          <a class="carousel-control-prev nps-carousel-control" href="#home-page-carousel" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-          </a>
-          <a class="carousel-control-next nps-carousel-control" href="#home-page-carousel" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-          </a>
-        </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

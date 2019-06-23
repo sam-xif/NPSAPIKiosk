@@ -1,64 +1,50 @@
-import {Component} from '@angular/core';
-import {INPSDisplayElement, INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
+import { Component, OnInit } from '@angular/core';
+import {INPSObject} from "../../nps/NPSModel";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
-import {ActivatedRoute, ParamMap, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
-import {ADataViewComponent} from "../DataViewComponent";
-import {ObjectStoreService} from "../services/object-store.service";
+import NPSDataSource from "../../nps/NPSDataSource";
 
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css']
 })
-export class HomePageComponent extends ADataViewComponent {
+export class HomePageComponent implements OnInit {
   title: string = 'nps-kiosk-app';
-  private images: Array<INPSObject>;
-  private activeSet: boolean;
+  resource: string = "parks";
+  queryString: string = "";
+  data: Array<INPSObject> = [];
 
-  constructor(
-    protected route: ActivatedRoute,
-    protected router: Router,
-    protected apiClient: NPSAPIClientService,
-    protected storeService: ObjectStoreService
-  ) {
-    super(route, router, apiClient, storeService);
-    this.activeSet = false;
+  constructor(private npsapiClientService : NPSAPIClientService, private router: Router) {}
+
+  ngOnInit() {
+
   }
 
-  fetchData(): void {
-    let queryBuilder = new NPSAPIQueryBuilder();
-    let query = queryBuilder
-      .from('parks')
-      .includeField('images')
-      .build();
+  callAPI() {
+    let qb = new NPSAPIQueryBuilder();
+    qb.from(this.resource);
 
-    let strategyBuilder = new NPSDataAccessStrategyBuilder();
-    let strategy = strategyBuilder
-      .use('batch', {
-        queryBuilder: queryBuilder,
-        numBatches: 5,
-        batchSize: 2
+    if (this.queryString !== "") {
+      qb.setQueryString(this.queryString);
+    }
+
+    let strategy = (new NPSDataAccessStrategyBuilder())
+      .use('default')
+      .use('filter', {
+        predicate: datum => {
+          return datum.getUrl() !== "";
+        }
       })
       .build();
 
-    let parksSource = this.apiClient.retrieve(query, strategy);
-    parksSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
-      if (!this.activeSet) {
-
-      }
-
-      let images = [];
-      snapshot.forEach((park: INPSObject) => {
-        images = images.concat(park.getDisplayElements()
-          .filter((disp: INPSDisplayElement) => disp.getDisplayElementType() == NPSDisplayElementType.IMAGE));
-      });
-      this.images = images;
-    });
+    let dataSource: NPSDataSource = this.npsapiClientService.retrieve(qb.build(), strategy);
+    dataSource.addOnUpdateHandler(snapshot => this.data = snapshot);
   }
 
-  onParamMapChange(newParamMap: ParamMap) {
-    // Do nothing, as there are no URL parameters we are worried about
+  goToLearnPage(datum) {
+    this.router.navigateByUrl("");
   }
 }
