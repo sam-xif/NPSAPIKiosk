@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
-import {Observable, Subscription} from "rxjs";
 import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import NPSDataSource from "../../nps/NPSDataSource";
@@ -39,9 +38,9 @@ export class SearchPageComponent extends ADataViewComponent {
     protected route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
-    private parkStore: ObjectStoreService
+    protected storeService: ObjectStoreService
   ) {
-    super(route, router, apiClient);
+    super(route, router, apiClient, storeService);
     // Defaults
     this.resource = 'alerts';
     this.query = undefined;
@@ -81,7 +80,7 @@ export class SearchPageComponent extends ADataViewComponent {
     this.data = [];
 
     this.datumRouterLink = this.datumRouterLinkGenerator(this.resource);
-    this.parkStore.setObject(undefined);
+    this.storeService.clearObject();
 
     let queryBuilder = new NPSAPIQueryBuilder()
       .from(this.resource)
