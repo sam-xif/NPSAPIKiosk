@@ -19,6 +19,7 @@ export class ParkLearnPageComponent extends ADataViewComponent {
 
   private lessonPlans: Array<INPSObject>;
   private people: Array<INPSObject>;
+  private places: Array<INPSObject>;
 
   // TODO: Move these enum values into the abstract class so all components have access to them
   private readonly DISPLAY_PROPERTY = NPSDisplayElementType.PROPERTY;
@@ -31,6 +32,9 @@ export class ParkLearnPageComponent extends ADataViewComponent {
     protected storeService: ObjectStoreService
   ) {
     super(route, router, apiClient, storeService);
+    this.lessonPlans = [];
+    this.people = [];
+    this.places = [];
   }
 
   ngOnInit(): void {
@@ -97,12 +101,17 @@ export class ParkLearnPageComponent extends ADataViewComponent {
       }
     });
 
+    queryBuilder = new NPSAPIQueryBuilder();
     query = queryBuilder
-      .reset()
       .from('people')
       .longText(true)
       .setLimit(5)
       .addParkCode(this.parkCode)
+      .build();
+    strategy = strategyBuilder
+      .use('batch', {
+        queryBuilder: queryBuilder
+      })
       .build();
 
     let peopleSource = this.apiClient.retrieve(query, strategy);
@@ -110,6 +119,30 @@ export class ParkLearnPageComponent extends ADataViewComponent {
       this.people = snapshot;
     });
     peopleSource.addOnCompletedHandler((snapshot: Array<INPSObject>) => {
+      if (snapshot.length == 0) {
+        // TODO Trigger nothing to show alert
+      }
+    });
+
+    queryBuilder = new NPSAPIQueryBuilder();
+    query = queryBuilder
+      .reset()
+      .from('places')
+      .longText(true)
+      .setLimit(5)
+      .addParkCode(this.parkCode)
+      .build();
+    strategy = strategyBuilder
+      .use('batch', {
+        queryBuilder: queryBuilder
+      })
+      .build();
+
+    let placesSource = this.apiClient.retrieve(query, strategy);
+    placesSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+      this.places = snapshot;
+    });
+    placesSource.addOnCompletedHandler((snapshot: Array<INPSObject>) => {
       if (snapshot.length == 0) {
         // TODO Trigger nothing to show alert
       }

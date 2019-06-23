@@ -170,6 +170,8 @@ abstract class ANPSObject implements INPSDisplayElement {
         return new NPSLessonPlan(data, config);
       case 'people':
         return new NPSPerson(data, config);
+      case 'places':
+        return new NPSPlace(data, config);
       default:
         throw new Error('Unsupported resource');
     }
@@ -489,7 +491,37 @@ class NPSPerson extends ANPSObject {
   }
 }
 
+class NPSPlace extends ANPSObject {
+  private displayElements: Array<INPSDisplayElement>;
+  private id: string;
 
-// TODO: Write model classes for the rest of the resources
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.title, source.listingdescription, source.url, 'places', source, config);
+    this.id = source.id;
+    this.displayElements = [];
+
+    if (this.config.getLong()) {
+      if (this.sourceHas('listingimage')) {
+        if (this.sourceData['listingimage']['url'] != '') {
+          this.displayElements.push(new NPSImage(this.sourceData['listingimage'], this.config));
+        }
+      }
+    }
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.SUMMARY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return this.displayElements;
+  }
+
+  getUniqueId(): string {
+    return this.id;
+  }
+}
+
+// TODO: Abstract more common behaviors out of these models
 
 
