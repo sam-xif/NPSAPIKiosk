@@ -17,6 +17,7 @@ import {EscapeHtmlPipe} from "./pipes/keep-html.pipe";
 import { EventPageComponent } from './event-page/event-page.component';
 import { CampgroundPageComponent } from './campground-page/campground-page.component';
 import { CampgroundListPageComponent } from './campground-list-page/campground-list-page.component';
+import { ParkLearnPageComponent } from './park-learn-page/park-learn-page.component';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { CampgroundListPageComponent } from './campground-list-page/campground-l
     EscapeHtmlPipe,
     EventPageComponent,
     CampgroundPageComponent,
-    CampgroundListPageComponent
+    CampgroundListPageComponent,
+    ParkLearnPageComponent
   ],
   imports: [
     BrowserModule,

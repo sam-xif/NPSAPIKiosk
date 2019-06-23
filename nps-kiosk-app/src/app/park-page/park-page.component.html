@@ -6,6 +6,11 @@
           <h1>{{ park.getTitle() }}</h1>
         </div>
       </div>
+      <div class="row">
+        <div class="col text-center">
+          <h5><a [routerLink]="['/learn', parkCode]">See Educational Content</a></h5>
+        </div>
+      </div>
       <hr>
       <div class="row">
         <ng-template [ngIf]="parkAlerts.length > 0 || parkEvents.length > 0">
