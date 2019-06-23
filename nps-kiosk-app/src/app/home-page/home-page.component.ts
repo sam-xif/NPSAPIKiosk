@@ -35,7 +35,7 @@ export class HomePageComponent extends ADataViewComponent {
     if (this.stateSelect.hasState()) {
       this.selectedState = this.stateSelect.getState();
     }
-
+    this.storeService.clear(); // Make sure stack is clear after returning to home
     super.ngOnInit();
   }
 
