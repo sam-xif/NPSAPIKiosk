@@ -58,7 +58,7 @@ export class ParkPageComponent extends ADataViewComponent {
     let parkSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
     parkSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
       if (snapshot.length < 1) {
-        this.router.navigateByUrl('/page-not-found');
+        //this.router.navigateByUrl('/page-not-found');
       }
 
       this.park = snapshot[0];
