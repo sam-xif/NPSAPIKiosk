@@ -44,7 +44,7 @@
               <div class="row">
                 <div class="col">
                   <div class="card-group" *ngFor="let displayElement of parkEvents">
-                    <div class="card my-2 mx-1" (click)="store(displayElement)" [routerLink]="['/events', parkCode]">
+                    <div class="card my-2 mx-1" (click)="store(displayElement)" [routerLink]="['/event']">
                       <div class="card-header"><h4>{{ displayElement.getTitle() }}</h4></div>
                       <div class="card-body">
                         <p [innerHTML]="displayElement.getDescription() | keepHtml"></p>

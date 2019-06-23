@@ -10,7 +10,7 @@ import {EventPageComponent} from "./event-page/event-page.component";
 
 const routes: Routes = [
   { path: 'parks/:parkCode', component: ParkPageComponent, pathMatch: 'full' },
-  { path: 'events/:parkCode', component: EventPageComponent, pathMatch: 'full' },
+  { path: 'event', component: EventPageComponent, pathMatch: 'full' },
   { path: 'alerts', component: AlertPageComponent },
   { path: 'alerts/:parkCode', component: AlertPageComponent },
   { path: 'search', component: SearchPageComponent },
