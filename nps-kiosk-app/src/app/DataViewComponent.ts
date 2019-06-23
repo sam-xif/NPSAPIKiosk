@@ -16,8 +16,10 @@ export abstract class ADataViewComponent implements IDataViewComponent {
   protected paramMapSubscription: Subscription;
 
   protected constructor(
-    private route: ActivatedRoute,
-  ) { }
+    protected route: ActivatedRoute,
+    protected router: Router,
+    protected apiClient: NPSAPIClientService,
+  ) {}
 
   abstract fetchData(): void;
 

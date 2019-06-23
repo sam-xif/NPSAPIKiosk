@@ -14,10 +14,7 @@ import {STATE_CODES} from "../../nps/Constants";
   templateUrl: './search-page.component.html',
   styleUrls: ['./search-page.component.css']
 })
-export class SearchPageComponent implements OnInit, OnDestroy {
-  private paramMap$: Observable<ParamMap>;
-  private paramMapSubscription: Subscription;
-
+export class SearchPageComponent extends ADataViewComponent {
   private resource: string;
   private query: string;
 
@@ -38,33 +35,18 @@ export class SearchPageComponent implements OnInit, OnDestroy {
   private stateFilters: Array<string>;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private apiClient: NPSAPIClientService,
+    protected route: ActivatedRoute,
+    protected router: Router,
+    protected apiClient: NPSAPIClientService,
     private parkStore: ParkStoreService
   ) {
+    super(route, router, apiClient);
     // Defaults
     this.resource = 'alerts';
     this.query = undefined;
     this.waiting = false;
     this.noResults = false;
     this.stateFilters = [];
-  }
-
-  ngOnInit() {
-    this.paramMap$ = this.route.paramMap;
-    this.paramMapSubscription = this.paramMap$.subscribe(
-      x => this.onParamMapChange(x),
-      err => console.error("error in paramMap observable"),
-      () => console.log("paramMap observable completed")
-    );
-    this.fetchData();
-    console.log("Search component initialized");
-  }
-
-  ngOnDestroy() {
-    this.paramMapSubscription.unsubscribe();
-    console.log("Search component destroyed");
   }
 
   onParamMapChange(newMap: ParamMap) {
@@ -99,7 +81,7 @@ export class SearchPageComponent implements OnInit, OnDestroy {
 
     this.datumRouterLink = this.datumRouterLinkGenerator(this.resource);
     this.parkStore.setObject(undefined);
-    console.log(this.resource);
+
     let queryBuilder = new NPSAPIQueryBuilder()
       .from(this.resource)
       .setQueryString(this.query)
