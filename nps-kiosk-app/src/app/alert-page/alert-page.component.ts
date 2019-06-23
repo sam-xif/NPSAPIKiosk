@@ -13,21 +13,20 @@ import {query} from "@angular/animations";
   templateUrl: './alert-page.component.html',
   styleUrls: ['./alert-page.component.css']
 })
-export class AlertPageComponent implements OnInit, OnDestroy {
+export class AlertPageComponent extends ADataViewComponent {
   private parkCode: string;
   private park: INPSObject;
-  private paramMap$: Observable<ParamMap>;
-  private paramMapSubscription: Subscription;
   private alerts: Array<INPSObject>;
 
   private noResults: boolean;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private apiClient: NPSAPIClientService,
+    protected route: ActivatedRoute,
+    protected router: Router,
+    protected apiClient: NPSAPIClientService,
     private parkStore: ParkStoreService
   ) {
+    super(route, router, apiClient);
     this.alerts = [];
   }
 
@@ -60,22 +59,15 @@ export class AlertPageComponent implements OnInit, OnDestroy {
       });
     }
 
-    this.paramMap$ = this.route.paramMap;
-    this.paramMapSubscription = this.paramMap$.subscribe(
-      x => this.onParamMapUpdate(x),
-      err => console.error('Error in paramMap observable'),
-      () => console.log("Completed")
-    );
-
-    this.fetchData();
+    super.ngOnInit();
   }
 
   ngOnDestroy(): void {
     this.paramMapSubscription.unsubscribe();
   }
 
-  onParamMapUpdate(newMap: ParamMap) {
-    let parkCode = newMap.get('parkCode');
+  onParamMapChange(newParamMap: ParamMap) {
+    let parkCode = newParamMap.get('parkCode');
     if (parkCode != this.parkCode) {
       this.fetchData();
     }

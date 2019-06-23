@@ -7,15 +7,14 @@ import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import NPSDataSource from "../../nps/NPSDataSource";
 import {INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
 import {ParkStoreService} from "../services/park-store.service";
+import {ADataViewComponent} from "../DataViewComponent";
 
 @Component({
   selector: 'app-park-page',
   templateUrl: './park-page.component.html',
   styleUrls: ['./park-page.component.css']
 })
-export class ParkPageComponent implements OnInit, OnDestroy {
-  private paramMap$: Observable<ParamMap>;
-  private paramMapSubscription: Subscription;
+export class ParkPageComponent extends ADataViewComponent {
   private parkCode: string;
   private park: INPSObject;
   private parkAlerts: Array<INPSObject>;
@@ -26,30 +25,14 @@ export class ParkPageComponent implements OnInit, OnDestroy {
   private readonly DISPLAY_META = NPSDisplayElementType.META;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private apiClient: NPSAPIClientService,
+    protected route: ActivatedRoute,
+    protected router: Router,
+    protected apiClient: NPSAPIClientService,
     private parkStore: ParkStoreService
   ) {
+    super(route, router, apiClient);
     this.park = undefined;
     this.parkAlerts = [];
-  }
-
-  ngOnInit() {
-    // Set initial value with snapshot
-    this.parkCode = this.route.snapshot.paramMap.get('parkCode');
-    this.paramMap$ = this.route.paramMap;
-    this.paramMapSubscription =  this.paramMap$.subscribe(
-      x => this.onParamMapChange(x),
-      err => console.error("parkCode observer encountered error: " + err),
-      () => console.log("Complete notification")
-    );
-    this.fetchData();
-  }
-
-  ngOnDestroy(): void {
-    // Unsubscribe from all observables
-    this.paramMapSubscription.unsubscribe();
   }
 
   onParamMapChange(newMap: ParamMap) {
