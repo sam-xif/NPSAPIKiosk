@@ -12,12 +12,12 @@ export default interface INPSAPIResponse {
  * Model of a response received from the NPS API.
  */
 export class NPSAPIResponse implements INPSAPIResponse {
-  private readonly status : string;
-  private readonly resource : string;
-  private readonly start : number;
-  private readonly limit : number;
-  private readonly total : number;
-  private readonly data : Array<object>;
+  protected readonly status : string;
+  protected readonly resource : string;
+  protected readonly start : number;
+  protected readonly limit : number;
+  protected readonly total : number;
+  protected readonly data : Array<object>;
 
   /**
    * @param status The status of the response
@@ -84,7 +84,6 @@ export class NPSAPIResponse implements INPSAPIResponse {
    * @return {String}
    */
   getResource() {
-    console.log(this.resource);
     return this.resource;
   }
 
@@ -100,11 +99,34 @@ export class NPSAPIResponse implements INPSAPIResponse {
       throw new Error("Cannot parse malformed response. Expected a 'status' property.");
     }
 
-    return new NPSAPIResponse(responseObj.status,
-      responseObj.reqResource,
-      responseObj.data.start,
-      responseObj.data.limit,
-      responseObj.data.total,
-      responseObj.data.data);
+    // Switch to address special cases (because the 'events' resource schema is apparently documented incorrectly...)
+    // TODO: Open an issue about this if they have the API code hosted on GitHub
+    switch (responseObj.reqResource) {
+      case 'events':
+        return new NPSAPIEventResponse(responseObj.status,
+          responseObj.reqResource,
+          responseObj.data.pagenumber,
+          responseObj.data.pagesize,
+          responseObj.data.total,
+          responseObj.data.data);
+      default:
+        return new NPSAPIResponse(responseObj.status,
+          responseObj.reqResource,
+          responseObj.data.start,
+          responseObj.data.limit,
+          responseObj.data.total,
+          responseObj.data.data);
+    }
+  }
+}
+
+class NPSAPIEventResponse extends NPSAPIResponse {
+  constructor(status, resource, pagenumber, pagesize, total, data) {
+    super(status, resource, pagenumber, pagesize, total, data);
+  }
+
+  // Override this one method
+  currentPage() {
+    return this.start;
   }
 }

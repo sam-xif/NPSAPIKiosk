@@ -30,7 +30,7 @@ export class NPSModelDAO implements INPSModelDAO {
   public async retrieve(query: INPSAPIQuery, paramsOverride: object = {}, callback?: any)
     : Promise<Array<INPSObject>> {
     let response: INPSAPIResponse = await query.execute(this.workerMgr, paramsOverride);
-
+    console.log(response);
     if (!response.ok()) {
       if (callback) {
         callback(response.ok(), null);
@@ -45,7 +45,6 @@ export class NPSModelDAO implements INPSModelDAO {
     let data = response.getData(); // This data is the actual API response in its entirety
 
     let out = [];
-
 
     if (response.totalPages() == 0) {
       return [];
