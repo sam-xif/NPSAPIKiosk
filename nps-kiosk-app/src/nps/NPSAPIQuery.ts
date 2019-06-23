@@ -61,6 +61,7 @@ export class NPSAPIQuery implements INPSAPIQuery {
 
 export class NPSAPIQueryOptions {
   private long: boolean = false;
+  private useSearchResultForm: boolean = false;
 
   constructor() {}
 
@@ -72,5 +73,13 @@ export class NPSAPIQueryOptions {
   // TODO: Change the name to something more boolean-like
   getLong(): boolean {
     return this.long;
+  }
+
+  setUseSearchResultForm(useSearchResultForm: boolean) {
+    this.useSearchResultForm = useSearchResultForm;
+  }
+
+  getUseSearchResultForm(): boolean {
+    return this.useSearchResultForm;
   }
 }

@@ -54,7 +54,7 @@ export class ParkLearnPageComponent extends ADataViewComponent {
       // Fetch park
       let queryBuilder = new NPSAPIQueryBuilder()
         .addParkCode(this.parkCode)
-        .longText(true)
+        .useLongForm(true)
         .setLimit(5)
         .includeField('images')
         .from('parks');
@@ -79,7 +79,7 @@ export class ParkLearnPageComponent extends ADataViewComponent {
     let queryBuilder = new NPSAPIQueryBuilder();
     let query = queryBuilder
       .from('lessonplans')
-      .longText(true)
+      .useLongForm(true)
       .setLimit(5)
       .addParkCode(this.parkCode)
       .build();
@@ -104,7 +104,7 @@ export class ParkLearnPageComponent extends ADataViewComponent {
     queryBuilder = new NPSAPIQueryBuilder();
     query = queryBuilder
       .from('people')
-      .longText(true)
+      .useLongForm(true)
       .setLimit(5)
       .addParkCode(this.parkCode)
       .build();
@@ -128,7 +128,7 @@ export class ParkLearnPageComponent extends ADataViewComponent {
     query = queryBuilder
       .reset()
       .from('places')
-      .longText(true)
+      .useLongForm(true)
       .setLimit(5)
       .addParkCode(this.parkCode)
       .build();

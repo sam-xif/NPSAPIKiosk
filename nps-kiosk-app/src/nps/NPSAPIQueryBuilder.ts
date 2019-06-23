@@ -34,8 +34,13 @@ export default class NPSAPIQueryBuilder {
     return this;
   }
 
-  longText(long: boolean) {
+  useLongForm(long: boolean) {
     this.options.setLong(long);
+    return this;
+  }
+
+  useSearchResultForm(searchResultForm: boolean) {
+    this.options.setUseSearchResultForm(searchResultForm);
     return this;
   }
 
