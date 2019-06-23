@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row pt-2">
       <div class="col text-center">
-        <ng-template [ngIf]="park"><h1>{{ park.getTitle() }}</h1></ng-template>
+        <ng-template [ngIf]="park"><h1 [innerHTML]="park.getTitle() | keepHtml"></h1></ng-template>
       </div>
     </div>
     <div class="row">

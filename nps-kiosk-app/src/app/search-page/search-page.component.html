@@ -61,12 +61,10 @@
           <div class="card-group" *ngFor="let datum of data">
             <div class="card my-1" [routerLink]="datumRouterLink(datum)">
               <div class="card-header">
-                <h4 class="my-0">{{ datum.getTitle() }}</h4>
+                <h4 class="my-0" [innerHTML]="datum.getTitle() | keepHtml"></h4>
               </div>
               <div class="card-body">
-                <p>
-                  {{ datum.getDescription() }}
-                </p>
+                <p [innerHTML]="datum.getDescription() | keepHtml"></p>
                 <p *ngFor="let displayElement of datum.getDisplayElements()">
                   <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PROPERTY">
                     <span class="font-weight-bold">{{ displayElement.getTitle() }}</span> {{ displayElement.getDescription() }}
