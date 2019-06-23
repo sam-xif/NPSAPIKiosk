@@ -2,21 +2,38 @@
   <div class="container">
     <div class="row">
       <div class="col text-center">
-        <h2 class="mt-2">Campgrounds at <ng-template [ngIf]="receivedObject"><a [routerLink]="['/parks', parkCode]">{{ receivedObject.getTitle() }}</a></ng-template></h2>
+        <h1 class="mt-2">Campgrounds in
+          <ng-template [ngIf]="receivedObject"><a [routerLink]="['/parks', parkCode]">{{ receivedObject.getTitle() }}</a></ng-template>
+          <ng-template [ngIf]="!receivedObject && stateCode">{{ stateCode }}</ng-template>
+        </h1>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <div class="card-group" *ngFor="let campground of campgrounds">
-          <div class="card my-2" (click)="store(campground)" [routerLink]="['/campground']">
-            <div class="card-header">
-              <h2 [innerHTML]="campground.getTitle()"></h2>
-            </div>
-            <div class="card-body">
-              <div [innerHTML]="campground.getDescription()"></div>
+        <ng-template [ngIf]="waiting == true">
+          <div class="text-center w-100">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
             </div>
           </div>
-        </div>
+        </ng-template>
+        <ng-template [ngIf]="waiting == false && noResults == true">
+          <div class="d-flex justify-content-center w-100">
+            <p class="alert alert-danger flex-shrink-1" role="alert">No campgrounds were found. Go <a [routerLink]="['/']">home</a></p>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="noResults == false">
+          <div class="card-group" *ngFor="let campground of campgrounds">
+            <div class="card my-2" (click)="store(campground)" [routerLink]="['/campground']">
+              <div class="card-header">
+                <h3 [innerHTML]="campground.getTitle()"></h3>
+              </div>
+              <div class="card-body">
+                <div [innerHTML]="campground.getDescription()"></div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>

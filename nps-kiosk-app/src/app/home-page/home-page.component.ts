@@ -7,6 +7,8 @@ import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import {ADataViewComponent} from "../DataViewComponent";
 import {ObjectStoreService} from "../services/object-store.service";
 import {STATE_CODES} from "../../nps/Constants";
+import {StateSelectService} from "../services/state-select.service";
+import {Observable, Subscriber, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-home-page',
@@ -16,7 +18,6 @@ import {STATE_CODES} from "../../nps/Constants";
 export class HomePageComponent extends ADataViewComponent {
   title: string = 'nps-kiosk-app';
   private images: Array<INPSObject>;
-  private activeSet: boolean;
   private selectedState: string = undefined;
   private stateCodes = STATE_CODES;
 
@@ -24,10 +25,18 @@ export class HomePageComponent extends ADataViewComponent {
     protected route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
-    protected storeService: ObjectStoreService
+    protected storeService: ObjectStoreService,
+    private stateSelect: StateSelectService
   ) {
     super(route, router, apiClient, storeService);
-    this.activeSet = false;
+  }
+
+  ngOnInit(): void {
+    if (this.stateSelect.hasState()) {
+      this.selectedState = this.stateSelect.getState();
+    }
+    this.storeService.clear(); // Make sure stack is clear after returning to home
+    super.ngOnInit();
   }
 
   fetchData(): void {
@@ -48,10 +57,6 @@ export class HomePageComponent extends ADataViewComponent {
 
     let parksSource = this.apiClient.retrieve(query, strategy);
     parksSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
-      if (!this.activeSet) {
-
-      }
-
       let images = [];
       snapshot.forEach((park: INPSObject) => {
         images = images.concat(park.getDisplayElements()
