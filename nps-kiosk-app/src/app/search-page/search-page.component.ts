@@ -80,7 +80,7 @@ export class SearchPageComponent extends ADataViewComponent {
     this.data = [];
 
     this.datumRouterLink = this.datumRouterLinkGenerator(this.resource);
-    this.storeService.clearObject();
+    this.storeService.pop();
 
     let queryBuilder = new NPSAPIQueryBuilder()
       .from(this.resource)

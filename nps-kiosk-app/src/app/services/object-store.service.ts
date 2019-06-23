@@ -1,31 +1,29 @@
 import { Injectable } from '@angular/core';
-import {INPSObject} from "../../nps/NPSModel";
+import {INPSObject, NPSObjectBuilder} from "../../nps/NPSModel";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ObjectStoreService {
-  private obj: INPSObject;
+  private stack: Array<INPSObject>;
 
   constructor() {
-    this.obj = undefined;
+    this.stack = [];
   }
 
-  // TODO: Maybe implement a queue if necessary
-
-  hasObject(): boolean {
-    return this.obj !== undefined;
+  isEmpty(): boolean {
+    return this.stack.length == 0;
   }
 
-  getObject(): INPSObject {
-    return this.obj;
+  clear() {
+    this.stack = [];
   }
 
-  setObject(park: INPSObject) {
-    this.obj = park;
+  push(obj: INPSObject) {
+    this.stack.push(obj);
   }
 
-  clearObject() {
-    this.obj = undefined;
+  pop(): INPSObject {
+    return this.stack.pop();
   }
 }

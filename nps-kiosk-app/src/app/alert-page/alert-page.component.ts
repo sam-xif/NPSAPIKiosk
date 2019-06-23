@@ -54,13 +54,11 @@ export class AlertPageComponent extends ADataViewComponent {
 
         this.receivedObject = snapshot[0];
       });
+    } else {
+      this.store(this.receivedObject);
     }
 
     super.ngOnInit();
-  }
-
-  ngOnDestroy(): void {
-    this.paramMapSubscription.unsubscribe();
   }
 
   onParamMapChange(newParamMap: ParamMap) {

@@ -49,29 +49,33 @@ export class ParkPageComponent extends ADataViewComponent {
 
   fetchData() {
     let queryBuilder = new NPSAPIQueryBuilder();
-
-    let query = queryBuilder
-      .from('parks')
-      .includeField('images')
-      .addParkCode(this.parkCode)
-      .longText(true)
-      .build();
-
     let strategy = new NPSDataAccessStrategyBuilder()
       .use('default')
       .build();
 
-    let parkSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
-    parkSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
-      if (snapshot.length < 1) {
-        //this.router.navigateByUrl('/page-not-found');
-      }
+    if (!this.receivedObject) {
+      let query = queryBuilder
+        .from('parks')
+        .includeField('images')
+        .addParkCode(this.parkCode)
+        .longText(true)
+        .build();
 
-      this.park = snapshot[0];
-      this.storeService.setObject(this.park);
-    });
+      let parkSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
+      parkSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+        if (snapshot.length < 1) {
+          //this.router.navigateByUrl('/page-not-found');
+        }
 
-    query = queryBuilder
+        this.park = snapshot[0];
+        this.store(this.park);
+      });
+
+    } else {
+      this.park = this.receivedObject;
+    }
+
+    let query = queryBuilder
       .reset()
       .from('alerts')
       .addParkCode(this.parkCode)
@@ -89,7 +93,7 @@ export class ParkPageComponent extends ADataViewComponent {
       .from('events')
       .addParkCode(this.parkCode)
       .longText(true)
-      .setLimit(5)
+      .set('pagesize', 5)
       .build();
 
     console.log(query);
@@ -98,6 +102,6 @@ export class ParkPageComponent extends ADataViewComponent {
     eventsSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
       console.log(snapshot);
       this.parkEvents = snapshot;
-    })
+    });
   }
 }

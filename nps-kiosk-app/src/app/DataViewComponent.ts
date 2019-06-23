@@ -33,8 +33,7 @@ export abstract class ADataViewComponent implements IDataViewComponent {
   abstract fetchData(): void;
 
   ngOnInit(): void {
-    this.receivedObject = this.storeService.getObject(); // Will be set to undefined if none exists, which is intended
-    this.storeService.clearObject();
+    this.receivedObject = this.storeService.pop(); // Will be set to undefined if none exists, which is intended
 
     this.paramMap$ = this.route.paramMap;
     this.paramMapSubscription = this.paramMap$.subscribe(
@@ -52,7 +51,7 @@ export abstract class ADataViewComponent implements IDataViewComponent {
   abstract onParamMapChange(newParamMap: ParamMap);
 
   store(obj: INPSObject) {
-    this.storeService.setObject(obj);
+    this.storeService.push(obj);
   }
 }
 
