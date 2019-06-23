@@ -1,3 +1,45 @@
-<p>
-  park-learn-page works!
-</p>
+<section role="main">
+  <div class="container">
+    <div class="row pt-2">
+      <div class="col text-center">
+        <ng-template [ngIf]="park"><h1>{{ park.getTitle() }}</h1></ng-template>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col text-center">
+        <h5><a (click)="store(park)" [routerLink]="['/parks', parkCode]">See Park Summary</a></h5>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <h2>Lesson Plans</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <!-- lesson plans -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h2>People</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <!-- people -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h2>Places</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <!-- places -->
+      </div>
+    </div>
+  </div>
+</section>
