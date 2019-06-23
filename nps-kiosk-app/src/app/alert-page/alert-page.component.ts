@@ -6,7 +6,7 @@ import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import {INPSObject} from "../../nps/NPSModel";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
 import {ParkStoreService} from "../services/park-store.service";
-import {query} from "@angular/animations";
+import {ADataViewComponent} from "../DataViewComponent";
 
 @Component({
   selector: 'app-alert-page',
