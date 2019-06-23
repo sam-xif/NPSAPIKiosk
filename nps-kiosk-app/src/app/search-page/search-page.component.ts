@@ -86,33 +86,13 @@ export class SearchPageComponent extends ADataViewComponent {
     let queryBuilder = new NPSAPIQueryBuilder()
       .from(this.resource)
       .setQueryString(this.query)
-      .longText(false);
+      .longText(false)
+      .addAllStateCodes(this.stateFilters);
 
     let strategyBuilder = new NPSDataAccessStrategyBuilder()
       .use('batch', {
         'queryBuilder': queryBuilder
       });
-
-    if (this.stateFilters.length > 0) {
-      strategyBuilder.use('filter', {
-        predicate: ((acceptableStateCodes: Array<string>) => {
-          return (result: INPSObject) => {
-            return result.applyPredicate((obj: object) => {
-              if ('states' in obj) {
-                let statesStr: string = obj['states'];
-                let stateStrSplit: string[] = statesStr.split(',');
-
-                return stateStrSplit.map(
-                  (stateCode: string) => acceptableStateCodes.includes(stateCode)
-                ).reduce(
-                  (acc: boolean, val: boolean) => acc || val, false
-                );
-              }
-            });
-          }
-        })(this.stateFilters)
-      })
-    }
 
     let dataSource: NPSDataSource = this.apiClient.retrieve(queryBuilder.build(), strategyBuilder.build());
     dataSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
