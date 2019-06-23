@@ -1,0 +1,24 @@
+<section role="main">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        {{ receivedObject.getTitle() }}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="container" *ngFor="let displayElement of receivedObject.getDisplayElements()">
+          <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PARAGRAPH">
+            <div class="row">
+              <div class="col">
+                <div class="card">
+                  <h2 class="card-header" [innerHTML]="displayElement.getTitle()"></h2>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

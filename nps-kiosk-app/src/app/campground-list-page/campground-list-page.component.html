@@ -1,0 +1,23 @@
+<section role="main">
+  <div class="container">
+    <div class="row">
+      <div class="col text-center">
+        <h2 class="mt-2">Campgrounds at <ng-template [ngIf]="receivedObject"><a [routerLink]="['/parks', parkCode]">{{ receivedObject.getTitle() }}</a></ng-template></h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="card-group" *ngFor="let campground of campgrounds">
+          <div class="card my-2" (click)="store(campground)" [routerLink]="['/campground']">
+            <div class="card-header">
+              <h2 [innerHTML]="campground.getTitle()"></h2>
+            </div>
+            <div class="card-body">
+              <div [innerHTML]="campground.getDescription()"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
