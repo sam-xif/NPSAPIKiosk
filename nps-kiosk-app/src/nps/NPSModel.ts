@@ -168,6 +168,8 @@ abstract class ANPSObject implements INPSDisplayElement {
         return new NPSCampground(data, config);
       case 'lessonplans':
         return new NPSLessonPlan(data, config);
+      case 'people':
+        return new NPSPerson(data, config);
       default:
         throw new Error('Unsupported resource');
     }
@@ -423,7 +425,7 @@ class NPSCampground extends ANPSObject {
   }
 }
 
-class NPSLessonPlan extends ANPSObject{
+class NPSLessonPlan extends ANPSObject {
   private displayElements: Array<INPSDisplayElement>;
   private id: string;
 
@@ -439,6 +441,37 @@ class NPSLessonPlan extends ANPSObject{
 
       if (this.sourceHas('duration')) {
         this.displayElements.push(new NPSDisplayProperty('Duration:', this.sourceData['duration']));
+      }
+    }
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.SUMMARY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return this.displayElements;
+  }
+
+  getUniqueId(): string {
+    return this.id;
+  }
+}
+
+class NPSPerson extends ANPSObject {
+  private displayElements: Array<INPSDisplayElement>;
+  private id: string;
+
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.title, source.listingdescription, source.url, 'people', source, config);
+    this.id = source.id;
+    this.displayElements = [];
+
+    if (this.config.getLong()) {
+      if (this.sourceHas('listingimage')) {
+        if (this.sourceData['listingimage']['url'] != '') {
+          this.displayElements.push(new NPSImage(this.sourceData['listingimage'], this.config));
+        }
       }
     }
   }

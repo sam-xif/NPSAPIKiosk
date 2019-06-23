@@ -18,9 +18,11 @@ export class ParkLearnPageComponent extends ADataViewComponent {
   private park: INPSObject;
 
   private lessonPlans: Array<INPSObject>;
+  private people: Array<INPSObject>;
 
   // TODO: Move these enum values into the abstract class so all components have access to them
   private readonly DISPLAY_PROPERTY = NPSDisplayElementType.PROPERTY;
+  private readonly DISPLAY_IMAGE = NPSDisplayElementType.IMAGE;
 
   constructor(
     protected route: ActivatedRoute,
@@ -90,6 +92,24 @@ export class ParkLearnPageComponent extends ADataViewComponent {
       this.lessonPlans = snapshot;
     });
     lessonPlansSource.addOnCompletedHandler((snapshot: Array<INPSObject>) => {
+      if (snapshot.length == 0) {
+        // TODO Trigger nothing to show alert
+      }
+    });
+
+    query = queryBuilder
+      .reset()
+      .from('people')
+      .longText(true)
+      .setLimit(5)
+      .addParkCode(this.parkCode)
+      .build();
+
+    let peopleSource = this.apiClient.retrieve(query, strategy);
+    peopleSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+      this.people = snapshot;
+    });
+    peopleSource.addOnCompletedHandler((snapshot: Array<INPSObject>) => {
       if (snapshot.length == 0) {
         // TODO Trigger nothing to show alert
       }
