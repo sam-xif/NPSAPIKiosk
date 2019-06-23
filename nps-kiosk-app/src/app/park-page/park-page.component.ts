@@ -94,6 +94,7 @@ export class ParkPageComponent extends ADataViewComponent {
       .addParkCode(this.parkCode)
       .longText(true)
       .set('pagesize', 5)
+      .includeField('images')
       .build();
 
     console.log(query);

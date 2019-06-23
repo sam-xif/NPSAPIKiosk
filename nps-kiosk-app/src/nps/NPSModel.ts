@@ -2,6 +2,7 @@
  * Definitions for JavaScript class representations of data objects provided by the NPS API.
  */
 import {NPSAPIQueryOptions} from "./NPSAPIQuery";
+import {INPSResourceDescription, NPSResourceDescriptionBuilder} from "./NPSResourceDescription";
 
 export class NPSObjectBuilder {
   private data: object;
@@ -29,41 +30,6 @@ export class NPSObjectBuilder {
 
   build() : INPSObject {
     return ANPSObject.from(this.resource, this.data, this.config);
-  }
-}
-
-export interface INPSResourceDescription {
-  getDesignations(): Array<string>;
-}
-
-export class NPSResourceDescriptionBuilder {
-  static get(resourceName: string) {
-    switch (resourceName) {
-      case 'parks':
-        return new NPSResourceDescription(
-          ['National Park', 'National Monument', 'Recreation Area']
-        );
-      case 'alerts':
-        return new NPSResourceDescription(
-          [ 'Danger', 'Caution', 'Information', 'Park Closure' ]
-        );
-      case 'events':
-        return new NPSResourceDescription(
-          []
-        );
-    }
-  }
-}
-
-class NPSResourceDescription implements INPSResourceDescription {
-  private readonly designations: Array<string>;
-
-  constructor(designations: Array<string>) {
-    this.designations = designations;
-  }
-
-  getDesignations(): Array<string> {
-    return this.designations;
   }
 }
 
@@ -346,10 +312,22 @@ class NPSEvent extends ANPSObject {
         this.displayElements.push(new NPSDisplayProperty('Fee Info:', this.sourceData['feeinfo']));
       }
 
-      this.displayElements.push(new NPSDisplayProperty('Contact:', this.sourceData['contacttelephonenumber']));
+      if (this.sourceData['contacttelephonenumber'] !== '') {
+        this.displayElements.push(new NPSDisplayProperty('Contact:', this.sourceData['contacttelephonenumber']));
+      }
+
+      if (this.sourceData['regresinfo'] !== '') {
+        this.displayElements.push(new NPSDisplayProperty('Registration Info:', this.sourceData['regresinfo']));
+      }
 
       this.displayElements.push(new NPSDisplayParagraph('Event Summary',
         this.getDescription(), this.getUrl()));
+      console.log(this.sourceData);
+      if ('images' in this.sourceData) {
+        this.sourceData['images'].forEach(imgData => {
+          this.displayElements.push(new NPSImage(imgData, this.config));
+        });
+      }
     }
   }
 
