@@ -15,7 +15,6 @@ import {ADataViewComponent} from "../DataViewComponent";
 })
 export class AlertPageComponent extends ADataViewComponent {
   private parkCode: string;
-  private park: INPSObject;
   private alerts: Array<INPSObject>;
 
   private noResults: boolean;
@@ -24,18 +23,16 @@ export class AlertPageComponent extends ADataViewComponent {
     protected route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
-    private parkStore: ObjectStoreService
+    protected storeService: ObjectStoreService
   ) {
-    super(route, router, apiClient);
+    super(route, router, apiClient, storeService);
     this.alerts = [];
   }
 
   ngOnInit() {
     this.parkCode = this.route.snapshot.paramMap.get('parkCode');
 
-    if (this.parkStore.hasObject()) {
-      this.park = this.parkStore.getObject();
-    } else {
+    if (!this.receivedObject) {
       let queryBuilder = new NPSAPIQueryBuilder()
         .addParkCode(this.parkCode)
         .longText(false)
@@ -55,7 +52,7 @@ export class AlertPageComponent extends ADataViewComponent {
           return;
         }
 
-        this.park = snapshot[0];
+        this.receivedObject = snapshot[0];
       });
     }
 
