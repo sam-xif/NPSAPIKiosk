@@ -63,7 +63,7 @@ module.exports = "<section role=\"main\">\n  <div class=\"container\">\n    <div
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<section role=\"main\">\n  <div class=\"container-fluid px-0\">\n    <img src=\"assets/img/park1.jpg\" width=\"100%\" />\n  </div>\n  <div class=\"container\">\n    <div class=\"row\">\n      <h1>\n        Welcome to {{ title }}!\n      </h1>\n    </div>\n    <div class=\"row\">\n      <button class=\"btn btn-primary col-2\" (click)=\"callAPI()\">Call API</button>\n      <input class=\"col-10\" [(ngModel)]=\"queryString\" type=\"text\"/>\n    </div>\n    <div class=\"row my-2\">\n      <div class=\"col container\">\n        <ul class=\"list-group\" *ngFor=\"let datum of data\">\n          <li class=\"list-group-item\">\n            <div (click)=\"goToLearnPage(datum)\">\n              <p class=\"my-0\"><b>{{ datum.getTitle() }}</b></p>\n              <p class=\"my-0\">{{ datum.getDescription() }}</p>\n            </div>\n          </li>\n        </ul>\n      </div>\n    </div>\n  </div>\n</section>\n"
+module.exports = "<section role=\"main\">\n  <div class=\"container\">\n    <div class=\"row\">\n      <div class=\"col text-center\">\n        <h1>\n          Welcome to the NPS Information Kiosk!\n        </h1>\n      </div>\n    </div>\n    <div class=\"row\">\n      <div class=\"col\">\n        <div id=\"home-page-carousel\" class=\"carousel slide\" data-ride=\"carousel\">\n          <div class=\"carousel-inner\">\n            <div class=\"carousel-item\" *ngFor=\"let image of images; let first = first\" [ngClass]=\"{ active: first }\">\n              <div class=\"d-block w-100 nps-carousel-images-wrapper\">\n                <div class=\"d-flex justify-content-center\">\n                  <img class=\"nps-carousel-image\" src=\"{{ image.getUrl() }}\" alt=\"{{ image.getDescription() }}\">\n                </div>\n              </div>\n              <div class=\"carousel-caption d-none d-md-block\">\n                <h5>{{ image.getTitle() }}</h5>\n                <p>{{ image.getDescription() }}</p>\n              </div>\n            </div>\n          </div>\n          <a class=\"carousel-control-prev nps-carousel-control\" href=\"#home-page-carousel\" role=\"button\" data-slide=\"prev\">\n            <span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"></span>\n            <span class=\"sr-only\">Previous</span>\n          </a>\n          <a class=\"carousel-control-next nps-carousel-control\" href=\"#home-page-carousel\" role=\"button\" data-slide=\"next\">\n            <span class=\"carousel-control-next-icon\" aria-hidden=\"true\"></span>\n            <span class=\"sr-only\">Next</span>\n          </a>\n        </div>\n      </div>\n    </div>\n    <div class=\"row\">\n      <div class=\"col\">\n        <p>\n          This website allows quick and easy access to useful information about the NPS's parks, campgrounds, visitor centers,\n          alerts, and events. Navigate to different parts of the site by using the banner at the top.\n        </p>\n      </div>\n    </div>\n  </div>\n</section>\n"
 
 /***/ }),
 
@@ -111,7 +111,7 @@ module.exports = "<section role=\"main\">\n  <div class=\"container\">\n    <div
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ADataViewComponent", function() { return ADataViewComponent; });
 // TODO: Abstract more boolean flags and control flow into this class
-//  (such as the `waiting` flag for when a request is being processed)
+//  (such as the `waiting` flag for when a request is being processed) <-- DO THIS!
 class ADataViewComponent {
     constructor(route, router, apiClient, storeService) {
         this.route = route;
@@ -513,7 +513,7 @@ EventPageComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL2hvbWUtcGFnZS9ob21lLXBhZ2UuY29tcG9uZW50LmNzcyJ9 */"
+module.exports = "\n/* So user can see the carousel controls */\na.nps-carousel-control {\n  background-color: rgba(0, 0, 0, 0);\n  transition: 0.5s;\n}\na.nps-carousel-control:hover {\n  background-color: rgba(0, 0, 0, 0.5);\n  transition: 0.5s;\n}\ndiv.nps-carousel-images-wrapper {\n  background-color: #040404;\n}\ndiv.carousel-caption {\n  background-color: rgba(0.5, 0.5, 0.5, 0.5);\n}\n/* To prevent stretching of images */\nimg.nps-carousel-image {\n  max-height: 700px;\n  min-height: 500px;\n  width: auto;\n  height: auto;\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvaG9tZS1wYWdlL2hvbWUtcGFnZS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7QUFDQSwwQ0FBMEM7QUFDMUM7RUFDRSxrQ0FBa0M7RUFDbEMsZ0JBQWdCO0FBQ2xCO0FBQ0E7RUFDRSxvQ0FBb0M7RUFDcEMsZ0JBQWdCO0FBQ2xCO0FBRUE7RUFDRSx5QkFBeUI7QUFDM0I7QUFFQTtFQUNFLDBDQUEwQztBQUM1QztBQUVBLG9DQUFvQztBQUNwQztFQUNFLGlCQUFpQjtFQUNqQixpQkFBaUI7RUFDakIsV0FBVztFQUNYLFlBQVk7QUFDZCIsImZpbGUiOiJzcmMvYXBwL2hvbWUtcGFnZS9ob21lLXBhZ2UuY29tcG9uZW50LmNzcyIsInNvdXJjZXNDb250ZW50IjpbIlxuLyogU28gdXNlciBjYW4gc2VlIHRoZSBjYXJvdXNlbCBjb250cm9scyAqL1xuYS5ucHMtY2Fyb3VzZWwtY29udHJvbCB7XG4gIGJhY2tncm91bmQtY29sb3I6IHJnYmEoMCwgMCwgMCwgMCk7XG4gIHRyYW5zaXRpb246IDAuNXM7XG59XG5hLm5wcy1jYXJvdXNlbC1jb250cm9sOmhvdmVyIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiYSgwLCAwLCAwLCAwLjUpO1xuICB0cmFuc2l0aW9uOiAwLjVzO1xufVxuXG5kaXYubnBzLWNhcm91c2VsLWltYWdlcy13cmFwcGVyIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzA0MDQwNDtcbn1cblxuZGl2LmNhcm91c2VsLWNhcHRpb24ge1xuICBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDAuNSwgMC41LCAwLjUsIDAuNSk7XG59XG5cbi8qIFRvIHByZXZlbnQgc3RyZXRjaGluZyBvZiBpbWFnZXMgKi9cbmltZy5ucHMtY2Fyb3VzZWwtaW1hZ2Uge1xuICBtYXgtaGVpZ2h0OiA3MDBweDtcbiAgbWluLWhlaWdodDogNTAwcHg7XG4gIHdpZHRoOiBhdXRvO1xuICBoZWlnaHQ6IGF1dG87XG59XG4iXX0= */"
 
 /***/ }),
 
@@ -529,46 +529,60 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "HomePageComponent", function() { return HomePageComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
-/* harmony import */ var _services_npsapiclient_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../services/npsapiclient.service */ "./src/app/services/npsapiclient.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
-/* harmony import */ var _nps_NPSAPIQueryBuilder__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../nps/NPSAPIQueryBuilder */ "./src/nps/NPSAPIQueryBuilder.ts");
-/* harmony import */ var _nps_NPSDataAccessStrategy__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../nps/NPSDataAccessStrategy */ "./src/nps/NPSDataAccessStrategy.ts");
+/* harmony import */ var _nps_NPSModel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../nps/NPSModel */ "./src/nps/NPSModel.ts");
+/* harmony import */ var _services_npsapiclient_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/npsapiclient.service */ "./src/app/services/npsapiclient.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+/* harmony import */ var _nps_NPSAPIQueryBuilder__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../nps/NPSAPIQueryBuilder */ "./src/nps/NPSAPIQueryBuilder.ts");
+/* harmony import */ var _nps_NPSDataAccessStrategy__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../nps/NPSDataAccessStrategy */ "./src/nps/NPSDataAccessStrategy.ts");
+/* harmony import */ var _DataViewComponent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../DataViewComponent */ "./src/app/DataViewComponent.ts");
+/* harmony import */ var _services_object_store_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../services/object-store.service */ "./src/app/services/object-store.service.ts");
 
 
 
 
 
 
-let HomePageComponent = class HomePageComponent {
-    constructor(npsapiClientService, router) {
-        this.npsapiClientService = npsapiClientService;
+
+
+
+let HomePageComponent = class HomePageComponent extends _DataViewComponent__WEBPACK_IMPORTED_MODULE_7__["ADataViewComponent"] {
+    constructor(route, router, apiClient, storeService) {
+        super(route, router, apiClient, storeService);
+        this.route = route;
         this.router = router;
+        this.apiClient = apiClient;
+        this.storeService = storeService;
         this.title = 'nps-kiosk-app';
-        this.resource = "parks";
-        this.queryString = "";
-        this.data = [];
+        this.activeSet = false;
     }
-    ngOnInit() {
-    }
-    callAPI() {
-        let qb = new _nps_NPSAPIQueryBuilder__WEBPACK_IMPORTED_MODULE_4__["default"]();
-        qb.from(this.resource);
-        if (this.queryString !== "") {
-            qb.setQueryString(this.queryString);
-        }
-        let strategy = (new _nps_NPSDataAccessStrategy__WEBPACK_IMPORTED_MODULE_5__["NPSDataAccessStrategyBuilder"]())
-            .use('default')
-            .use('filter', {
-            predicate: datum => {
-                return datum.getUrl() !== "";
-            }
+    fetchData() {
+        let queryBuilder = new _nps_NPSAPIQueryBuilder__WEBPACK_IMPORTED_MODULE_5__["default"]();
+        let query = queryBuilder
+            .from('parks')
+            .includeField('images')
+            .build();
+        let strategyBuilder = new _nps_NPSDataAccessStrategy__WEBPACK_IMPORTED_MODULE_6__["NPSDataAccessStrategyBuilder"]();
+        let strategy = strategyBuilder
+            .use('batch', {
+            queryBuilder: queryBuilder,
+            numBatches: 5,
+            batchSize: 2
         })
             .build();
-        let dataSource = this.npsapiClientService.retrieve(qb.build(), strategy);
-        dataSource.addOnUpdateHandler(snapshot => this.data = snapshot);
+        let parksSource = this.apiClient.retrieve(query, strategy);
+        parksSource.addOnUpdateHandler((snapshot) => {
+            if (!this.activeSet) {
+            }
+            let images = [];
+            snapshot.forEach((park) => {
+                images = images.concat(park.getDisplayElements()
+                    .filter((disp) => disp.getDisplayElementType() == _nps_NPSModel__WEBPACK_IMPORTED_MODULE_2__["NPSDisplayElementType"].IMAGE));
+            });
+            this.images = images;
+        });
     }
-    goToLearnPage(datum) {
-        this.router.navigateByUrl("");
+    onParamMapChange(newParamMap) {
+        // Do nothing, as there are no URL parameters we are worried about
     }
 };
 HomePageComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -577,7 +591,10 @@ HomePageComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         template: __webpack_require__(/*! raw-loader!./home-page.component.html */ "./node_modules/raw-loader/index.js!./src/app/home-page/home-page.component.html"),
         styles: [__webpack_require__(/*! ./home-page.component.css */ "./src/app/home-page/home-page.component.css")]
     }),
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_services_npsapiclient_service__WEBPACK_IMPORTED_MODULE_2__["NPSAPIClientService"], _angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]])
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_4__["ActivatedRoute"],
+        _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"],
+        _services_npsapiclient_service__WEBPACK_IMPORTED_MODULE_3__["NPSAPIClientService"],
+        _services_object_store_service__WEBPACK_IMPORTED_MODULE_8__["ObjectStoreService"]])
 ], HomePageComponent);
 
 
@@ -1726,8 +1743,8 @@ class BatchNPSDataAccessStrategy extends ANPSDataAccessStrategy {
         if ('batchSize' in config) {
             this.batchSize = config['batchSize'];
         }
-        if ('batches' in config) {
-            this.batches = config['batches'];
+        if ('numBatches' in config) {
+            this.batches = config['numBatches'];
         }
         if ('queryBuilder' in config) {
             this.builder = config['queryBuilder'];
