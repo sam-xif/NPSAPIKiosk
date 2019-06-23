@@ -1,0 +1,44 @@
+<section role="main">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <!-- header -->
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="container" *ngFor="let event of events">
+          <div class="row">
+            <div class="col">
+              <div class="container">
+                <div class="row" *ngFor="let displayElement of event.getDisplayElements()">
+                  <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PROPERTY">
+                    <div class="col">
+                      {{ displayElement.getTitle() }} -- {{ displayElement.getDescription() }}
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="container">
+                <div class="row" *ngFor="let displayElement of event.getDisplayElements()">
+                  <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PARAGRAPH">
+                    <div class="col">
+                      <div class="card">
+                        <h5 class="card-header" [innerHTML]="displayElement.getTitle() | keepHtml"></h5>
+                        <div class="card-body" [innerHTML]="displayElement.getDescription() | keepHtml"></div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

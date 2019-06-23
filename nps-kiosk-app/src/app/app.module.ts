@@ -14,6 +14,7 @@ import { AlertPageComponent } from './alert-page/alert-page.component';
 import {ParkStoreService} from "./services/park-store.service";
 import {CommonModule} from "@angular/common";
 import {EscapeHtmlPipe} from "./pipes/keep-html.pipe";
+import { EventPageComponent } from './event-page/event-page.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import {EscapeHtmlPipe} from "./pipes/keep-html.pipe";
     PageNotFoundComponent,
     SearchPageComponent,
     AlertPageComponent,
-    EscapeHtmlPipe
+    EscapeHtmlPipe,
+    EventPageComponent
   ],
   imports: [
     BrowserModule,

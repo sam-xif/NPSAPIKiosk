@@ -86,6 +86,7 @@ export interface INPSObject {
 
 export enum NPSDisplayElementType {
   SUMMARY,
+  PROPERTY,
   META,
   IMAGE
 }
@@ -309,13 +310,47 @@ class NPSDisplayParagraph extends ANPSObject {
   }
 }
 
+class NPSDisplayProperty extends ANPSObject {
+  constructor(title: string, description: string) {
+    super(title, description, undefined, undefined, undefined, new NPSAPIQueryOptions);
+  }
+
+  getUniqueId(): string {
+    throw new Error("Unsupported Operation: getUniqueId on NPSDisplayParagraph");
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.PROPERTY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return [];
+  }
+}
+
 class NPSEvent extends ANPSObject {
   private readonly id: string;
+  private displayElements: Array<INPSDisplayElement>;
 
   constructor(source, config: NPSAPIQueryOptions) {
     super(source.title, source.description, source.url, 'events', source, config);
     this.id = source.id;
-    console.log("NEW EVENT CREATED");
+    this.displayElements = [];
+
+    if (this.config.getLong()) {
+      let isfree: boolean = this.sourceData['isfree'];
+
+      if (isfree) {
+        this.displayElements.push(new NPSDisplayProperty('Free?', isfree ? 'Yes' : 'No'));
+      } else {
+        this.displayElements.push(new NPSDisplayProperty('Fee Info:', this.sourceData['feeinfo']));
+      }
+
+      this.displayElements.push(new NPSDisplayProperty('Contact:', this.sourceData['contacttelephonenumber']));
+
+      this.displayElements.push(new NPSDisplayParagraph('Event Summary',
+        this.getDescription(), this.getUrl()));
+    }
   }
 
   getDisplayElementType(): NPSDisplayElementType {
@@ -323,7 +358,7 @@ class NPSEvent extends ANPSObject {
   }
 
   getDisplayElements(): Array<INPSDisplayElement> {
-    return [];
+    return this.displayElements;
   }
 
   getUniqueId(): string {

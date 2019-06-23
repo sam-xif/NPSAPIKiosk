@@ -33,7 +33,7 @@ export default class NPSAPIQueryBuilder {
   }
 
   longText(long: boolean) {
-    this.options.setLong(true);
+    this.options.setLong(long);
     return this;
   }
 

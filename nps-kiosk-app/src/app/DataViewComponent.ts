@@ -3,6 +3,8 @@ import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {NPSAPIClientService} from "./services/npsapiclient.service";
 import {Observable, Subscription} from "rxjs";
 
+
+
 /**
  *
  */
@@ -11,6 +13,9 @@ export interface IDataViewComponent extends OnInit, OnDestroy {
   onParamMapChange(newParamMap: ParamMap);
 }
 
+
+// TODO: Abstract more boolean flags and control flow into this class
+//  (such as the `waiting` flag for when a request is being processed)
 export abstract class ADataViewComponent implements IDataViewComponent {
   protected paramMap$: Observable<ParamMap>;
   protected paramMapSubscription: Subscription;
