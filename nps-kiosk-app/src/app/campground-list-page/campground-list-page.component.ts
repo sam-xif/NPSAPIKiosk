@@ -31,7 +31,7 @@ export class CampgroundListPageComponent extends ADataViewComponent {
     if (!this.receivedObject) {
       let queryBuilder = new NPSAPIQueryBuilder()
         .addParkCode(this.parkCode)
-        .longText(false)
+        .useLongForm(false)
         .setLimit(5)
         .from('parks');
 
@@ -62,7 +62,7 @@ export class CampgroundListPageComponent extends ADataViewComponent {
     let query = queryBuilder
       .from('campgrounds')
       .addParkCode(this.parkCode)
-      .longText(true)
+      .useLongForm(true)
       .build();
 
     let strategyBuilder = new NPSDataAccessStrategyBuilder();

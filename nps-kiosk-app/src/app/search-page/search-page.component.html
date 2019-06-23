@@ -67,6 +67,11 @@
                 <p>
                   {{ datum.getDescription() }}
                 </p>
+                <p *ngFor="let displayElement of datum.getDisplayElements()">
+                  <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PROPERTY">
+                    <span class="font-weight-bold">{{ displayElement.getTitle() }}</span> {{ displayElement.getDescription() }}
+                  </ng-template>
+                </p>
               </div>
             </div>
           </div>

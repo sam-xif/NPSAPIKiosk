@@ -58,7 +58,7 @@ export class ParkPageComponent extends ADataViewComponent {
         .from('parks')
         .includeField('images')
         .addParkCode(this.parkCode)
-        .longText(true)
+        .useLongForm(true)
         .build();
 
       let parkSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
@@ -79,7 +79,7 @@ export class ParkPageComponent extends ADataViewComponent {
       .reset()
       .from('alerts')
       .addParkCode(this.parkCode)
-      .longText(false)
+      .useLongForm(false)
       .setLimit(5)
       .build();
 
@@ -92,7 +92,7 @@ export class ParkPageComponent extends ADataViewComponent {
       .reset()
       .from('events')
       .addParkCode(this.parkCode)
-      .longText(true)
+      .useLongForm(true)
       .set('pagesize', 5)
       .includeField('images')
       .build();

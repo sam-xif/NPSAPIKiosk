@@ -243,6 +243,12 @@ class NPSPark extends ANPSObject {
       }
     }
 
+    if (this.config.getUseSearchResultForm()) {
+      if (this.sourceHas('states')) {
+        this.displayElements.push(new NPSDisplayProperty('States:', this.sourceData['states']));
+      }
+    }
+
     // Next, add all images to the display elements list
     this.images.forEach(img => this.displayElements.push(img));
   }
