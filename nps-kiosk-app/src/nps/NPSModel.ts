@@ -80,7 +80,16 @@ abstract class ANPSObject implements INPSDisplayElement {
   protected constructor(title: string, description: string, url: string, resourceName: string, sourceData: object, config: NPSAPIQueryOptions) {
     this.title = title;
     this.description = description;
-    this.url = url;
+
+    if (url) {
+      if (url.startsWith('/')) {
+        url = 'https://www.nps.gov' + url;
+      }
+      this.url = url;
+    } else {
+      this.url = url;
+    }
+
     this.resourceName = resourceName;
     this.sourceData = sourceData;
     this.config = config;
@@ -242,6 +251,7 @@ class NPSImage extends ANPSObject {
 
   constructor(source, config: NPSAPIQueryOptions) {
     super(source.title + " (Credit: " + source.credit + ")", source.caption, source.url, undefined, source, config);
+    console.log(this.getUrl());
     this.id = source.id;
   }
 
@@ -322,7 +332,7 @@ class NPSEvent extends ANPSObject {
 
       this.displayElements.push(new NPSDisplayParagraph('Event Summary',
         this.getDescription(), this.getUrl()));
-      console.log(this.sourceData);
+
       if ('images' in this.sourceData) {
         this.sourceData['images'].forEach(imgData => {
           this.displayElements.push(new NPSImage(imgData, this.config));
