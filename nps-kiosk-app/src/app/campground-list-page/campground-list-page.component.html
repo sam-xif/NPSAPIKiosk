@@ -2,7 +2,10 @@
   <div class="container">
     <div class="row">
       <div class="col text-center">
-        <h2 class="mt-2">Campgrounds at <ng-template [ngIf]="receivedObject"><a [routerLink]="['/parks', parkCode]">{{ receivedObject.getTitle() }}</a></ng-template></h2>
+        <h1 class="mt-2">Campgrounds in
+          <ng-template [ngIf]="receivedObject"><a [routerLink]="['/parks', parkCode]">{{ receivedObject.getTitle() }}</a></ng-template>
+          <ng-template [ngIf]="!receivedObject && stateCode">{{ stateCode }}</ng-template>
+        </h1>
       </div>
     </div>
     <div class="row">
@@ -10,7 +13,7 @@
         <div class="card-group" *ngFor="let campground of campgrounds">
           <div class="card my-2" (click)="store(campground)" [routerLink]="['/campground']">
             <div class="card-header">
-              <h2 [innerHTML]="campground.getTitle()"></h2>
+              <h3 [innerHTML]="campground.getTitle()"></h3>
             </div>
             <div class="card-body">
               <div [innerHTML]="campground.getDescription()"></div>

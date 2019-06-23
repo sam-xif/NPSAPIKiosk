@@ -82,7 +82,9 @@ export class CampgroundListPageComponent extends ADataViewComponent {
 
     let strategyBuilder = new NPSDataAccessStrategyBuilder();
     let strategy = strategyBuilder
-      .use('default')
+      .use('batch', {
+        queryBuilder: queryBuilder
+      })
       .build();
 
     let campgroundsSource = this.apiClient.retrieve(query, strategy);
