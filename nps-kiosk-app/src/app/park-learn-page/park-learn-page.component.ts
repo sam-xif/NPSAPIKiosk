@@ -14,19 +14,19 @@ import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 })
 export class ParkLearnPageComponent extends ADataViewComponent {
 
-  private parkCode: string;
-  private park: INPSObject;
+  public parkCode: string;
+  public park: INPSObject;
 
-  private lessonPlans: Array<INPSObject>;
-  private people: Array<INPSObject>;
-  private places: Array<INPSObject>;
+  public lessonPlans: Array<INPSObject>;
+  public people: Array<INPSObject>;
+  public places: Array<INPSObject>;
 
   // TODO: Move these enum values into the abstract class so all components have access to them
   private readonly DISPLAY_PROPERTY = NPSDisplayElementType.PROPERTY;
   private readonly DISPLAY_IMAGE = NPSDisplayElementType.IMAGE;
 
   constructor(
-    protected route: ActivatedRoute,
+    public route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
     protected storeService: ObjectStoreService

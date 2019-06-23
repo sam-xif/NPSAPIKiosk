@@ -17,16 +17,16 @@ import {Observable, Subscriber, Subscription} from "rxjs";
 })
 export class HomePageComponent extends ADataViewComponent {
   title: string = 'nps-kiosk-app';
-  private images: Array<INPSObject>;
-  private selectedState: string = undefined;
-  private stateCodes = STATE_CODES;
+  public images: Array<INPSObject>;
+  public selectedState: string = undefined;
+  public stateCodes = STATE_CODES;
 
   constructor(
-    protected route: ActivatedRoute,
+    public route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
     protected storeService: ObjectStoreService,
-    private stateSelect: StateSelectService
+    public stateSelect: StateSelectService
   ) {
     super(route, router, apiClient, storeService);
   }

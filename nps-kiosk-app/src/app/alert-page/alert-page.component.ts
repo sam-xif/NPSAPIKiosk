@@ -14,13 +14,13 @@ import {ADataViewComponent} from "../DataViewComponent";
   styleUrls: ['./alert-page.component.css']
 })
 export class AlertPageComponent extends ADataViewComponent {
-  private parkCode: string;
-  private alerts: Array<INPSObject>;
+  public parkCode: string;
+  public alerts: Array<INPSObject>;
 
   private noResults: boolean;
 
   constructor(
-    protected route: ActivatedRoute,
+    public route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
     protected storeService: ObjectStoreService

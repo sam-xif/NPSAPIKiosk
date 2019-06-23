@@ -13,14 +13,14 @@ import {ObjectStoreService} from "../services/object-store.service";
   styleUrls: ['./event-page.component.css']
 })
 export class EventPageComponent extends ADataViewComponent {
-  private parkCode: string;
+  public parkCode: string;
 
   private readonly DISPLAY_PROPERTY = NPSDisplayElementType.PROPERTY;
   private readonly DISPLAY_PARAGRAPH = NPSDisplayElementType.SUMMARY;
   private readonly DISPLAY_IMAGE = NPSDisplayElementType.IMAGE;
 
   constructor(
-    protected route: ActivatedRoute,
+    public route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
     protected storeService: ObjectStoreService

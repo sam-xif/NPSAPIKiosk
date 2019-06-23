@@ -14,18 +14,18 @@ import {StateSelectService} from "../services/state-select.service";
   styleUrls: ['./campground-list-page.component.css']
 })
 export class CampgroundListPageComponent extends ADataViewComponent {
-  private parkCode: string;
-  private campgrounds: Array<INPSObject>;
-  private stateCode: string;
-  private waiting: boolean;
-  private noResults: boolean;
+  public parkCode: string;
+  public campgrounds: Array<INPSObject>;
+  public stateCode: string;
+  public waiting: boolean;
+  public noResults: boolean;
 
   constructor(
-    protected route: ActivatedRoute,
+    public route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
     protected storeService: ObjectStoreService,
-    private stateSelect: StateSelectService
+    protected stateSelect: StateSelectService
   ) {
     super(route, router, apiClient, storeService);
   }
