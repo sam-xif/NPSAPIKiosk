@@ -38,6 +38,7 @@ export class ParkPageComponent extends ADataViewComponent {
   onParamMapChange(newMap: ParamMap) {
     let parkCode = newMap.get('parkCode');
     if (parkCode != this.parkCode) {
+      this.parkCode = parkCode;
       this.fetchData();
     }
   }
