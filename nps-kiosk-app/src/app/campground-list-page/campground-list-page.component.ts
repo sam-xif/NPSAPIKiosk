@@ -18,6 +18,7 @@ export class CampgroundListPageComponent extends ADataViewComponent {
   private campgrounds: Array<INPSObject>;
   private stateCode: string;
   private waiting: boolean;
+  private noResults: boolean;
 
   constructor(
     protected route: ActivatedRoute,
@@ -31,6 +32,7 @@ export class CampgroundListPageComponent extends ADataViewComponent {
 
   ngOnInit(): void {
     this.waiting = false;
+    this.noResults = false;
     this.parkCode = this.route.snapshot.paramMap.get('parkCode');
     this.stateCode = this.stateSelect.getState();
 
@@ -99,7 +101,8 @@ export class CampgroundListPageComponent extends ADataViewComponent {
     });
     campgroundsSource.addOnCompletedHandler((snapshot: Array<INPSObject>) => {
       if (snapshot.length == 0) {
-        this.router.navigateByUrl('/page-not-found'); // TODO 
+        this.waiting = false;
+        this.noResults = true;
       }
     });
   }
