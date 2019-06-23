@@ -113,24 +113,26 @@ class BatchNPSDataAccessStrategy extends ANPSDataAccessStrategy {
   }
 
   getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource {
-    let fetchMore = true;
     const dataSource = new NPSDataSource();
-    const promiseArr: Array<Promise<any>> = [];
-    for (let i = 0; i < this.batches && fetchMore; i++) {
-       promiseArr.push(dao.retrieve(this.builder.build(), { 'limit': this.batchSize })
-         .then((results) => {
-           if (results.length === 0) {
-             fetchMore = false;
-           }
-           dataSource.addAll(results);
-         }));
-       this.builder.nextPage();
-    }
-    Promise.all(promiseArr)
-      .then((values) => {
-        dataSource.complete();
-      });
+    (async (dataSource: NPSDataSource) => {
+      let fetchMore = true;
 
+      for (let i = 0; i < this.batches && fetchMore; i++) {
+        let results = await dao.retrieve(this.builder.build(), {'limit': this.batchSize});
+        if (results.length === 0) {
+          fetchMore = false;
+          break;
+        }
+
+        if (fetchMore) {
+          dataSource.addAll(results);
+        }
+
+        this.builder.nextPage();
+      }
+
+      dataSource.complete();
+    })(dataSource);
     return dataSource;
   }
 }
