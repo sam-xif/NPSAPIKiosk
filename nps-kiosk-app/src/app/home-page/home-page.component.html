@@ -16,7 +16,9 @@
         <p>
           First, select your state from this list so that we can provide location-specific data for you:
           <ng-template [ngIf]="!selectedState">
-            <select name="stateFilters" class="custom-select form-control my-2 d-inline w-auto" [(ngModel)]="selectedState">
+            <select name="stateFilters" class="custom-select form-control my-2 d-inline w-auto"
+                    [(ngModel)]="selectedState"
+                    (change)="stateSelect.setState(selectedState)">
               <option *ngFor="let state of stateCodes" value="{{ state }}">{{ state }}</option>
             </select>
           </ng-template>

@@ -6,6 +6,7 @@ import {ObjectStoreService} from "../services/object-store.service";
 import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import {INPSObject} from "../../nps/NPSModel";
+import {StateSelectService} from "../services/state-select.service";
 
 @Component({
   selector: 'app-campground-list-page',
@@ -15,55 +16,69 @@ import {INPSObject} from "../../nps/NPSModel";
 export class CampgroundListPageComponent extends ADataViewComponent {
   private parkCode: string;
   private campgrounds: Array<INPSObject>;
+  private stateCode: string;
 
   constructor(
     protected route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
-    protected storeService: ObjectStoreService
+    protected storeService: ObjectStoreService,
+    private stateSelect: StateSelectService
   ) {
     super(route, router, apiClient, storeService);
   }
 
   ngOnInit(): void {
     this.parkCode = this.route.snapshot.paramMap.get('parkCode');
+    this.stateCode = this.stateSelect.getState();
 
-    if (!this.receivedObject) {
-      let queryBuilder = new NPSAPIQueryBuilder()
-        .addParkCode(this.parkCode)
-        .longText(false)
-        .setLimit(5)
-        .from('parks');
+    if (this.parkCode) {
+      if (!this.receivedObject) {
+        let queryBuilder = new NPSAPIQueryBuilder()
+          .addParkCode(this.parkCode)
+          .longText(false)
+          .setLimit(5)
+          .from('parks');
 
-      let strategy = new NPSDataAccessStrategyBuilder()
-        .use('batch', {
-          queryBuilder: queryBuilder
-        })
-        .build();
+        let strategy = new NPSDataAccessStrategyBuilder()
+          .use('batch', {
+            queryBuilder: queryBuilder
+          })
+          .build();
 
-      let parkSource = this.apiClient.retrieve(queryBuilder.build(), strategy);
-      parkSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
-        if (snapshot.length < 1) {
-          this.router.navigateByUrl('/page-not-found');
-          return;
-        }
+        let parkSource = this.apiClient.retrieve(queryBuilder.build(), strategy);
+        parkSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+          if (snapshot.length < 1) {
+            this.router.navigateByUrl('/page-not-found');
+            return;
+          }
 
-        this.receivedObject = snapshot[0];
-      });
-    } else {
-      this.store(this.receivedObject);
+          this.receivedObject = snapshot[0];
+        });
+      } else {
+        this.store(this.receivedObject);
+      }
+    } else if (!this.stateCode) {
+      this.router.navigateByUrl('/page-not-found');
     }
 
     super.ngOnInit();
   }
 
   fetchData(): void {
-    let queryBuilder = new NPSAPIQueryBuilder();
-    let query = queryBuilder
+    let queryBuilder = new NPSAPIQueryBuilder()
       .from('campgrounds')
-      .addParkCode(this.parkCode)
-      .longText(true)
-      .build();
+      .longText(true);
+    let query;
+    if (this.parkCode) {
+      query = queryBuilder
+        .addParkCode(this.parkCode)
+        .build();
+    } else if (this.stateCode) {
+      query = queryBuilder
+        .addAllStateCodes([this.stateCode])
+        .build();
+    }
 
     let strategyBuilder = new NPSDataAccessStrategyBuilder();
     let strategy = strategyBuilder
