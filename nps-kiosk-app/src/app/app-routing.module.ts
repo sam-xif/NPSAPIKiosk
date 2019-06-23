@@ -17,6 +17,7 @@ const routes: Routes = [
   { path: 'learn/:parkCode', component: ParkLearnPageComponent, pathMatch: 'full' },
 
   { path: 'campground', component: CampgroundPageComponent },
+  { path: 'campgrounds', component: CampgroundListPageComponent, pathMatch: 'full' },
   { path: 'campgrounds/:parkCode', component: CampgroundListPageComponent, pathMatch: 'full' },
 
   { path: 'event', component: EventPageComponent, pathMatch: 'full' },
