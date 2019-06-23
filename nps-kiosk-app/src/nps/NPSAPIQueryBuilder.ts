@@ -5,6 +5,7 @@ import {NPSAPIQuery, NPSAPIQueryOptions} from "./NPSAPIQuery";
  */
 export default class NPSAPIQueryBuilder {
   private parkCodes : Array<string>;
+  private stateCodes : Array<string>;
   private queryString : string;
   private limit : number;
   private start : number;
@@ -22,6 +23,7 @@ export default class NPSAPIQueryBuilder {
    */
   reset() {
     this.parkCodes = [];
+    this.stateCodes = [];
     this.queryString = undefined;
     this.limit = 50;
     this.start = 0;
@@ -58,6 +60,15 @@ export default class NPSAPIQueryBuilder {
     if (!this.parkCodes.includes(parkCode)) {
       this.parkCodes.push(parkCode);
     }
+    return this;
+  }
+
+  addAllStateCodes(stateCodeArr) {
+    stateCodeArr.forEach((parkCode) => {
+      if (!this.stateCodes.includes(parkCode)) {
+        this.stateCodes.push(parkCode);
+      }
+    });
     return this;
   }
 
@@ -133,6 +144,10 @@ export default class NPSAPIQueryBuilder {
 
     if (this.parkCodes.length > 0) {
       params["parkCode"] = this.arrayToCommaDelimitedString(this.parkCodes);
+    }
+
+    if (this.stateCodes.length > 0) {
+      params["stateCode"] = this.arrayToCommaDelimitedString(this.stateCodes);
     }
 
     if (this.fields.length > 0) {
