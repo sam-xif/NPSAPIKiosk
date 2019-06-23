@@ -7,38 +7,40 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-4 col-sm-12">
-          <ng-template [ngIf]="parkAlerts.length > 0">
-            <div class="container my-2">
-              <div class="row">
-                <div class="col">
-                  <h3><a [routerLink]="['/alerts', parkCode]">Active Alerts</a></h3>
+        <ng-template [ngIf]="parkAlerts.length > 0 || parkEvents.length > 0">
+          <div class="col-lg-4 col-sm-12">
+            <ng-template [ngIf]="parkAlerts.length > 0">
+              <div class="container my-2">
+                <div class="row">
+                  <div class="col">
+                    <h3><a [routerLink]="['/alerts', parkCode]">Active Alerts</a></h3>
+                  </div>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  <div class="card-group" *ngFor="let displayElement of parkAlerts">
-                    <div class="card alert-warning my-2 mx-1" (click)="store(park)" [routerLink]="['/alerts', parkCode]">
-                      <div class="card-header"><h4>{{ displayElement.getTitle() }}</h4></div>
-                      <div class="card-body">
-                        <p>
-                          {{ displayElement.getDescription() }}
-                        </p>
-                        <ng-template [ngIf]="displayElement.getUrl() !== undefined && displayElement.getUrl() !== ''">
-                          <a [href]="displayElement.getUrl()">Read more...</a>
-                        </ng-template>
+                <div class="row">
+                  <div class="col">
+                    <div class="card-group" *ngFor="let displayElement of parkAlerts">
+                      <div class="card alert-warning my-2 mx-1" [routerLink]="['/alerts', parkCode]">
+                        <div class="card-header"><h4>{{ displayElement.getTitle() }}</h4></div>
+                        <div class="card-body">
+                          <p>
+                            {{ displayElement.getDescription() }}
+                          </p>
+                          <ng-template [ngIf]="displayElement.getUrl() !== undefined && displayElement.getUrl() !== ''">
+                            <a [href]="displayElement.getUrl()">Read more...</a>
+                          </ng-template>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </ng-template>
-          <ng-template [ngIf]="parkEvents.length > 0">
-            <div class="container my-2">
-              <div class="row">
-                <div class="col">
-                  <h3>Events</h3>
+            </ng-template>
+            <ng-template [ngIf]="parkEvents.length > 0">
+              <div class="container my-2">
+                <div class="row">
+                  <div class="col">
+                    <h3>Events</h3>
+                  </div>
                 </div>
               </div>
               <div class="row">
@@ -56,9 +58,9 @@
                   </div>
                 </div>
               </div>
-            </div>
-          </ng-template>
-        </div>
+            </ng-template>
+          </div>
+        </ng-template>
         <div class="col">
           <div class="container">
             <div class="card-group" *ngFor="let displayElement of park.getDisplayElements()">

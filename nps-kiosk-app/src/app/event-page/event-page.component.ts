@@ -17,6 +17,7 @@ export class EventPageComponent extends ADataViewComponent {
 
   private readonly DISPLAY_PROPERTY = NPSDisplayElementType.PROPERTY;
   private readonly DISPLAY_PARAGRAPH = NPSDisplayElementType.SUMMARY;
+  private readonly DISPLAY_IMAGE = NPSDisplayElementType.IMAGE;
 
   constructor(
     protected route: ActivatedRoute,
