@@ -12,6 +12,7 @@ export default class NPSAPIQueryBuilder {
   private resource : string;
   private options : NPSAPIQueryOptions;
   private fields : Array<string>;
+  private params: object;
 
   constructor() {
     this.reset();
@@ -29,11 +30,12 @@ export default class NPSAPIQueryBuilder {
     this.start = 0;
     this.options = new NPSAPIQueryOptions();
     this.fields = [];
+    this.params = {};
     return this;
   }
 
   longText(long: boolean) {
-    this.options.setLong(true);
+    this.options.setLong(long);
     return this;
   }
 
@@ -135,33 +137,36 @@ export default class NPSAPIQueryBuilder {
     return this;
   }
 
+  set(name, value) {
+    this.params[name] = value;
+    return this;
+  }
+
   /**
    * Builds a new query object based on the current configuration.
    * @return {NPSAPIQuery} The query object
    */
   build() {
-    let params = {};
-
     if (this.parkCodes.length > 0) {
-      params["parkCode"] = this.arrayToCommaDelimitedString(this.parkCodes);
+      this.params["parkCode"] = this.arrayToCommaDelimitedString(this.parkCodes);
     }
 
     if (this.stateCodes.length > 0) {
-      params["stateCode"] = this.arrayToCommaDelimitedString(this.stateCodes);
+      this.params["stateCode"] = this.arrayToCommaDelimitedString(this.stateCodes);
     }
 
     if (this.fields.length > 0) {
-      params["fields"] = this.arrayToCommaDelimitedString(this.fields);
+      this.params["fields"] = this.arrayToCommaDelimitedString(this.fields);
     }
 
-    params["limit"] = this.limit;
-    params["start"] = this.start;
+    this.params["limit"] = this.limit;
+    this.params["start"] = this.start;
 
     if (this.queryString) {
-      params["q"] = this.queryString;
+      this.params["q"] = this.queryString;
     }
 
-    return new NPSAPIQuery(this.resource, params, this.options);
+    return new NPSAPIQuery(this.resource, this.params, this.options);
   }
 
   private arrayToCommaDelimitedString = (items) => {

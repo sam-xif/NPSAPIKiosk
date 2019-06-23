@@ -5,7 +5,7 @@ import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import {INPSObject} from "../../nps/NPSModel";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
-import {ParkStoreService} from "../services/park-store.service";
+import {ObjectStoreService} from "../services/object-store.service";
 import {ADataViewComponent} from "../DataViewComponent";
 
 @Component({
@@ -15,7 +15,6 @@ import {ADataViewComponent} from "../DataViewComponent";
 })
 export class AlertPageComponent extends ADataViewComponent {
   private parkCode: string;
-  private park: INPSObject;
   private alerts: Array<INPSObject>;
 
   private noResults: boolean;
@@ -24,18 +23,16 @@ export class AlertPageComponent extends ADataViewComponent {
     protected route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
-    private parkStore: ParkStoreService
+    protected storeService: ObjectStoreService
   ) {
-    super(route, router, apiClient);
+    super(route, router, apiClient, storeService);
     this.alerts = [];
   }
 
   ngOnInit() {
     this.parkCode = this.route.snapshot.paramMap.get('parkCode');
 
-    if (this.parkStore.hasObject()) {
-      this.park = this.parkStore.getObject();
-    } else {
+    if (!this.receivedObject) {
       let queryBuilder = new NPSAPIQueryBuilder()
         .addParkCode(this.parkCode)
         .longText(false)
@@ -55,15 +52,13 @@ export class AlertPageComponent extends ADataViewComponent {
           return;
         }
 
-        this.park = snapshot[0];
+        this.receivedObject = snapshot[0];
       });
+    } else {
+      this.store(this.receivedObject);
     }
 
     super.ngOnInit();
-  }
-
-  ngOnDestroy(): void {
-    this.paramMapSubscription.unsubscribe();
   }
 
   onParamMapChange(newParamMap: ParamMap) {

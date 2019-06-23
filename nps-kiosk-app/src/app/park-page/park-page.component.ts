@@ -6,7 +6,7 @@ import {NPSAPIClientService} from "../services/npsapiclient.service";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import NPSDataSource from "../../nps/NPSDataSource";
 import {INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
-import {ParkStoreService} from "../services/park-store.service";
+import {ObjectStoreService} from "../services/object-store.service";
 import {ADataViewComponent} from "../DataViewComponent";
 
 @Component({
@@ -31,9 +31,9 @@ export class ParkPageComponent extends ADataViewComponent {
     protected route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
-    private parkStore: ParkStoreService
+    protected storeService: ObjectStoreService
   ) {
-    super(route, router, apiClient);
+    super(route, router, apiClient, storeService);
     this.park = undefined;
     this.parkAlerts = [];
     this.parkEvents = [];
@@ -49,29 +49,33 @@ export class ParkPageComponent extends ADataViewComponent {
 
   fetchData() {
     let queryBuilder = new NPSAPIQueryBuilder();
-
-    let query = queryBuilder
-      .from('parks')
-      .includeField('images')
-      .addParkCode(this.parkCode)
-      .longText(true)
-      .build();
-
     let strategy = new NPSDataAccessStrategyBuilder()
       .use('default')
       .build();
 
-    let parkSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
-    parkSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
-      if (snapshot.length < 1) {
-        //this.router.navigateByUrl('/page-not-found');
-      }
+    if (!this.receivedObject) {
+      let query = queryBuilder
+        .from('parks')
+        .includeField('images')
+        .addParkCode(this.parkCode)
+        .longText(true)
+        .build();
 
-      this.park = snapshot[0];
-      this.parkStore.setObject(this.park);
-    });
+      let parkSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
+      parkSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+        if (snapshot.length < 1) {
+          //this.router.navigateByUrl('/page-not-found');
+        }
 
-    query = queryBuilder
+        this.park = snapshot[0];
+        this.store(this.park);
+      });
+
+    } else {
+      this.park = this.receivedObject;
+    }
+
+    let query = queryBuilder
       .reset()
       .from('alerts')
       .addParkCode(this.parkCode)
@@ -88,8 +92,8 @@ export class ParkPageComponent extends ADataViewComponent {
       .reset()
       .from('events')
       .addParkCode(this.parkCode)
-      .longText(false)
-      .setLimit(5)
+      .longText(true)
+      .set('pagesize', 5)
       .build();
 
     console.log(query);
@@ -98,6 +102,6 @@ export class ParkPageComponent extends ADataViewComponent {
     eventsSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
       console.log(snapshot);
       this.parkEvents = snapshot;
-    })
+    });
   }
 }

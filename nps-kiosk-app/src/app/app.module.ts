@@ -11,9 +11,10 @@ import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SearchPageComponent } from './search-page/search-page.component';
 import { AlertPageComponent } from './alert-page/alert-page.component';
-import {ParkStoreService} from "./services/park-store.service";
+import {ObjectStoreService} from "./services/object-store.service";
 import {CommonModule} from "@angular/common";
 import {EscapeHtmlPipe} from "./pipes/keep-html.pipe";
+import { EventPageComponent } from './event-page/event-page.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import {EscapeHtmlPipe} from "./pipes/keep-html.pipe";
     PageNotFoundComponent,
     SearchPageComponent,
     AlertPageComponent,
-    EscapeHtmlPipe
+    EscapeHtmlPipe,
+    EventPageComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +34,7 @@ import {EscapeHtmlPipe} from "./pipes/keep-html.pipe";
     FormsModule,
     AppRoutingModule
   ],
-  providers: [ WindowRefService, NPSModelDAOProviderService, ParkStoreService ],
+  providers: [ WindowRefService, NPSModelDAOProviderService, ObjectStoreService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }

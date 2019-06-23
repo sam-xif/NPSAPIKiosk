@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ParkStoreService } from './park-store.service';
+import { ObjectStoreService } from './object-store.service';
 
-describe('ParkStoreService', () => {
+describe('ObjectStoreService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ParkStoreService = TestBed.get(ParkStoreService);
+    const service: ObjectStoreService = TestBed.get(ObjectStoreService);
     expect(service).toBeTruthy();
   });
 });
