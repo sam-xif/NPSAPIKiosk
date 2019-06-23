@@ -6,6 +6,7 @@ import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import {ADataViewComponent} from "../DataViewComponent";
 import {ObjectStoreService} from "../services/object-store.service";
+import {STATE_CODES} from "../../nps/Constants";
 
 @Component({
   selector: 'app-home-page',
@@ -16,6 +17,8 @@ export class HomePageComponent extends ADataViewComponent {
   title: string = 'nps-kiosk-app';
   private images: Array<INPSObject>;
   private activeSet: boolean;
+  private selectedState: string = undefined;
+  private stateCodes = STATE_CODES;
 
   constructor(
     protected route: ActivatedRoute,

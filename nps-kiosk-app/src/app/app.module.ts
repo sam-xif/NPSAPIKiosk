@@ -18,6 +18,7 @@ import { EventPageComponent } from './event-page/event-page.component';
 import { CampgroundPageComponent } from './campground-page/campground-page.component';
 import { CampgroundListPageComponent } from './campground-list-page/campground-list-page.component';
 import { ParkLearnPageComponent } from './park-learn-page/park-learn-page.component';
+import {StateSelectService} from "./services/state-select.service";
 
 
 @NgModule({
@@ -40,7 +41,7 @@ import { ParkLearnPageComponent } from './park-learn-page/park-learn-page.compon
     FormsModule,
     AppRoutingModule
   ],
-  providers: [ WindowRefService, NPSModelDAOProviderService, ObjectStoreService ],
+  providers: [ WindowRefService, NPSModelDAOProviderService, ObjectStoreService, StateSelectService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
