@@ -17,3 +17,6 @@ cd nps-api-kiosk
 ng serve
 ```
 The first command cd's into the root of the Angular project, the second command starts the local server.
+
+## Known Bugs
+* When the search form is fiddled with too quickly, sometimes wrong results appear. Unfortunately, I didn't have enough time to fix this before submitting to the MindSumo challenge.
