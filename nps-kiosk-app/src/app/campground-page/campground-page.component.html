@@ -1,22 +1,37 @@
 <section role="main">
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        {{ receivedObject.getTitle() }}
+  <div class="container py-2">
+    <div class="row pt-2">
+      <div class="col text-center">
+        <h1 [innerHTML]="receivedObject.getTitle()"></h1>
       </div>
     </div>
     <div class="row">
       <div class="col">
-        <div class="container" *ngFor="let displayElement of receivedObject.getDisplayElements()">
-          <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PARAGRAPH">
-            <div class="row">
-              <div class="col">
-                <div class="card">
-                  <h2 class="card-header" [innerHTML]="displayElement.getTitle()"></h2>
-                </div>
-              </div>
+        <p [innerHTML]="receivedObject.getDescription() | keepHtml"></p>
+        <a *ngIf="receivedObject.getUrl()" href="{{ receivedObject.getUrl() }}">more...</a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h2>Amenities</h2>
+        <p *ngFor="let displayElement of receivedObject.getDisplayElements() | callback: selectProperties">
+          <strong [innerHTML]="displayElement.getTitle() | keepHtml"></strong>
+          <span class="pl-3" [innerHTML]="displayElement.getDescription() | keepHtml"></span>
+        </p>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <div class="card-deck">
+          <div class="card" *ngFor="let displayElement of receivedObject.getDisplayElements() | callback: selectParagraphs">
+            <div class="card-header">
+              <h4 class="card-title" [innerHTML]="displayElement.getTitle() | keepHtml"></h4>
             </div>
-          </ng-template>
+            <div class="card-body">
+              <p [innerHTML]="displayElement.getDescription() | keepHtml"></p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

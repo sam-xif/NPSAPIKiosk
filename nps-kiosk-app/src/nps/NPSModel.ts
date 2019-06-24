@@ -1,5 +1,6 @@
 /**
  * Definitions for JavaScript class representations of data objects provided by the NPS API.
+ * Essentially an ORM.
  */
 import {NPSAPIQueryOptions} from "./NPSAPIQuery";
 import {INPSResourceDescription, NPSResourceDescriptionBuilder} from "./NPSResourceDescription";
@@ -172,6 +173,8 @@ abstract class ANPSObject implements INPSDisplayElement {
         return new NPSPerson(data, config);
       case 'places':
         return new NPSPlace(data, config);
+      case 'visitorcenters':
+        return new NPSVisitorCenter(data, config);
       default:
         throw new Error('Unsupported resource');
     }
@@ -397,6 +400,7 @@ class NPSEvent extends ANPSObject {
 
 class NPSCampground extends ANPSObject {
   private displayElements: Array<INPSDisplayElement>;
+  private amenities: INPSObject;
   private id: string;
 
   constructor(source, config: NPSAPIQueryOptions) {
@@ -406,20 +410,31 @@ class NPSCampground extends ANPSObject {
 
     if (this.config.getLong()) {
       if (this.sourceHas('regulationsoverview')) {
-        this.displayElements.push(new NPSDisplayParagraph('Regulations Overview', this.sourceData['regulationsoverview'],
+        this.displayElements.push(new NPSDisplayParagraph('Regulations Overview',
+          this.sourceData['regulationsoverview'],
           this.sourceData['regulationsurl'] === '' ? undefined : this.sourceData['regulationsurl']));
       }
 
       if (this.sourceHas('weatheroverview')) {
-        this.displayElements.push(new NPSDisplayParagraph('Weather Overview', this.sourceData['weatheroverview'], undefined));
+        this.displayElements.push(new NPSDisplayParagraph('Weather Overview',
+          this.sourceData['weatheroverview'],
+          undefined));
       }
 
       if (this.sourceHas('directionsoverview')) {
         this.displayElements.push(new NPSDisplayParagraph('Directions Overview', this.sourceData['directionsoverview'],
           this.sourceData['directionsurl'] === '' ? undefined : this.sourceData['directionsurl']));
       }
+
+      if (this.sourceHas('amenities')) {
+        this.amenities = new NPSCampgroundAmenities(this.sourceData['amenities'], config);
+
+        // Concat all the properties from NPSCampgroundAmenities
+        this.displayElements = this.displayElements.concat(this.amenities.getDisplayElements());
+      }
     }
   }
+
   getDisplayElementType(): NPSDisplayElementType {
     return NPSDisplayElementType.SUMMARY;
   }
@@ -430,6 +445,147 @@ class NPSCampground extends ANPSObject {
 
   getUniqueId(): string {
     return this.id;
+  }
+}
+
+class NPSCampgroundAmenities extends ANPSObject {
+  private displayElements: Array<INPSDisplayElement>;
+
+  constructor(source, config: NPSAPIQueryOptions) {
+    super('Amenities', 'campground amenities', undefined, undefined, source, config);
+    this.displayElements = [];
+
+    if (this.sourceHas('trashrecyclingcollection')) {
+      this.displayElements.push(new NPSDisplayProperty('Trash and Recycling Collection?',
+        this.sourceData['trashrecyclingcollection']));
+    }
+
+    if (this.sourceHas('toilets')) {
+      this.displayElements.push(new NPSDisplayProperty('Toilets?',
+        this.arrayToCommaDelimitedString(this.sourceData['toilets'])));
+    }
+
+    if (this.sourceHas('internetconnectivity')) {
+      this.displayElements.push(new NPSDisplayProperty('Internet Connectivity?',
+        this.sourceData['internetconnectivity']));
+    }
+
+    if (this.sourceHas('showers')) {
+      this.displayElements.push(new NPSDisplayProperty('Showers?',
+        this.arrayToCommaDelimitedString(this.sourceData['showers'])));
+    }
+
+    if (this.sourceHas('cellphonereception')) {
+      this.displayElements.push(new NPSDisplayProperty('Cell Phone Reception?',
+        this.sourceData['cellphonereception']));
+    }
+
+    if (this.sourceHas('laundry')) {
+      this.displayElements.push(new NPSDisplayProperty('Laundry?',
+        this.sourceData['laundry']));
+    }
+
+    if (this.sourceHas('amphitheater')) {
+      this.displayElements.push(new NPSDisplayProperty('Amphitheater?',
+        this.sourceData['amphitheater']));
+    }
+
+    if (this.sourceHas('dumpstation')) {
+      this.displayElements.push(new NPSDisplayProperty('Dump Station?',
+        this.sourceData['dumpstation']));
+    }
+
+    if (this.sourceHas('campstore')) {
+      this.displayElements.push(new NPSDisplayProperty('Camp Store?',
+        this.sourceData['campstore']));
+    }
+
+    if (this.sourceHas('stafforvolunteerhostonsite')) {
+      this.displayElements.push(new NPSDisplayProperty('Staff or Volunteer Host on Site?',
+        this.sourceData['stafforvolunteerhostonsite']));
+    }
+
+    if (this.sourceHas('potablewater')) {
+      this.displayElements.push(new NPSDisplayProperty('Potable Water?',
+        this.arrayToCommaDelimitedString(this.sourceData['potablewater'])));
+    }
+
+    if (this.sourceHas('iceavailableforsale')) {
+      this.displayElements.push(new NPSDisplayProperty('Ice Available for Sale?',
+        this.sourceData['iceavailableforsale']));
+    }
+
+    if (this.sourceHas('firewoodforsale')) {
+      this.displayElements.push(new NPSDisplayProperty('Firewood for Sale?',
+        this.sourceData['firewoodforsale']));
+    }
+
+    if (this.sourceHas('ampitheater')) {
+      this.displayElements.push(new NPSDisplayProperty('Ampitheater?',
+        this.sourceData['ampitheater']));
+    }
+
+    if (this.sourceHas('foodstoragelockers')) {
+      this.displayElements.push(new NPSDisplayProperty('Food Storage Lockers?',
+        this.sourceData['foodstoragelockers']));
+    }
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.PROPERTY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return this.displayElements;
+  }
+
+  getUniqueId(): string {
+    throw new Error("Unsupported operation: Cannot get unique ID of NPSCampgroundAmenities");
+  }
+
+  // Same as from NPSAPIQueryBuilder
+  private arrayToCommaDelimitedString = (items) => {
+    let out = "";
+    for (let i = 0; i < items.length; i++) {
+      if (i < items.length - 1) {
+        out += items[i] + ",";
+      } else {
+        out += items[i];
+      }
+    }
+    return out;
+  };
+}
+
+class NPSVisitorCenter extends ANPSObject {
+  private displayElements: Array<INPSDisplayElement>;
+  private id: string;
+
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.name, source.description, source.url, 'visitorcenters', source, config);
+    this.id = source.id;
+    this.displayElements = [];
+
+    if (this.config.getLong()) {
+      if (this.sourceHas('directionsInfo')) {
+        this.displayElements.push(new NPSDisplayParagraph(
+          'Directions Info', this.sourceData['directionsInfo'],
+          this.sourceData['directionsUrl'] == '' ? undefined : this.sourceData['directionsUrl']
+        ));
+      }
+    }
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.SUMMARY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return this.displayElements;
+  }
+
+  getUniqueId(): string {
+    return "";
   }
 }
 

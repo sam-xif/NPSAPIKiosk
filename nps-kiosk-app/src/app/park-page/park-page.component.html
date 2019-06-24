@@ -3,7 +3,7 @@
     <div class="container my-2">
       <div class="row">
         <div class="col text-center">
-          <h1>{{ park.getTitle() }}</h1>
+          <h1 [innerHTML]="park.getTitle() | keepHtml"></h1>
         </div>
       </div>
       <div class="row">

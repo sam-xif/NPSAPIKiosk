@@ -1,5 +1,5 @@
 <section role="main">
-  <div class="container">
+  <div class="container py-2">
     <div class="row">
       <div class="col text-center">
         <h1>
@@ -26,7 +26,7 @@
         <ng-template [ngIf]="selectedState">
           <p>
             You have selected <strong>{{ selectedState }}</strong> as your state.
-            <button class="btn btn-outline-primary" (click)="selectedState = undefined">Change</button>
+            <button class="btn btn-outline-primary" (click)="selectedState = undefined;stateSelect.clearState()">Change</button>
           </p>
         </ng-template>
         <p>
