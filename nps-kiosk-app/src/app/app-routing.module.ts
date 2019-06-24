@@ -11,6 +11,7 @@ import {CampgroundPageComponent} from "./campground-page/campground-page.compone
 import {CampgroundListPageComponent} from "./campground-list-page/campground-list-page.component";
 import {ParkLearnPageComponent} from "./park-learn-page/park-learn-page.component";
 import {VisitorCenterListComponent} from "./visitor-center-list/visitor-center-list.component";
+import {ArticlesListComponent} from "./articles-list/articles-list.component";
 
 const routes: Routes = [
   { path: 'parks/:parkCode', component: ParkPageComponent, pathMatch: 'full' },
@@ -23,6 +24,8 @@ const routes: Routes = [
 
   { path: 'visitorcenters', component: VisitorCenterListComponent, pathMatch: 'full' },
   { path: 'visitorcenters/:parkCode', component: VisitorCenterListComponent, pathMatch: 'full' },
+
+  { path: 'articles/:parkCode', component: ArticlesListComponent, pathMatch: 'full' },
 
   { path: 'event', component: EventPageComponent, pathMatch: 'full' },
 

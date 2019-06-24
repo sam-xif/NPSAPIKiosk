@@ -97,9 +97,11 @@
               </div>
             </div>
             <ng-template [ngIf]="parkArticles.length > 0">
+              <hr>
               <div class="row">
                 <div class="col">
                   <h1>Articles</h1>
+                  <p><a [routerLink]="['/articles', parkCode]">more...</a></p>
                 </div>
               </div>
               <div class="row">
@@ -119,6 +121,7 @@
               </div>
             </ng-template>
             <ng-template [ngIf]="parkNewsReleases.length > 0">
+              <hr>
               <div class="row">
                 <div class="col">
                   <h1>News Releases</h1>
@@ -140,6 +143,7 @@
                 </div>
               </div>
             </ng-template>
+            <hr>
             <div class="row">
               <div class="col">
                 <h1>Gallery</h1>
