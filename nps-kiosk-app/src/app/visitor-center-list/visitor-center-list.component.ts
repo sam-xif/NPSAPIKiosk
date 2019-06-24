@@ -3,40 +3,39 @@ import {ADataViewComponent} from "../DataViewComponent";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
 import {ObjectStoreService} from "../services/object-store.service";
+import {StateSelectService} from "../services/state-select.service";
+import {INPSObject} from "../../nps/NPSModel";
 import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
-import {INPSObject} from "../../nps/NPSModel";
-import {StateSelectService} from "../services/state-select.service";
 
 @Component({
-  selector: 'app-campground-list-page',
-  templateUrl: './campground-list-page.component.html',
-  styleUrls: ['./campground-list-page.component.css']
+  selector: 'app-visitor-center-list',
+  templateUrl: './visitor-center-list.component.html',
+  styleUrls: ['./visitor-center-list.component.css']
 })
-export class CampgroundListPageComponent extends ADataViewComponent {
-  public parkCode: string;
-  public campgrounds: Array<INPSObject>;
+export class VisitorCenterListComponent extends ADataViewComponent {
   public stateCode: string;
-  public waiting: boolean;
-  public noResults: boolean;
+  public parkCode: string;
+  public visitorCenters: Array<INPSObject>;
+  public visitorCentersCompleted: boolean;
 
   constructor(
-    public route: ActivatedRoute,
+    protected route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
     protected storeService: ObjectStoreService,
-    protected stateSelect: StateSelectService
+    private stateSelect: StateSelectService
   ) {
     super(route, router, apiClient, storeService);
   }
 
   ngOnInit(): void {
-    this.waiting = false;
-    this.noResults = false;
-    this.campgrounds = [];
+    this.visitorCenters = [];
+    this.visitorCentersCompleted = false;
     this.parkCode = this.route.snapshot.paramMap.get('parkCode');
     this.stateCode = this.stateSelect.getState();
 
+    // TODO: This code is largely the same as the campground-list code; another abstraction layer could likely be made
     if (this.parkCode) {
       if (!this.receivedObject) {
         let queryBuilder = new NPSAPIQueryBuilder()
@@ -65,7 +64,7 @@ export class CampgroundListPageComponent extends ADataViewComponent {
       }
     } else if (!this.stateCode) {
       console.log(this.route.parent);
-      alert("To view campgrounds, you must select a state or park");
+      alert("To view visitor centers, you must select a state or park");
       this.router.navigate(['.'], {
         relativeTo: this.route.parent
       });
@@ -75,9 +74,8 @@ export class CampgroundListPageComponent extends ADataViewComponent {
   }
 
   fetchData(): void {
-    this.waiting = true;
     let queryBuilder = new NPSAPIQueryBuilder()
-      .from('campgrounds')
+      .from('visitorcenters')
       .useLongForm(true);
     let query;
     if (this.parkCode) {
@@ -97,18 +95,13 @@ export class CampgroundListPageComponent extends ADataViewComponent {
       })
       .build();
 
-    let campgroundsSource = this.apiClient.retrieve(query, strategy);
-    campgroundsSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
-      if (snapshot.length > 0) {
-        this.waiting = false;
-      }
-      this.campgrounds = snapshot;
+    let visitorCentersSource = this.apiClient.retrieve(query, strategy);
+    visitorCentersSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+      console.log(snapshot);
+      this.visitorCenters = snapshot;
     });
-    campgroundsSource.addOnCompletedHandler((snapshot: Array<INPSObject>) => {
-      if (snapshot.length == 0) {
-        this.waiting = false;
-        this.noResults = true;
-      }
+    visitorCentersSource.addOnCompletedHandler((snapshot: Array<INPSObject>) => {
+      this.visitorCentersCompleted = true;
     });
   }
 
@@ -119,4 +112,5 @@ export class CampgroundListPageComponent extends ADataViewComponent {
       this.fetchData();
     }
   }
+
 }

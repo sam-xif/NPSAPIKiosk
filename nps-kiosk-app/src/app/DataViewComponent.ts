@@ -3,7 +3,7 @@ import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {NPSAPIClientService} from "./services/npsapiclient.service";
 import {Observable, Subscription} from "rxjs";
 import {ObjectStoreService} from "./services/object-store.service";
-import {INPSObject} from "../nps/NPSModel";
+import {INPSDisplayElement, INPSObject, NPSDisplayElementType} from "../nps/NPSModel";
 
 /**
  *
@@ -52,6 +52,18 @@ export abstract class ADataViewComponent implements IDataViewComponent {
 
   store(obj: INPSObject) {
     this.storeService.push(obj);
+  }
+
+  selectParagraphs(obj: INPSDisplayElement) {
+    return obj.getDisplayElementType() === NPSDisplayElementType.SUMMARY;
+  }
+
+  selectProperties(obj: INPSDisplayElement) {
+    return obj.getDisplayElementType() === NPSDisplayElementType.PROPERTY;
+  }
+
+  selectImages(obj: INPSDisplayElement) {
+    return obj.getDisplayElementType() === NPSDisplayElementType.IMAGE;
   }
 }
 

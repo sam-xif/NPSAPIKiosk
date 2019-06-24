@@ -1,0 +1,43 @@
+<section role="main">
+  <div class="container py-2">
+    <div class="row">
+      <div class="col text-center">
+        <h1 class="mt-2">Visitor Centers in
+          <ng-template [ngIf]="receivedObject"><a [routerLink]="['/parks', parkCode]">{{ receivedObject.getTitle() }}</a></ng-template>
+          <ng-template [ngIf]="!receivedObject && stateCode">{{ stateCode }}</ng-template>
+        </h1>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <ng-template [ngIf]="visitorCentersCompleted && visitorCenters.length == 0">
+          <div class="d-flex justify-content-center w-100">
+            <p class="alert alert-danger flex-shrink-1" role="alert">No visitor centers were found</p>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="visitorCentersCompleted && visitorCenters.length > 0">
+          <div class="card-columns">
+            <div class="card" *ngFor="let visitorCenter of visitorCenters">
+              <div class="card-header">
+                <h4 [innerHTML]="visitorCenter.getTitle()"></h4>
+              </div>
+              <div class="card-body">
+                <p [innerHTML]="visitorCenter.getDescription() | keepHtml"></p>
+              </div>
+              <div *ngFor="let displayElement of visitorCenter.getDisplayElements()">
+                <div class="card-body">
+                  <h5 [innerHTML]="displayElement.getTitle()"></h5>
+                  <p [innerHTML]="displayElement.getDescription() | keepHtml"></p>
+                </div>
+              </div>
+              <div class="card-body">
+                <a class="card-link" [href]="visitorCenter.getUrl()">View on NPS</a>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</section>

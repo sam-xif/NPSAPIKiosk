@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row pt-2">
       <div class="col text-center">
-        <ng-template [ngIf]="park"><h1>{{ park.getTitle() }}</h1></ng-template>
+        <ng-template [ngIf]="park"><h1 [innerHTML]="park.getTitle() | keepHtml"></h1></ng-template>
       </div>
     </div>
     <div class="row">
@@ -19,6 +19,13 @@
     <div class="row">
       <div class="col">
         <!-- lesson plans -->
+        <ng-template [ngIf]="lessonPlansCompleted == true && lessonPlans.length == 0">
+          <div class="d-flex justify-content-center">
+            <div class="alert alert-danger flex-shrink-1">
+              <h4>No lesson plans to show for this park</h4>
+            </div>
+          </div>
+        </ng-template>
         <div class="card-columns py-2" >
           <div class="card" *ngFor="let lessonPlan of lessonPlans">
             <div class="card-header">
@@ -46,6 +53,13 @@
     <div class="row">
       <div class="col">
         <!-- people -->
+        <ng-template [ngIf]="peopleCompleted == true && people.length == 0">
+          <div class="d-flex justify-content-center">
+            <div class="alert alert-danger flex-shrink-1">
+              <h4>No people to show for this park</h4>
+            </div>
+          </div>
+        </ng-template>
         <div class="card-columns py-2" >
           <div class="card" *ngFor="let person of people">
             <div class="card-header">
@@ -77,6 +91,13 @@
     <div class="row">
       <div class="col">
         <!-- places -->
+        <ng-template [ngIf]="placesCompleted == true && places.length == 0">
+          <div class="d-flex justify-content-center">
+            <div class="alert alert-danger flex-shrink-1">
+              <h4>No places to show for this park</h4>
+            </div>
+          </div>
+        </ng-template>
         <div class="card-columns py-2" >
           <div class="card" *ngFor="let place of places">
             <div class="card-header">

@@ -18,8 +18,13 @@ export class ParkLearnPageComponent extends ADataViewComponent {
   public park: INPSObject;
 
   public lessonPlans: Array<INPSObject>;
+  public lessonPlansCompleted: boolean;
+
   public people: Array<INPSObject>;
+  public peopleCompleted: boolean;
+
   public places: Array<INPSObject>;
+  public placesCompleted: boolean;
 
   // TODO: Move these enum values into the abstract class so all components have access to them
   private readonly DISPLAY_PROPERTY = NPSDisplayElementType.PROPERTY;
@@ -35,6 +40,10 @@ export class ParkLearnPageComponent extends ADataViewComponent {
     this.lessonPlans = [];
     this.people = [];
     this.places = [];
+
+    this.lessonPlansCompleted = false;
+    this.peopleCompleted = false;
+    this.placesCompleted = false;
   }
 
   ngOnInit(): void {
@@ -99,6 +108,8 @@ export class ParkLearnPageComponent extends ADataViewComponent {
       if (snapshot.length == 0) {
         // TODO Trigger nothing to show alert
       }
+
+      this.lessonPlansCompleted = true;
     });
 
     queryBuilder = new NPSAPIQueryBuilder();
@@ -122,6 +133,8 @@ export class ParkLearnPageComponent extends ADataViewComponent {
       if (snapshot.length == 0) {
         // TODO Trigger nothing to show alert
       }
+
+      this.peopleCompleted = true;
     });
 
     queryBuilder = new NPSAPIQueryBuilder();
@@ -145,7 +158,10 @@ export class ParkLearnPageComponent extends ADataViewComponent {
     placesSource.addOnCompletedHandler((snapshot: Array<INPSObject>) => {
       if (snapshot.length == 0) {
         // TODO Trigger nothing to show alert
+
       }
+
+      this.placesCompleted = true;
     });
   }
 

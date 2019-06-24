@@ -19,6 +19,8 @@ import { CampgroundPageComponent } from './campground-page/campground-page.compo
 import { CampgroundListPageComponent } from './campground-list-page/campground-list-page.component';
 import { ParkLearnPageComponent } from './park-learn-page/park-learn-page.component';
 import {StateSelectService} from "./services/state-select.service";
+import {CallbackPipe} from "./pipes/callback.pipe";
+import { VisitorCenterListComponent } from './visitor-center-list/visitor-center-list.component';
 
 
 @NgModule({
@@ -30,10 +32,12 @@ import {StateSelectService} from "./services/state-select.service";
     SearchPageComponent,
     AlertPageComponent,
     EscapeHtmlPipe,
+    CallbackPipe,
     EventPageComponent,
     CampgroundPageComponent,
     CampgroundListPageComponent,
-    ParkLearnPageComponent
+    ParkLearnPageComponent,
+    VisitorCenterListComponent
   ],
   imports: [
     BrowserModule,
