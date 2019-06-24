@@ -175,6 +175,8 @@ abstract class ANPSObject implements INPSDisplayElement {
         return new NPSPlace(data, config);
       case 'visitorcenters':
         return new NPSVisitorCenter(data, config);
+      case 'articles':
+        return new NPSArticle(data, config);
       default:
         throw new Error('Unsupported resource');
     }
@@ -269,9 +271,6 @@ class NPSPark extends ANPSObject {
   }
 }
 
-/**
- *
- */
 class NPSNewsRelease extends ANPSObject {
   constructor(source, config: NPSAPIQueryOptions) {
     super(source.title, source.abstract, source.url, 'newsreleases', source, config);
@@ -556,12 +555,6 @@ class NPSCampgroundAmenities extends ANPSObject {
     return out;
   };
 }
-/*
-class NPSVisitorCenter extends ANPSObject {
-  constructor(source, config: NPSAPIQueryOptions) {
-
-  }
-}*/
 
 class NPSVisitorCenter extends ANPSObject {
   private displayElements: Array<INPSDisplayElement>;
@@ -665,6 +658,37 @@ class NPSPlace extends ANPSObject {
 
   constructor(source, config: NPSAPIQueryOptions) {
     super(source.title, source.listingdescription, source.url, 'places', source, config);
+    this.id = source.id;
+    this.displayElements = [];
+
+    if (this.config.getLong()) {
+      if (this.sourceHas('listingimage')) {
+        if (this.sourceData['listingimage']['url'] != '') {
+          this.displayElements.push(new NPSImage(this.sourceData['listingimage'], this.config));
+        }
+      }
+    }
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.SUMMARY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return this.displayElements;
+  }
+
+  getUniqueId(): string {
+    return this.id;
+  }
+}
+
+class NPSArticle extends ANPSObject {
+  private displayElements: Array<INPSDisplayElement>;
+  private id: string;
+
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.title, source.listingdescription, source.url, 'articles', source, config);
     this.id = source.id;
     this.displayElements = [];
 

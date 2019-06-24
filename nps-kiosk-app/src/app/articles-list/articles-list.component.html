@@ -1,0 +1,41 @@
+<section role="main">
+  <div class="container py-2">
+    <div class="row">
+      <div class="col text-center">
+        <h1 class="mt-2">Articles about
+          <ng-template [ngIf]="receivedObject"><a [routerLink]="['/parks', parkCode]">{{ receivedObject.getTitle() }}</a></ng-template>
+          <ng-template [ngIf]="!receivedObject && stateCode">{{ stateCode }}</ng-template>
+        </h1>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col">
+        <ng-template [ngIf]="articlesCompleted && articles.length == 0">
+          <div class="d-flex justify-content-center w-100">
+            <p class="alert alert-danger flex-shrink-1" role="alert">No articles were found</p>
+          </div>
+        </ng-template>
+        <ng-template [ngIf]="articlesCompleted && articles.length > 0">
+          <div class="card-columns">
+            <div class="card" *ngFor="let article of articles">
+              <div class="card-header">
+                <h4 [innerHTML]="article.getTitle()"></h4>
+              </div>
+              <div class="card-body">
+                <p [innerHTML]="article.getDescription() | keepHtml"></p>
+              </div>
+              <div class="card-body">
+                <a class="card-link" [href]="article.getUrl()">View on NPS</a>
+              </div>
+              <ng-template [ngIf]="article.getDisplayElements().length > 0
+             && article.getDisplayElements()[0].getDisplayElementType() == DISPLAY_IMAGE">
+                <img class="card-img-bottom" src="{{ article.getDisplayElements()[0].getUrl() }}" />
+              </ng-template>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</section>

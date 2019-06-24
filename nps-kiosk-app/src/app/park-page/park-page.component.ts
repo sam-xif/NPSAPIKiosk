@@ -21,6 +21,8 @@ export class ParkPageComponent extends ADataViewComponent {
   // Sub-information about the park
   public parkAlerts: Array<INPSObject>;
   public parkEvents: Array<INPSObject>;
+  public parkArticles: Array<INPSObject>;
+  public parkNewsReleases: Array<INPSObject>;
 
   // NPS Display Element Type bindings for use in the view
   private readonly DISPLAY_IMAGE = NPSDisplayElementType.IMAGE;
@@ -37,6 +39,8 @@ export class ParkPageComponent extends ADataViewComponent {
     this.park = undefined;
     this.parkAlerts = [];
     this.parkEvents = [];
+    this.parkArticles = [];
+    this.parkNewsReleases = [];
   }
 
   onParamMapChange(newMap: ParamMap) {
@@ -97,12 +101,38 @@ export class ParkPageComponent extends ADataViewComponent {
       .includeField('images')
       .build();
 
-    console.log(query);
-
     let eventsSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
     eventsSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
-      console.log(snapshot);
       this.parkEvents = snapshot;
+    });
+
+    query = queryBuilder
+      .reset()
+      .from('articles')
+      .addParkCode(this.parkCode)
+      .useLongForm(true)
+      .includeField('images')
+      .setLimit(5)
+      .build();
+
+    let articlesSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
+    articlesSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+      this.parkArticles = snapshot;
+    });
+
+    query = queryBuilder
+      .reset()
+      .from('newsreleases')
+      .addParkCode(this.parkCode)
+      .useLongForm(true)
+      .includeField('images')
+      .setLimit(5)
+      .build();
+
+    let newsReleasesSource: NPSDataSource = this.apiClient.retrieve(query, strategy);
+    newsReleasesSource.addOnUpdateHandler((snapshot: Array<INPSObject>) => {
+      console.log("Articles");
+      this.parkNewsReleases = snapshot;
     });
   }
 }
