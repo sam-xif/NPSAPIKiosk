@@ -10,6 +10,7 @@ import {EventPageComponent} from "./event-page/event-page.component";
 import {CampgroundPageComponent} from "./campground-page/campground-page.component";
 import {CampgroundListPageComponent} from "./campground-list-page/campground-list-page.component";
 import {ParkLearnPageComponent} from "./park-learn-page/park-learn-page.component";
+import {VisitorCenterListComponent} from "./visitor-center-list/visitor-center-list.component";
 
 const routes: Routes = [
   { path: 'parks/:parkCode', component: ParkPageComponent, pathMatch: 'full' },
@@ -19,6 +20,9 @@ const routes: Routes = [
   { path: 'campground', component: CampgroundPageComponent },
   { path: 'campgrounds', component: CampgroundListPageComponent, pathMatch: 'full' },
   { path: 'campgrounds/:parkCode', component: CampgroundListPageComponent, pathMatch: 'full' },
+
+  { path: 'visitorcenters', component: VisitorCenterListComponent, pathMatch: 'full' },
+  { path: 'visitorcenters/:parkCode', component: VisitorCenterListComponent, pathMatch: 'full' },
 
   { path: 'event', component: EventPageComponent, pathMatch: 'full' },
 

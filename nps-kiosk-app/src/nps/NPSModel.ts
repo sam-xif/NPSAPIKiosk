@@ -173,6 +173,8 @@ abstract class ANPSObject implements INPSDisplayElement {
         return new NPSPerson(data, config);
       case 'places':
         return new NPSPlace(data, config);
+      case 'visitorcenters':
+        return new NPSVisitorCenter(data, config);
       default:
         throw new Error('Unsupported resource');
     }
@@ -553,6 +555,38 @@ class NPSCampgroundAmenities extends ANPSObject {
     }
     return out;
   };
+}
+
+class NPSVisitorCenter extends ANPSObject {
+  private displayElements: Array<INPSDisplayElement>;
+  private id: string;
+
+  constructor(source, config: NPSAPIQueryOptions) {
+    super(source.name, source.description, source.url, 'visitorcenters', source, config);
+    this.id = source.id;
+    this.displayElements = [];
+
+    if (this.config.getLong()) {
+      if (this.sourceHas('directionsInfo')) {
+        this.displayElements.push(new NPSDisplayParagraph(
+          'Directions Info', this.sourceData['directionsInfo'],
+          this.sourceData['directionsUrl'] == '' ? undefined : this.sourceData['directionsUrl']
+        ));
+      }
+    }
+  }
+
+  getDisplayElementType(): NPSDisplayElementType {
+    return NPSDisplayElementType.SUMMARY;
+  }
+
+  getDisplayElements(): Array<INPSDisplayElement> {
+    return this.displayElements;
+  }
+
+  getUniqueId(): string {
+    return "";
+  }
 }
 
 class NPSLessonPlan extends ANPSObject {
