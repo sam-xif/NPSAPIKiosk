@@ -23,14 +23,6 @@ export class CampgroundPageComponent extends ADataViewComponent {
     super(route, router, apiClient, storeService);
   }
 
-  selectParagraphs(obj: INPSDisplayElement) {
-    return obj.getDisplayElementType() === NPSDisplayElementType.SUMMARY;
-  }
-
-  selectProperties(obj: INPSDisplayElement) {
-    return obj.getDisplayElementType() === NPSDisplayElementType.PROPERTY;
-  }
-
   fetchData(): void {
     if (!this.receivedObject) {
       this.router.navigateByUrl('/page-not-found');

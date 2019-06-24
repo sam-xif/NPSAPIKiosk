@@ -110,7 +110,7 @@
                          [alt]="displayElement.getDescription()" style="width:50%;"
                          class="float-right">
                     <div>
-                      <p class="font-weight-bold mt-1 mb-0">{{ displayElement.getTitle() }}</p>
+                      <p class="font-weight-bold mt-1 mb-0" [innerHTML]="displayElement.getTitle() | keepHtml"></p>
                       <p class="my-1" [innerHTML]="displayElement.getDescription() | keepHtml"></p>
                     </div>
                   </li>

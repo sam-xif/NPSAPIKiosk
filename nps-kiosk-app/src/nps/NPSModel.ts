@@ -556,6 +556,12 @@ class NPSCampgroundAmenities extends ANPSObject {
     return out;
   };
 }
+/*
+class NPSVisitorCenter extends ANPSObject {
+  constructor(source, config: NPSAPIQueryOptions) {
+
+  }
+}*/
 
 class NPSVisitorCenter extends ANPSObject {
   private displayElements: Array<INPSDisplayElement>;
