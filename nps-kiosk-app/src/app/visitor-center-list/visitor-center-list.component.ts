@@ -20,7 +20,7 @@ export class VisitorCenterListComponent extends ADataViewComponent {
   public visitorCentersCompleted: boolean;
 
   constructor(
-    protected route: ActivatedRoute,
+    public route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
     protected storeService: ObjectStoreService,
