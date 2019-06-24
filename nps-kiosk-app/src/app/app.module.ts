@@ -22,6 +22,7 @@ import {StateSelectService} from "./services/state-select.service";
 import {CallbackPipe} from "./pipes/callback.pipe";
 import { VisitorCenterListComponent } from './visitor-center-list/visitor-center-list.component';
 import { ArticlesListComponent } from './articles-list/articles-list.component';
+import { NewsReleasesListComponent } from './newsreleases-list/news-releases-list.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { ArticlesListComponent } from './articles-list/articles-list.component';
     CampgroundListPageComponent,
     ParkLearnPageComponent,
     VisitorCenterListComponent,
-    ArticlesListComponent
+    ArticlesListComponent,
+    NewsReleasesListComponent
   ],
   imports: [
     BrowserModule,
