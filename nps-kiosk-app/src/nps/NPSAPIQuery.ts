@@ -1,13 +1,27 @@
-import INPSAPIWorkerManager from './NPSAPIWorkerManager';
-import INPSAPIResponse from './NPSAPIResponse';
+import {INPSAPIWorkerManager} from './NPSAPIWorkerManager';
+import {INPSAPIResponse} from './NPSAPIResponse';
 
-export default interface INPSAPIQuery {
-  execute(workerMgr : INPSAPIWorkerManager, paramsOverride: object) : Promise<INPSAPIResponse>;
+/**
+ * Represents a query to the NPS API.
+ */
+export interface INPSAPIQuery {
+  /**
+   * Executes this query on the given worker manager, with any parameter overrides as needed.
+   * @param workerMgr The worker manager to execute on
+   * @param paramsOverride Object of parameters to override
+   * @return A promise containing the response
+   */
+  execute(workerMgr : INPSAPIWorkerManager, paramsOverride: object): Promise<INPSAPIResponse>;
+
+  /**
+   * Gets the query configuration object of this query.
+   * @return The query configuration
+   */
   getConfig(): NPSAPIQueryOptions
 }
 
 /**
- * Represents an NPS API query that can be executed.
+ * Implementation of a query to the NPS API.
  */
 export class NPSAPIQuery implements INPSAPIQuery {
   private readonly resource : string;
@@ -17,7 +31,7 @@ export class NPSAPIQuery implements INPSAPIQuery {
   /**
    * @param resource The API resource to query
    * @param params The query parameters
-   * @constructor
+   * @param options The query options to use
    */
   constructor(resource: string, params: object, options: NPSAPIQueryOptions) {
     this.resource = resource;
@@ -36,11 +50,6 @@ export class NPSAPIQuery implements INPSAPIQuery {
     };
   }
 
-  /**
-   * Executes this query by sending a request to the given API worker manager.
-   * @param {NPSAPIWorkerManager} workerMgr The worker manager
-   * @return {Promise<NPSAPIResponse>} The response object
-   */
   async execute(workerMgr: INPSAPIWorkerManager, paramsOverride: object = {}) : Promise<INPSAPIResponse> {
     for (let field in paramsOverride) {
       this.params[field] = paramsOverride[field]; // Set override parameters
@@ -59,26 +68,43 @@ export class NPSAPIQuery implements INPSAPIQuery {
   }
 }
 
+/**
+ * Class which contains query configuration options and flags.
+ */
 export class NPSAPIQueryOptions {
   private long: boolean = false;
   private useSearchResultForm: boolean = false;
 
   constructor() {}
 
+  /**
+   * Sets whether the response objects should be long-form (i.e. keep their sub-data).
+   * @param long Whether to return objects in long form
+   */
   setLong(long: boolean): NPSAPIQueryOptions {
     this.long = long;
     return this;
   }
 
-  // TODO: Change the name to something more boolean-like
+  /**
+   * Retrieves the value for whether response objects should be long form
+   */
   getLong(): boolean {
     return this.long;
   }
 
+  /**
+   * <p>Sets whether the response objects should be in search-result form. Each object defines its own
+   * search result format.</p>
+   * @param useSearchResultForm
+   */
   setUseSearchResultForm(useSearchResultForm: boolean) {
     this.useSearchResultForm = useSearchResultForm;
   }
 
+  /**
+   * Retrieves the value for whether response objects should be in search-result form
+   */
   getUseSearchResultForm(): boolean {
     return this.useSearchResultForm;
   }

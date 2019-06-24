@@ -1,7 +1,7 @@
 /**
  * A data source object which can be dynamically written to and read from.
  */
-export default class NPSDataSource implements Iterable<any> {
+export class NPSDataSource implements Iterable<any> {
   private data: Array<any>;
   private counter: number;
   private onUpdateCallbacks: Array<any>;
@@ -18,10 +18,17 @@ export default class NPSDataSource implements Iterable<any> {
     return this.getSnapshot()[Symbol.iterator]();
   }
 
+  /**
+   * Add an event handler for when the data source has finished receiving elements.
+   * @param fn The handler function
+   */
   addOnCompletedHandler(fn) {
     this.onCompletedCallbacks.push(fn);
   }
 
+  /**
+   * Fires this data source's onComplete event.
+   */
   complete() {
     this.onCompletedCallbacks.forEach(fn => fn(this.getSnapshotRaw()));
   }

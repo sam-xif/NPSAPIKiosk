@@ -1,5 +1,6 @@
-
-
+/**
+ * An array of state codes for use with views that are compatible with the NPS API.
+ */
 export const STATE_CODES = [
   'AL',
   'AK',

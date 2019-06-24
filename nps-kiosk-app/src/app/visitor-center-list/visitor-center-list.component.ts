@@ -5,7 +5,7 @@ import {NPSAPIClientService} from "../services/npsapiclient.service";
 import {ObjectStoreService} from "../services/object-store.service";
 import {StateSelectService} from "../services/state-select.service";
 import {INPSObject} from "../../nps/NPSModel";
-import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
+import {NPSAPIQueryBuilder} from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 
 @Component({

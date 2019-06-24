@@ -1,9 +1,22 @@
-import INPSAPIQuery from "./NPSAPIQuery";
-import INPSAPIWorkerManager from "./NPSAPIWorkerManager";
-import INPSAPIResponse from "./NPSAPIResponse";
+import {INPSAPIQuery} from "./NPSAPIQuery";
+import {INPSAPIWorkerManager} from "./NPSAPIWorkerManager";
+import {INPSAPIResponse} from "./NPSAPIResponse";
 import {INPSObject, NPSObjectBuilder} from "./NPSModel";
 
+/**
+ * Data Access Object interface for the NPS API.
+ */
 export interface INPSModelDAO {
+  /**
+   * Asynchronously fetch {@link ANPSObject} objects using the given {@link NPSAPIQuery} object.
+   * @param {NPSAPIQuery} query The query to execute
+   * @param paramsOverride
+   * @param {function(boolean, Array<ANPSObject>): void ?} callback Optional callback that is called when the data
+   *                                                     is obtained. The first parameter is a boolean value that is
+   *                                                     true if and only if the operation succeeded.
+   * @return {Array<ANPSObject>} Array of model objects retrieved. It is empty if there are no results
+   * @throws Error if the response could not be parsed
+   */
   retrieve(query: INPSAPIQuery, callback?: any): Promise<Array<INPSObject>>;
 }
 
@@ -17,16 +30,6 @@ export class NPSModelDAO implements INPSModelDAO {
     this.workerMgr = workerMgr;
   }
 
-  /**
-   * Asynchronously fetch {@link ANPSObject} objects using the given {@link NPSAPIQuery} object.
-   * @param {NPSAPIQuery} query The query to execute
-   * @param paramsOverride
-   * @param {function(boolean, Array<ANPSObject>): void ?} callback Optional callback that is called when the data
-   *                                                     is obtained. The first parameter is a boolean value that is
-   *                                                     true if and only if the operation succeeded.
-   * @return {Array<ANPSObject>} Array of model objects retrieved. It is empty if there are no results
-   * @throws Error if the response could not be parsed
-   */
   public async retrieve(query: INPSAPIQuery, paramsOverride: object = {}, callback?: any)
     : Promise<Array<INPSObject>> {
     let response: INPSAPIResponse = await query.execute(this.workerMgr, paramsOverride);
