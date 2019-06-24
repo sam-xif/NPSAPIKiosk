@@ -18,10 +18,17 @@ export class NPSDataSource implements Iterable<any> {
     return this.getSnapshot()[Symbol.iterator]();
   }
 
+  /**
+   * Add an event handler for when the data source has finished receiving elements.
+   * @param fn The handler function
+   */
   addOnCompletedHandler(fn) {
     this.onCompletedCallbacks.push(fn);
   }
 
+  /**
+   * Fires this data source's onComplete event.
+   */
   complete() {
     this.onCompletedCallbacks.forEach(fn => fn(this.getSnapshotRaw()));
   }

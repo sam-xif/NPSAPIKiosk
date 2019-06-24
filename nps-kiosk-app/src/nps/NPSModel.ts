@@ -5,6 +5,9 @@
 import {NPSAPIQueryOptions} from "./NPSAPIQuery";
 import {INPSResourceDescription, NPSResourceDescriptionBuilder} from "./NPSResourceDescription";
 
+/**
+ * Factory class for instances of {@link INPSObject}.
+ */
 export class NPSObjectBuilder {
   private data: object;
   private resource: string;
@@ -35,12 +38,12 @@ export class NPSObjectBuilder {
 }
 
 /**
- *
+ * Represents an object from the NPS API.
  */
 export interface INPSObject {
   /**
-   *
-   * @param pred
+   * Applies the given predicate to this object's raw data source, returning its result.
+   * @param pred The predicate to apply
    */
   applyPredicate(pred: (obj: object) => boolean): boolean;
 
@@ -52,15 +55,30 @@ export interface INPSObject {
   applyTransform(fn: (obj: object) => any): any;
 
   /**
-   *
+   * Gets a description for the resource from which this object was retrieved.
    */
   getResourceDescription(): INPSResourceDescription;
 
   // These getters are commonly used properties for easy access
+  /**
+   * Gets a title for this object.
+   */
   getTitle(): string;
+
+  /**
+   *  Gets a description for this object.
+   */
   getDescription(): string;
+
+  /**
+   * Gets a URL for this object.
+   * @return The URL or undefined if there isn't one
+   */
   getUrl(): string;
 
+  /**
+   * Gets an array of display elements for this object.
+   */
   getDisplayElements(): Array<INPSDisplayElement>;
 
   /**
@@ -69,6 +87,9 @@ export interface INPSObject {
   getUniqueId(): string;
 }
 
+/**
+ * Enumeration of display element types.
+ */
 export enum NPSDisplayElementType {
   SUMMARY,
   PROPERTY,
@@ -76,7 +97,13 @@ export enum NPSDisplayElementType {
   IMAGE
 }
 
+/**
+ * Represents a display element which can be used to help in rendering an {@link INPSObject}.
+ */
 export interface INPSDisplayElement extends INPSObject {
+  /**
+   * Gets the type of this display element.
+   */
   getDisplayElementType(): NPSDisplayElementType;
 }
 
@@ -92,9 +119,12 @@ abstract class ANPSObject implements INPSDisplayElement {
   protected readonly resourceName: string;
 
   /**
-   * @param title
-   * @param description
-   * @param url
+   * @param title The title of the object
+   * @param description The description of the object
+   * @param url The URL of the object
+   * @param resourceName The resource from which the object came
+   * @param sourceData The raw JSON source data
+   * @param config The query configuration that was used to retrieve the object
    */
   protected constructor(title: string, description: string, url: string, resourceName: string, sourceData: object, config: NPSAPIQueryOptions) {
     this.title = title;
@@ -155,6 +185,12 @@ abstract class ANPSObject implements INPSDisplayElement {
     return fn(this.sourceData);
   }
 
+  /**
+   * Builds a new {@link INPSObject} instance.
+   * @param resource The API resource from which the object was retrieved
+   * @param data The raw JSON data to parse
+   * @param config The query config that was used to retrieve the object
+   */
   static from(resource: string, data: object, config: NPSAPIQueryOptions): INPSObject {
     switch (resource) {
       case 'parks':
@@ -271,6 +307,9 @@ class NPSPark extends ANPSObject {
   }
 }
 
+/**
+ * Representation of a news release.
+ */
 class NPSNewsRelease extends ANPSObject {
   constructor(source, config: NPSAPIQueryOptions) {
     super(source.title, source.abstract, source.url, 'newsreleases', source, config);
@@ -289,6 +328,9 @@ class NPSNewsRelease extends ANPSObject {
   }
 }
 
+/**
+ * Representation of an image from the API
+ */
 class NPSImage extends ANPSObject {
   private readonly id: string;
 
@@ -311,6 +353,9 @@ class NPSImage extends ANPSObject {
   }
 }
 
+/**
+ * Representation of a display paragraph for use when rendering other objects.
+ */
 class NPSDisplayParagraph extends ANPSObject {
   constructor(title: string, description: string, url: string) {
     super(title, description, url, undefined, undefined, new NPSAPIQueryOptions);
@@ -329,6 +374,9 @@ class NPSDisplayParagraph extends ANPSObject {
   }
 }
 
+/**
+ * Representation of a display property for use when rendering other objects.
+ */
 class NPSDisplayProperty extends ANPSObject {
   constructor(title: string, description: string) {
     super(title, description, undefined, undefined, undefined, new NPSAPIQueryOptions);
@@ -347,6 +395,9 @@ class NPSDisplayProperty extends ANPSObject {
   }
 }
 
+/**
+ * Representation of an event object.
+ */
 class NPSEvent extends ANPSObject {
   private readonly id: string;
   private displayElements: Array<INPSDisplayElement>;
@@ -397,6 +448,9 @@ class NPSEvent extends ANPSObject {
   }
 }
 
+/**
+ * Representation of a campground object.
+ */
 class NPSCampground extends ANPSObject {
   private displayElements: Array<INPSDisplayElement>;
   private amenities: INPSObject;
@@ -447,6 +501,9 @@ class NPSCampground extends ANPSObject {
   }
 }
 
+/**
+ * Representation of a campground amenities sub-object.
+ */
 class NPSCampgroundAmenities extends ANPSObject {
   private displayElements: Array<INPSDisplayElement>;
 
@@ -556,6 +613,9 @@ class NPSCampgroundAmenities extends ANPSObject {
   };
 }
 
+/**
+ * Representation of a visitor center object.
+ */
 class NPSVisitorCenter extends ANPSObject {
   private displayElements: Array<INPSDisplayElement>;
   private id: string;
@@ -588,6 +648,9 @@ class NPSVisitorCenter extends ANPSObject {
   }
 }
 
+/**
+ * Representation of a lesson plan object.
+ */
 class NPSLessonPlan extends ANPSObject {
   private displayElements: Array<INPSDisplayElement>;
   private id: string;
@@ -621,6 +684,9 @@ class NPSLessonPlan extends ANPSObject {
   }
 }
 
+/**
+ * Representation of a person object.
+ */
 class NPSPerson extends ANPSObject {
   private displayElements: Array<INPSDisplayElement>;
   private id: string;
@@ -652,6 +718,9 @@ class NPSPerson extends ANPSObject {
   }
 }
 
+/**
+ * Representation of a place object.
+ */
 class NPSPlace extends ANPSObject {
   private displayElements: Array<INPSDisplayElement>;
   private id: string;
@@ -683,6 +752,9 @@ class NPSPlace extends ANPSObject {
   }
 }
 
+/**
+ * Representation of an article object.
+ */
 class NPSArticle extends ANPSObject {
   private displayElements: Array<INPSDisplayElement>;
   private id: string;

@@ -1,4 +1,4 @@
-import {NPSAPIQuery, NPSAPIQueryOptions} from "./NPSAPIQuery";
+import {INPSAPIQuery, NPSAPIQuery, NPSAPIQueryOptions} from "./NPSAPIQuery";
 
 /**
  * Factory for {@link NPSAPIQuery} objects that can be executed on the NPS API.
@@ -20,7 +20,7 @@ export class NPSAPIQueryBuilder {
 
   /**
    * Resets this query builder to its initial state.
-   * @return {NPSAPIQueryBuilder} This instance, with its fields reset
+   * @return This instance, with its fields reset
    */
   reset() {
     this.parkCodes = [];
@@ -34,11 +34,20 @@ export class NPSAPIQueryBuilder {
     return this;
   }
 
+  /**
+   * Whether the queries produced by this builder should produce objects in long form.
+   * Refer to {@link NPSAPIQueryOptions} for more information.
+   * @param long Whether the objects should be in long form
+   */
   useLongForm(long: boolean) {
     this.options.setLong(long);
     return this;
   }
 
+  /**
+   * Whether the queries produced by this builder should produce objects in search-result form
+   * @param searchResultForm
+   */
   useSearchResultForm(searchResultForm: boolean) {
     this.options.setUseSearchResultForm(searchResultForm);
     return this;
@@ -46,8 +55,7 @@ export class NPSAPIQueryBuilder {
 
   /**
    * Adds all park codes in the given array to the query.
-   * @param {Array<String>} parkCodeArr The array of park codes to add
-   * @return {NPSAPIQueryBuilder} This instance
+   * @param parkCodeArr The array of park codes to add
    */
   addAllParkCodes(parkCodeArr) {
     parkCodeArr.forEach((parkCode) => {
@@ -60,8 +68,7 @@ export class NPSAPIQueryBuilder {
 
   /**
    * Adds a single park code to the query.
-   * @param {String} parkCode The park code
-   * @return {NPSAPIQueryBuilder} This instance
+   * @param parkCode The park code
    */
   addParkCode(parkCode) {
     if (!this.parkCodes.includes(parkCode)) {
@@ -70,6 +77,11 @@ export class NPSAPIQueryBuilder {
     return this;
   }
 
+  /**
+   * <p>Adds all state codes in the given array to the query. Refer to {@link STATE_CODES}
+   * in Constants.ts for the list of state codes.</p>
+   * @param stateCodeArr The array of state codes to add
+   */
   addAllStateCodes(stateCodeArr) {
     stateCodeArr.forEach((parkCode) => {
       if (!this.stateCodes.includes(parkCode)) {
@@ -81,8 +93,7 @@ export class NPSAPIQueryBuilder {
 
   /**
    * Sets the query string.
-   * @param {String} queryString The query string
-   * @return {NPSAPIQueryBuilder} This instance
+   * @param queryString The query string
    */
   setQueryString(queryString) {
     this.queryString = queryString;
@@ -96,7 +107,6 @@ export class NPSAPIQueryBuilder {
    * let response1 = qb.from("parks").build().execute();
    * let response2 = qb.nextPage().build().execute();
    *
-   * @return {NPSAPIQueryBuilder} This instance
    */
   nextPage() {
     this.start += this.limit;
@@ -105,11 +115,10 @@ export class NPSAPIQueryBuilder {
 
   /**
    * Sets the limit.
-   * @param {int} limit The limit
-   * @return {NPSAPIQueryBuilder} This instance
+   * @param limit The limit
    * @throws {Error} if the limit is less than 0
    */
-  setLimit(limit) {
+  setLimit(limit: number) {
     if (limit < 0) {
       throw new Error("Limit cannot be less than 0");
     }
@@ -120,11 +129,10 @@ export class NPSAPIQueryBuilder {
 
   /**
    * Sets the start index.
-   * @param {int} start The start index
-   * @return {NPSAPIQueryBuilder} This instance
+   * @param start The start index
    * @throws {Error} if the start index is less than 0
    */
-  setStart(start) {
+  setStart(start: number) {
     if (start < 0) {
       throw new Error("Start cannot be less than 0");
     }
@@ -134,14 +142,18 @@ export class NPSAPIQueryBuilder {
 
   /**
    * Sets the resource from which to retrieve data.
-   * @param {String} resource The resource string
-   * @return {NPSAPIQueryBuilder} This instance
+   * @param resource The resource string
    */
-  from(resource) {
+  from(resource: string) {
     this.resource = resource;
     return this;
   }
 
+  /**
+   * Manually adds a new <code>(name,value)</code> pair to the parameters object.
+   * @param name The name of the parameter
+   * @param value The value of the parameter
+   */
   set(name, value) {
     this.params[name] = value;
     return this;
@@ -149,9 +161,9 @@ export class NPSAPIQueryBuilder {
 
   /**
    * Builds a new query object based on the current configuration.
-   * @return {NPSAPIQuery} The query object
+   * @return The query object
    */
-  build() {
+  build(): INPSAPIQuery {
     if (this.parkCodes.length > 0) {
       this.params["parkCode"] = this.arrayToCommaDelimitedString(this.parkCodes);
     }

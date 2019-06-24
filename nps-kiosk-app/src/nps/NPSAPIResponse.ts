@@ -38,7 +38,6 @@ export class NPSAPIResponse implements INPSAPIResponse {
 
   /**
    * Gets the total number of pages at the resource accessed.
-   * @return {number}
    */
   totalPages() {
     return Math.ceil(this.total / this.limit);
@@ -46,7 +45,6 @@ export class NPSAPIResponse implements INPSAPIResponse {
 
   /**
    * Gets the current page based on the query parameters
-   * @return {number}
    */
   currentPage() {
     return this.start / this.limit;
@@ -54,7 +52,6 @@ export class NPSAPIResponse implements INPSAPIResponse {
 
   /**
    * Gets the number of pages left based on the query parameters
-   * @return {number}
    */
   pagesLeft() {
     return this.totalPages() - this.currentPage();
@@ -62,7 +59,6 @@ export class NPSAPIResponse implements INPSAPIResponse {
 
   /**
    * Checks whether the response has an OK status.
-   * @return {boolean}
    */
   ok() {
     return this.status === 'ok';
@@ -73,7 +69,6 @@ export class NPSAPIResponse implements INPSAPIResponse {
    *     Gets the data of this response. This method should only be expected to return a defined value if this.ok()
    *     is true.
    * </p>
-   * @return {Object} The data of this response
    */
   getData() : Array<object> {
     return this.data;
@@ -81,7 +76,6 @@ export class NPSAPIResponse implements INPSAPIResponse {
 
   /**
    * Gets the resource that was accessed.
-   * @return {String}
    */
   getResource() {
     return this.resource;
@@ -89,12 +83,12 @@ export class NPSAPIResponse implements INPSAPIResponse {
 
 
   /**
-   * Constructs an {@link NPSAPIResponse} object from raw data.
-   * @param raw A response object as received from an {@link NPSAPIWorkerManager}.
-   * @return {NPSAPIResponse} The new object
-   * @throws Error if parsing the data failed
+   * Constructs an {@link INPSAPIResponse} object from raw data.
+   * @param responseObj A response object as received from an {@link INPSAPIWorkerManager}.
+   * @return The new object
+   * @throws {Error} if parsing the data failed
    */
-  static from(responseObj) {
+  static from(responseObj): INPSAPIResponse {
     if (responseObj.status === undefined) {
       throw new Error("Cannot parse malformed response. Expected a 'status' property.");
     }
@@ -120,6 +114,9 @@ export class NPSAPIResponse implements INPSAPIResponse {
   }
 }
 
+/**
+ * A special case response object for events, because their schema is different from the other API resources.
+ */
 class NPSAPIEventResponse extends NPSAPIResponse {
   constructor(status, resource, pagenumber, pagesize, total, data) {
     super(status, resource, pagenumber, pagesize, total, data);

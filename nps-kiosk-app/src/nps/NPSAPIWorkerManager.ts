@@ -1,5 +1,6 @@
 import { NPSAPIResponse } from './NPSAPIResponse';
 import { INPSAPIQuery } from './NPSAPIQuery';
+import {WindowRefService} from "../app/services/window-ref.service";
 
 export interface INPSAPIWorkerManager {
   request(query : INPSAPIQuery, callback : any);
@@ -17,9 +18,10 @@ export class NPSAPIWorkerManager implements INPSAPIWorkerManager {
   callbacks : Array<any>; // Array of callback functions
 
   /**
-   * @param {String} clientWorkerScriptSrc The worker script to use
+   * @param clientWorkerScriptSrc The worker script to use
+   * @param windowRef The DOM window reference
    */
-  constructor(clientWorkerScriptSrc, windowRef) {
+  constructor(clientWorkerScriptSrc: string, windowRef) {
     // Setup worker if possible
     if (!windowRef.Worker) {
       throw new Error(

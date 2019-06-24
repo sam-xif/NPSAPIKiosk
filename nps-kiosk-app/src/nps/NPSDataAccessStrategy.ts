@@ -3,10 +3,22 @@ import {INPSModelDAO} from "./NPSModelDAO";
 import {NPSDataSource} from "./NPSDataSource";
 import {NPSAPIQueryBuilder} from "./NPSAPIQueryBuilder";
 
+/**
+ * Represents a data access strategy for the NPS API.
+ */
 export interface INPSDataAccessStrategy {
+  /**
+   * Obtains data based on the given query, from the given Data Access Object, with this strategy.
+   * @param query The query to use
+   * @param dao The DAO with which to communicate
+   * @return An {@link NPSDataSource} object, which can be populated asynchronously
+   */
   getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource;
 }
 
+/**
+ * Factory class for {@link INPSDataAccessStrategy} instances.
+ */
 export class NPSDataAccessStrategyBuilder {
   private strategy: INPSDataAccessStrategy;
 
@@ -14,6 +26,11 @@ export class NPSDataAccessStrategyBuilder {
     this.strategy = new DefaultNPSDataAccessStrategy();
   }
 
+  /**
+   * Configures the strategy by overwriting or composing the accumulated strategy.
+   * @param identifier The type of strategy to use or compose with
+   * @param config Config parameters that are unique to each strategy type
+   */
   use(identifier: string, config: object = {}): NPSDataAccessStrategyBuilder {
     switch (identifier) {
       case "default":
@@ -31,11 +48,17 @@ export class NPSDataAccessStrategyBuilder {
     return this;
   }
 
+  /**
+   * Builds a new {@link INPSDataAccessStrategy}.
+   */
   build(): INPSDataAccessStrategy {
     return this.strategy;
   }
 }
 
+/**
+ * Abstraction of data access strategies.
+ */
 abstract class ANPSDataAccessStrategy implements INPSDataAccessStrategy {
   protected readonly config: object;
 
@@ -46,6 +69,9 @@ abstract class ANPSDataAccessStrategy implements INPSDataAccessStrategy {
   abstract getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource;
 }
 
+/**
+ * Applies a post filter to the received objects.
+ */
 class FilteredNPSDataAccessStrategy extends ANPSDataAccessStrategy {
   delegate: INPSDataAccessStrategy;
   predicate: any;
@@ -76,6 +102,9 @@ class FilteredNPSDataAccessStrategy extends ANPSDataAccessStrategy {
   }
 }
 
+/**
+ * Performs a normal retrieval operation.
+ */
 class DefaultNPSDataAccessStrategy extends ANPSDataAccessStrategy {
   constructor() {
     super({});
@@ -92,6 +121,9 @@ class DefaultNPSDataAccessStrategy extends ANPSDataAccessStrategy {
   }
 }
 
+/**
+ * Performs the retrieval by spawning multiple requests that retrieve small batches of data.
+ */
 class BatchNPSDataAccessStrategy extends ANPSDataAccessStrategy {
   private batches = 10;
   private batchSize: number = 5;
