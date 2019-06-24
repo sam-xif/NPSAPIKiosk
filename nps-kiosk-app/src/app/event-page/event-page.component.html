@@ -1,42 +1,38 @@
 <section role="main">
   <div class="container py-3">
-    <div class="row">
-      <div class="col">
+    <div class="row pt-2">
+      <div class="col text-center">
         <!-- header -->
         <h1>{{ receivedObject.getTitle() }}</h1>
       </div>
     </div>
+    <hr>
     <div class="row">
       <div class="col">
         <div class="container">
           <div class="row">
-            <div class="col-6">
-              <div class="card">
-                <h5 class="card-header">
-                  Event Info
-                </h5>
-                <div class="card-body">
-                  <div *ngFor="let displayElement of receivedObject.getDisplayElements()">
-                    <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PROPERTY">
-                      <div class="col">
-                        {{ displayElement.getTitle() }} {{ displayElement.getDescription() }}
-                      </div>
-                    </ng-template>
+            <div class="col">
+              <div class="card-group">
+                <div class="card">
+                  <h5 class="card-header">
+                    Event Info
+                  </h5>
+                  <div class="card-body">
+                    <div *ngFor="let displayElement of receivedObject.getDisplayElements() | callback: selectProperties">
+                      <p>{{ displayElement.getTitle() }} {{ displayElement.getDescription() }}</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-6">
-              <div class="container">
-                <div class="row" *ngFor="let displayElement of receivedObject.getDisplayElements()">
-                  <ng-template [ngIf]="displayElement.getDisplayElementType() == DISPLAY_PARAGRAPH">
-                    <div class="col">
-                      <div class="card">
-                        <h5 class="card-header" [innerHTML]="displayElement.getTitle() | keepHtml"></h5>
-                        <div class="card-body" [innerHTML]="displayElement.getDescription() | keepHtml"></div>
-                      </div>
-                    </div>
-                  </ng-template>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col">
+              <div class="card-group py-2" *ngFor="let displayElement of receivedObject.getDisplayElements() | callback: selectParagraphs">
+                <div class="card">
+                  <h5 class="card-header" [innerHTML]="displayElement.getTitle() | keepHtml"></h5>
+                  <div class="card-body" [innerHTML]="displayElement.getDescription() | keepHtml"></div>
                 </div>
               </div>
             </div>
