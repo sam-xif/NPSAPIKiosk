@@ -1,6 +1,6 @@
-import INPSAPIQuery from "./NPSAPIQuery";
-import INPSAPIWorkerManager from "./NPSAPIWorkerManager";
-import INPSAPIResponse from "./NPSAPIResponse";
+import {INPSAPIQuery} from "./NPSAPIQuery";
+import {INPSAPIWorkerManager} from "./NPSAPIWorkerManager";
+import {INPSAPIResponse} from "./NPSAPIResponse";
 import {INPSObject, NPSObjectBuilder} from "./NPSModel";
 
 export interface INPSModelDAO {

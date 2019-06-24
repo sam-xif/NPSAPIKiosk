@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {INPSDisplayElement, INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
-import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
+import {NPSAPIQueryBuilder} from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 import {ADataViewComponent} from "../DataViewComponent";
 import {ObjectStoreService} from "../services/object-store.service";

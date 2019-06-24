@@ -1,7 +1,7 @@
-import INPSAPIWorkerManager from './NPSAPIWorkerManager';
-import INPSAPIResponse from './NPSAPIResponse';
+import {INPSAPIWorkerManager} from './NPSAPIWorkerManager';
+import {INPSAPIResponse} from './NPSAPIResponse';
 
-export default interface INPSAPIQuery {
+export interface INPSAPIQuery {
   execute(workerMgr : INPSAPIWorkerManager, paramsOverride: object) : Promise<INPSAPIResponse>;
   getConfig(): NPSAPIQueryOptions
 }

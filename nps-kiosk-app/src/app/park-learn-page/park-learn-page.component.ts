@@ -4,7 +4,7 @@ import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
 import {ObjectStoreService} from "../services/object-store.service";
 import {INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
-import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
+import {NPSAPIQueryBuilder} from "../../nps/NPSAPIQueryBuilder";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
 
 @Component({

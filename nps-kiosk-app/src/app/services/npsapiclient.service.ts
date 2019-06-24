@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import INPSAPIWorkerManager, { NPSAPIWorkerManager } from '../../nps/NPSAPIWorkerManager';
-import INPSAPIQuery from '../../nps/NPSAPIQuery';
+import {INPSAPIWorkerManager, NPSAPIWorkerManager} from '../../nps/NPSAPIWorkerManager';
+import {INPSAPIQuery} from '../../nps/NPSAPIQuery';
 import { INPSModelDAO } from '../../nps/NPSModelDAO';
 import { WindowRefService } from "./window-ref.service";
 import { NPSModelDAOProviderService } from "./npsmodel-daoprovider.service";
 import {INPSDataAccessStrategy} from "../../nps/NPSDataAccessStrategy";
-import NPSDataSource from "../../nps/NPSDataSource";
+import {NPSDataSource} from "../../nps/NPSDataSource";
 
 @Injectable({
   providedIn: 'root'

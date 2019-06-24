@@ -3,7 +3,7 @@ import {ADataViewComponent} from "../DataViewComponent";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
 import {ObjectStoreService} from "../services/object-store.service";
-import {INPSDisplayElement, NPSDisplayElementType} from "../../nps/NPSModel";
+import {NPSDisplayElementType} from "../../nps/NPSModel";
 
 @Component({
   selector: 'app-campground-page',

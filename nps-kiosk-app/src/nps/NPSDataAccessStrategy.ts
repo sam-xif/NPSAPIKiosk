@@ -1,7 +1,7 @@
-import INPSAPIQuery from "./NPSAPIQuery";
+import {INPSAPIQuery} from "./NPSAPIQuery";
 import {INPSModelDAO} from "./NPSModelDAO";
-import NPSDataSource from "./NPSDataSource";
-import NPSAPIQueryBuilder from "./NPSAPIQueryBuilder";
+import {NPSDataSource} from "./NPSDataSource";
+import {NPSAPIQueryBuilder} from "./NPSAPIQueryBuilder";
 
 export interface INPSDataAccessStrategy {
   getData(query: INPSAPIQuery, dao: INPSModelDAO): NPSDataSource;

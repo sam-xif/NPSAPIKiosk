@@ -1,5 +1,5 @@
 
-export default interface INPSAPIResponse {
+export interface INPSAPIResponse {
   totalPages() : number;
   currentPage() : number;
   pagesLeft() : number;
@@ -12,12 +12,12 @@ export default interface INPSAPIResponse {
  * Model of a response received from the NPS API.
  */
 export class NPSAPIResponse implements INPSAPIResponse {
-  protected readonly status : string;
-  protected readonly resource : string;
-  protected readonly start : number;
-  protected readonly limit : number;
-  protected readonly total : number;
-  protected readonly data : Array<object>;
+  protected readonly status: string;
+  protected readonly resource: string;
+  protected readonly start: number;
+  protected readonly limit: number;
+  protected readonly total: number;
+  protected readonly data: Array<object>;
 
   /**
    * @param status The status of the response

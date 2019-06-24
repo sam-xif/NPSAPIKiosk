@@ -1,7 +1,7 @@
 import { NPSAPIResponse } from './NPSAPIResponse';
-import INPSAPIQuery from './NPSAPIQuery';
+import { INPSAPIQuery } from './NPSAPIQuery';
 
-export default interface INPSAPIWorkerManager {
+export interface INPSAPIWorkerManager {
   request(query : INPSAPIQuery, callback : any);
 }
 

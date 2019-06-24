@@ -3,7 +3,7 @@ import {NPSAPIQuery, NPSAPIQueryOptions} from "./NPSAPIQuery";
 /**
  * Factory for {@link NPSAPIQuery} objects that can be executed on the NPS API.
  */
-export default class NPSAPIQueryBuilder {
+export class NPSAPIQueryBuilder {
   private parkCodes : Array<string>;
   private stateCodes : Array<string>;
   private queryString : string;

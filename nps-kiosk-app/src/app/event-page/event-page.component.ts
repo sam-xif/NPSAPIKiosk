@@ -1,10 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import {ADataViewComponent} from "../DataViewComponent";
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
-import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
-import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
-import {INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
+import {NPSDisplayElementType} from "../../nps/NPSModel";
 import {ObjectStoreService} from "../services/object-store.service";
 
 @Component({

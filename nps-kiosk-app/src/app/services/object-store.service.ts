@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {INPSObject, NPSObjectBuilder} from "../../nps/NPSModel";
+import {INPSObject} from "../../nps/NPSModel";
 
 @Injectable({
   providedIn: 'root'

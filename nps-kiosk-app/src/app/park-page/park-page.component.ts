@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, ParamMap, Router} from "@angular/router";
 import {Observable, Subscription} from "rxjs";
-import NPSAPIQueryBuilder from "../../nps/NPSAPIQueryBuilder";
+import {NPSAPIQueryBuilder} from "../../nps/NPSAPIQueryBuilder";
 import {NPSAPIClientService} from "../services/npsapiclient.service";
 import {NPSDataAccessStrategyBuilder} from "../../nps/NPSDataAccessStrategy";
-import NPSDataSource from "../../nps/NPSDataSource";
+import {NPSDataSource} from "../../nps/NPSDataSource";
 import {INPSObject, NPSDisplayElementType} from "../../nps/NPSModel";
 import {ObjectStoreService} from "../services/object-store.service";
 import {ADataViewComponent} from "../DataViewComponent";

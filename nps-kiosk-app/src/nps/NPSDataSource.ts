@@ -1,7 +1,7 @@
 /**
  * A data source object which can be dynamically written to and read from.
  */
-export default class NPSDataSource implements Iterable<any> {
+export class NPSDataSource implements Iterable<any> {
   private data: Array<any>;
   private counter: number;
   private onUpdateCallbacks: Array<any>;
