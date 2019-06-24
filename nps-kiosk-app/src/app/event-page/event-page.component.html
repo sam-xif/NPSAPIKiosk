@@ -42,9 +42,8 @@
     </div>
     <div class="row">
       <div class="col">
-        <ul class="list-group" *ngFor="let displayElement of receivedObject.getDisplayElements()">
-          <li class="list-group-item card my-2 mx-1"
-              *ngIf="displayElement.getDisplayElementType() === DISPLAY_IMAGE">
+        <ul class="list-group">
+          <li class="list-group-item card my-2 mx-1" *ngFor="let displayElement of receivedObject.getDisplayElements() | callback: selectImages">
             <img [src]="displayElement.getUrl()"
                  [alt]="displayElement.getDescription()" style="width:50%;"
                  class="float-right">
