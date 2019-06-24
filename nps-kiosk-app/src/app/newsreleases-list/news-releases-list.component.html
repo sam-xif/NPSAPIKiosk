@@ -1,5 +1,5 @@
 <section role="main">
-  <div class="container py-2">
+  <div class="container py-3">
     <div class="row">
       <div class="col text-center">
         <h1 class="mt-2">News Releases about
@@ -11,6 +11,13 @@
     <hr>
     <div class="row">
       <div class="col">
+        <ng-template [ngIf]="newsReleases.length == 0 && !newsReleasesCompleted">
+          <div class="text-center w-100">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+        </ng-template>
         <ng-template [ngIf]="newsReleasesCompleted && newsReleases.length == 0">
           <div class="d-flex justify-content-center w-100">
             <p class="alert alert-danger flex-shrink-1" role="alert">No articles were found</p>

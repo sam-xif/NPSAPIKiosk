@@ -1,1 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+html {
+  height:100%;
+}
+
+body {
+  height:100%;
+}
+
+/* https://www.freecodecamp.org/news/how-to-keep-your-footer-where-it-belongs-59c6aa05c59c */
+
+#page-container {
+  position: relative;
+  min-height: 100vh;
+}
+
+#content-wrap {
+  padding-bottom: 10rem;    /* Footer height */
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 10rem;            /* Footer height */
+}
