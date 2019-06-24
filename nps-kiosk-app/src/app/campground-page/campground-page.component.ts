@@ -15,7 +15,7 @@ export class CampgroundPageComponent extends ADataViewComponent {
   private readonly DISPLAY_PROPERTY = NPSDisplayElementType.PROPERTY;
 
   constructor(
-    protected route: ActivatedRoute,
+    public route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
     protected storeService: ObjectStoreService

@@ -15,13 +15,13 @@ import {ADataViewComponent} from "../DataViewComponent";
   styleUrls: ['./search-page.component.css']
 })
 export class SearchPageComponent extends ADataViewComponent {
-  private resource: string;
-  private query: string;
+  public resource: string;
+  public query: string;
 
-  private data: Array<INPSObject>;
-  private waiting: boolean;
-  private noResults: boolean;
-  private datumRouterLink: any;
+  public data: Array<INPSObject>;
+  public waiting: boolean;
+  public noResults: boolean;
+  public datumRouterLink: any;
   private datumRouterLinkGenerator =
     (resource: string) => {
       return (datum: INPSObject) => {
@@ -30,14 +30,14 @@ export class SearchPageComponent extends ADataViewComponent {
     };
 
   // Variables for state filter
-  private readonly stateCodes = STATE_CODES;
-  private selectedState: string;
-  private stateFilters: Array<string>;
+  public readonly stateCodes = STATE_CODES;
+  public selectedState: string;
+  public stateFilters: Array<string>;
 
   private readonly DISPLAY_PROPERTY = NPSDisplayElementType.PROPERTY;
 
   constructor(
-    protected route: ActivatedRoute,
+    public route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
     protected storeService: ObjectStoreService

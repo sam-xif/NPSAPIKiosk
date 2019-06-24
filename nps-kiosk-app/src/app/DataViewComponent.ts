@@ -21,10 +21,10 @@ export interface IDataViewComponent extends OnInit, OnDestroy {
 export abstract class ADataViewComponent implements IDataViewComponent {
   protected paramMap$: Observable<ParamMap>;
   protected paramMapSubscription: Subscription;
-  protected receivedObject: INPSObject;
+  public receivedObject: INPSObject;
 
   protected constructor(
-    protected route: ActivatedRoute,
+    public route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
     protected storeService: ObjectStoreService

@@ -15,12 +15,12 @@ import {ADataViewComponent} from "../DataViewComponent";
   styleUrls: ['./park-page.component.css']
 })
 export class ParkPageComponent extends ADataViewComponent {
-  private parkCode: string;
-  private park: INPSObject;
+  public parkCode: string;
+  public park: INPSObject;
 
   // Sub-information about the park
-  private parkAlerts: Array<INPSObject>;
-  private parkEvents: Array<INPSObject>;
+  public parkAlerts: Array<INPSObject>;
+  public parkEvents: Array<INPSObject>;
 
   // NPS Display Element Type bindings for use in the view
   private readonly DISPLAY_IMAGE = NPSDisplayElementType.IMAGE;
@@ -28,7 +28,7 @@ export class ParkPageComponent extends ADataViewComponent {
   private readonly DISPLAY_META = NPSDisplayElementType.META;
 
   constructor(
-    protected route: ActivatedRoute,
+    public route: ActivatedRoute,
     protected router: Router,
     protected apiClient: NPSAPIClientService,
     protected storeService: ObjectStoreService
